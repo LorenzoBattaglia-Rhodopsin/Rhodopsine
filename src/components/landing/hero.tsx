@@ -1,0 +1,62 @@
+import Link from "next/link";
+import { ShieldCheck, FlaskConical, Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { EyeIllustration } from "@/components/shared/eye-illustration";
+import { routes } from "@/data/site";
+
+/**
+ * HERO — Tesi della pagina.
+ * Apre con il claim "La tua vista conta." e l'elemento-firma (l'iride),
+ * due CTA chiare e indicatori di affidabilità.
+ */
+export function Hero() {
+  return (
+    <section className="relative overflow-hidden">
+      <div className="container grid items-center gap-12 py-16 sm:py-24 lg:grid-cols-2 lg:gap-8 lg:py-28">
+        {/* Colonna testo */}
+        <div className="max-w-xl animate-fade-in-up">
+          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-3 py-1 text-xs text-muted-foreground">
+            <Eye className="size-3.5 text-primary" aria-hidden="true" />
+            Benessere visivo basato su evidenze
+          </p>
+
+          <h1 className="text-display text-balance font-semibold text-foreground">
+            La tua vista conta.
+          </h1>
+
+          <p className="mt-5 text-pretty text-lg leading-relaxed text-muted-foreground">
+            Comprendi le tue abitudini visive e scopri come migliorare il tuo
+            benessere visivo attraverso consigli basati su evidenze
+            scientifiche.
+          </p>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Button asChild size="lg">
+              <Link href={routes.test}>Valuta il tuo affaticamento visivo</Link>
+            </Button>
+            <Button asChild size="lg" variant="secondary">
+              <Link href="/#come-funziona">Scopri di più</Link>
+            </Button>
+          </div>
+
+          {/* Indicatori di affidabilità */}
+          <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground">
+            <li className="inline-flex items-center gap-2">
+              <FlaskConical className="size-4 text-primary" aria-hidden="true" />
+              Basato sulla letteratura su DES/CVS
+            </li>
+            <li className="inline-flex items-center gap-2">
+              <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
+              Nessuna diagnosi, solo prevenzione
+            </li>
+          </ul>
+        </div>
+
+        {/* Colonna illustrazione (decorativa, in secondo piano su mobile) */}
+        <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+          <EyeIllustration className="mx-auto h-auto w-2/3 max-w-sm lg:w-full" />
+        </div>
+      </div>
+    </section>
+  );
+}

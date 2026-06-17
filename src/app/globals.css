@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * DESIGN SYSTEM — Variabili di tema (HSL)
+ * --------------------------------------------------------------------------
+ * Tutti i colori sono definiti qui come variabili CSS in formato HSL e mappati
+ * in `tailwind.config.ts`. Cambiare tema = modificare un solo blocco.
+ *
+ * Vincoli rispettati:
+ * - Nessun bianco puro o nero puro.
+ * - Sfondo caldo scuro (#1A1816 → 30 8% 9%), testo crema (#E6DFD3 → 38 27% 86%).
+ * - Palette calmante: accento teal, stati in salvia/ambra/terracotta (mai rosso vivo).
+ * - Contrasti AA o superiori (vedi docs/DESIGN-SYSTEM.md).
+ */
+@layer base {
+  :root {
+    /* Superfici */
+    --background: 30 8% 9%; /* #1A1816 */
+    --foreground: 38 27% 86%; /* #E6DFD3 */
+
+    --card: 30 8% 12%;
+    --card-foreground: 38 27% 86%;
+
+    --muted: 30 6% 16%;
+    --muted-foreground: 38 14% 68%;
+
+    --secondary: 30 7% 14%;
+    --secondary-foreground: 38 27% 86%;
+
+    /* Accento (hover su superfici) */
+    --accent: 30 8% 18%;
+    --accent-foreground: 38 27% 86%;
+
+    /* Bordi e campi */
+    --border: 30 7% 20%;
+    --input: 30 7% 22%;
+    --ring: 172 45% 62%;
+
+    /* Primario: teal calmo e scientifico (no verde acido) */
+    --primary: 172 30% 54%;
+    --primary-hover: 172 32% 47%;
+    --primary-foreground: 30 12% 9%;
+
+    /* Stati semantici (livelli di esito) */
+    --success: 150 30% 52%; /* salvia — livello basso */
+    --success-foreground: 30 12% 9%;
+
+    --warning: 38 58% 60%; /* ambra — livello moderato */
+    --warning-foreground: 30 12% 9%;
+
+    --elevated: 16 52% 57%; /* terracotta — livello elevato (mai rosso allarme) */
+    --elevated-foreground: 30 12% 9%;
+
+    /* Raggio di base */
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "kern", "liga", "calt";
+  }
+
+  /* Selezione testo coerente con il tema */
+  ::selection {
+    background-color: hsl(var(--primary) / 0.3);
+    color: hsl(var(--foreground));
+  }
+
+  /* Focus visibile di base per elementi interattivi nativi (link, ecc.).
+     I componenti UI definiscono già il proprio anello via :focus-visible. */
+  a:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: calc(var(--radius) - 4px);
+  }
+}
+
+/**
+ * Accessibilità del movimento: chi ha impostato "riduci animazioni" nel
+ * sistema operativo non vedrà transizioni o animazioni decorative.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
