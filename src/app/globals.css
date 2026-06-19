@@ -55,6 +55,10 @@
 
     /* Raggio di base */
     --radius: 0.75rem;
+
+    /* Sfondo decorativo (vedi body::before / body::after) */
+    --bg-glow: 30 8% 13%; /* punto luce centrale: appena più chiaro */
+    --bg-edge: 30 10% 7%; /* bordi: appena più scuri */
   }
 }
 
@@ -69,12 +73,54 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
+    /* Il colore base sta sull'elemento radice: così i due livelli decorativi
+       fissi (body::before / body::after) possono restare DIETRO al contenuto
+       senza essere coperti da uno sfondo opaco applicato al body. */
+    background-color: hsl(var(--background));
   }
 
   body {
-    background-color: hsl(var(--background));
+    position: relative;
+    background-color: transparent;
     color: hsl(var(--foreground));
     font-feature-settings: "kern", "liga", "calt";
+  }
+
+  /* LIVELLO 1 — Gradiente radiale morbido (bassa frequenza spaziale).
+     Un leggerissimo punto luce al centro dello schermo che sfuma verso bordi
+     appena più scuri: asseconda la fissazione foveale (il centro della retina
+     coglie più dettagli) e guida l'occhio al centro della pagina, riducendo lo
+     stress da navigazione periferica. È fisso al viewport e dietro a tutto. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background: radial-gradient(
+      90% 70% at 50% 42%,
+      hsl(var(--bg-glow)) 0%,
+      hsl(var(--background)) 55%,
+      hsl(var(--bg-edge)) 100%
+    );
+  }
+
+  /* LIVELLO 2 — Micro-grana organica (effetto carta).
+     Rumore desaturato a contrasto quasi impercettibile (~3% di opacità) che
+     rompe l'uniformità della retroilluminazione LED: la superficie appare più
+     opaca e meno "speculare". Il rumore è un SVG inline (zero richieste di
+     rete). Per regolarla: opacity per l'intensità, background-size per la
+     dimensione del grano, baseFrequency nell'SVG per la finezza. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='paperGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperGrain)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+    background-repeat: repeat;
   }
 
   /* Selezione testo coerente con il tema */
@@ -105,5 +151,13 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+
+@media (prefers-contrast: more) {
+  body::before,
+  body::after {
+    display: none;
   }
 }

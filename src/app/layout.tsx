@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -9,9 +11,9 @@ import { siteConfig } from "@/data/site";
 /**
  * LAYOUT RADICE
  * --------------------------------------------------------------------------
- * Imposta lingua, metadati di base, font di sistema e la struttura comune
- * (skip-link → header → main → footer). Inietta il JSON-LD del sito una volta
- * sola, qui, così è presente su tutte le pagine.
+ * Imposta lingua, metadati di base, font (Geist, self-hosted) e la struttura
+ * comune (skip-link → header → main → footer). Inietta il JSON-LD del sito una
+ * volta sola, qui, così è presente su tutte le pagine.
  */
 
 // `metadataBase` permette a Next di rendere assoluti gli URL relativi (OG, canonical).
@@ -31,8 +33,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="it" className="dark">
-      <body className="min-h-dvh bg-background text-foreground antialiased">
+    <html lang="it" className={`dark ${GeistSans.variable} ${GeistMono.variable}`}>
+      <body className="min-h-dvh text-foreground antialiased">
         {/* Link di salto: visibile solo con tastiera, porta al contenuto. */}
         <a
           href="#main"

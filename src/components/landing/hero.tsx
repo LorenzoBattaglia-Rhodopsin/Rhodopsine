@@ -17,22 +17,21 @@ export function Hero() {
         <div className="max-w-xl animate-fade-in-up">
           <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-3 py-1 text-xs text-muted-foreground">
             <Eye className="size-3.5 text-primary" aria-hidden="true" />
-            Benessere visivo basato su evidenze
+            La tua vista conta.
           </p>
 
           <h1 className="text-display text-balance font-semibold text-foreground">
-            La tua vista conta.
+            Il benessere visivo a portata di mano.
           </h1>
 
           <p className="mt-5 text-pretty text-lg leading-relaxed text-muted-foreground">
-            Comprendi le tue abitudini visive e scopri come migliorare il tuo
-            benessere visivo attraverso consigli basati su evidenze
-            scientifiche.
+            Passi più di 6 ore al giorno davanti a uno schermo? <br/>
+            Scopri in 2 minuti se le tue abitudini stanno affaticando i tuoi occhi.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg">
-              <Link href={routes.test}>Valuta il tuo affaticamento visivo</Link>
+              <Link href={routes.test}>Fai ora il test gratuito</Link>
             </Button>
             <Button asChild size="lg" variant="secondary">
               <Link href="/#come-funziona">Scopri di più</Link>

@@ -77,9 +77,11 @@ const config: Config = {
         xl: "calc(var(--radius) + 6px)",
       },
       fontFamily: {
-        // Stack di sistema: zero richieste di rete (ottimo per LCP/Lighthouse),
-        // rende come San Francisco su Apple, Segoe su Windows, Roboto su Android.
+        // Geist (self-hosted via pacchetto npm, nessuna richiesta a Google):
+        // moderno e premium. Lo stack di sistema resta come fallback.
+        // Per cambiare font basta sostituire la variabile qui sotto.
         sans: [
+          "var(--font-geist-sans)",
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",
@@ -89,6 +91,7 @@ const config: Config = {
           "sans-serif",
         ],
         mono: [
+          "var(--font-geist-mono)",
           "ui-monospace",
           "SFMono-Regular",
           "Menlo",
