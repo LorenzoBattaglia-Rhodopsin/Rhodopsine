@@ -1,0 +1,143 @@
+diff -ruN design_a/src/app/globals.css design_b/src/app/globals.css
+--- design_a/src/app/globals.css	2026-06-19 17:16:17.765101675 +0000
++++ design_b/src/app/globals.css	2026-06-19 17:15:51.533526304 +0000
+@@ -55,6 +55,10 @@
+ 
+     /* Raggio di base */
+     --radius: 0.75rem;
++
++    /* Sfondo decorativo (vedi body::before / body::after) */
++    --bg-glow: 30 8% 13%; /* punto luce centrale: appena più chiaro */
++    --bg-edge: 30 10% 7%; /* bordi: appena più scuri */
+   }
+ }
+ 
+@@ -69,14 +73,56 @@
+     -webkit-font-smoothing: antialiased;
+     -moz-osx-font-smoothing: grayscale;
+     scroll-behavior: smooth;
++    /* Il colore base sta sull'elemento radice: così i due livelli decorativi
++       fissi (body::before / body::after) possono restare DIETRO al contenuto
++       senza essere coperti da uno sfondo opaco applicato al body. */
++    background-color: hsl(var(--background));
+   }
+ 
+   body {
+-    background-color: hsl(var(--background));
++    position: relative;
++    background-color: transparent;
+     color: hsl(var(--foreground));
+     font-feature-settings: "kern", "liga", "calt";
+   }
+ 
++  /* LIVELLO 1 — Gradiente radiale morbido (bassa frequenza spaziale).
++     Un leggerissimo punto luce al centro dello schermo che sfuma verso bordi
++     appena più scuri: asseconda la fissazione foveale (il centro della retina
++     coglie più dettagli) e guida l'occhio al centro della pagina, riducendo lo
++     stress da navigazione periferica. È fisso al viewport e dietro a tutto. */
++  body::before {
++    content: "";
++    position: fixed;
++    inset: 0;
++    z-index: -2;
++    pointer-events: none;
++    background: radial-gradient(
++      90% 70% at 50% 42%,
++      hsl(var(--bg-glow)) 0%,
++      hsl(var(--background)) 55%,
++      hsl(var(--bg-edge)) 100%
++    );
++  }
++
++  /* LIVELLO 2 — Micro-grana organica (effetto carta).
++     Rumore desaturato a contrasto quasi impercettibile (~3% di opacità) che
++     rompe l'uniformità della retroilluminazione LED: la superficie appare più
++     opaca e meno "speculare". Il rumore è un SVG inline (zero richieste di
++     rete). Per regolarla: opacity per l'intensità, background-size per la
++     dimensione del grano, baseFrequency nell'SVG per la finezza. */
++  body::after {
++    content: "";
++    position: fixed;
++    inset: 0;
++    z-index: -1;
++    pointer-events: none;
++    opacity: 0.035;
++    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='paperGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperGrain)'/%3E%3C/svg%3E");
++    background-size: 160px 160px;
++    background-repeat: repeat;
++  }
++
+   /* Selezione testo coerente con il tema */
+   ::selection {
+     background-color: hsl(var(--primary) / 0.3);
+@@ -107,3 +153,11 @@
+     scroll-behavior: auto !important;
+   }
+ }
++
++/* Per chi richiede contrasto elevato: sfondo piatto, senza decorazioni. */
++@media (prefers-contrast: more) {
++  body::before,
++  body::after {
++    display: none;
++  }
++}
+diff -ruN design_a/src/app/layout.tsx design_b/src/app/layout.tsx
+--- design_a/src/app/layout.tsx	2026-06-19 17:16:30.220777622 +0000
++++ design_b/src/app/layout.tsx	2026-06-19 17:15:51.538635020 +0000
+@@ -1,4 +1,6 @@
+ import type { Metadata, Viewport } from "next";
++import { GeistSans } from "geist/font/sans";
++import { GeistMono } from "geist/font/mono";
+ import "./globals.css";
+ import { SiteHeader } from "@/components/layout/site-header";
+ import { SiteFooter } from "@/components/layout/site-footer";
+@@ -9,9 +11,9 @@
+ /**
+  * LAYOUT RADICE
+  * --------------------------------------------------------------------------
+- * Imposta lingua, metadati di base, font di sistema e la struttura comune
+- * (skip-link → header → main → footer). Inietta il JSON-LD del sito una volta
+- * sola, qui, così è presente su tutte le pagine.
++ * Imposta lingua, metadati di base, font (Geist, self-hosted) e la struttura
++ * comune (skip-link → header → main → footer). Inietta il JSON-LD del sito una
++ * volta sola, qui, così è presente su tutte le pagine.
+  */
+ 
+ // `metadataBase` permette a Next di rendere assoluti gli URL relativi (OG, canonical).
+@@ -31,8 +33,8 @@
+   children,
+ }: Readonly<{ children: React.ReactNode }>) {
+   return (
+-    <html lang="it" className="dark">
+-      <body className="min-h-dvh bg-background text-foreground antialiased">
++    <html lang="it" className={`dark ${GeistSans.variable} ${GeistMono.variable}`}>
++      <body className="min-h-dvh text-foreground antialiased">
+         {/* Link di salto: visibile solo con tastiera, porta al contenuto. */}
+         <a
+           href="#main"
+diff -ruN design_a/tailwind.config.ts design_b/tailwind.config.ts
+--- design_a/tailwind.config.ts	2026-06-19 17:16:45.068710557 +0000
++++ design_b/tailwind.config.ts	2026-06-19 17:15:51.543689363 +0000
+@@ -77,9 +77,11 @@
+         xl: "calc(var(--radius) + 6px)",
+       },
+       fontFamily: {
+-        // Stack di sistema: zero richieste di rete (ottimo per LCP/Lighthouse),
+-        // rende come San Francisco su Apple, Segoe su Windows, Roboto su Android.
++        // Geist (self-hosted via pacchetto npm, nessuna richiesta a Google):
++        // moderno e premium. Lo stack di sistema resta come fallback.
++        // Per cambiare font basta sostituire la variabile qui sotto.
+         sans: [
++          "var(--font-geist-sans)",
+           "-apple-system",
+           "BlinkMacSystemFont",
+           "Segoe UI",
+@@ -89,6 +91,7 @@
+           "sans-serif",
+         ],
+         mono: [
++          "var(--font-geist-mono)",
+           "ui-monospace",
+           "SFMono-Regular",
+           "Menlo",
