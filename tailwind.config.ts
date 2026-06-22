@@ -128,6 +128,7 @@ const config: Config = {
         "island-in": "island-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both",
         "check-draw": "check-draw 0.5s ease-out 0.1s both",
         "pulse-ring": "pulse-ring 1.5s ease-out infinite",
+        "shake": "shake 0.4s ease-in-out both",
       },
       transitionTimingFunction: {
         spring: "cubic-bezier(0.34, 1.56, 0.64, 1)",

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Eye, Clock, Microscope } from "lucide-react";
 import { Timer202020 } from "@/components/timer/timer-20-20-20";
+import { FocusHub } from "@/components/timer/focus-hub";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -14,12 +15,12 @@ const benefits = [
   {
     icon: Clock,
     title: "Ogni 20 minuti",
-    text: "Il timer conta in silenzio. Quando scadono 20 minuti, una notifica discreta ti avvisa.",
+    text: "Il timer conta in silenzio. Quando scadono 20 minuti, una notifica ti avviserà.",
   },
   {
     icon: Eye,
     title: "20 secondi di riposo",
-    text: "Fissa un punto a oltre 6 metri. Basta: i muscoli accomodativi si rilassano.",
+    text: "Fissa un punto a oltre 6 metri. Basta: i  tuoi muscoli accomodativi ti ringrazieranno.",
   },
   {
     icon: Microscope,
@@ -48,6 +49,20 @@ export default function TimerPage() {
 
         {/* Componente timer (client) */}
         <Timer202020 />
+
+        {/* Sezione "focus" dedicata: stessa state machine, presentazione a Card
+            con barra di avanzamento lineare e display in Geist Mono. */}
+        <div className="mx-auto mt-16 max-w-2xl">
+          <div className="mb-6 text-center">
+            <p className="mb-2 text-eyebrow font-medium uppercase text-primary">
+              Modalità focus
+            </p>
+            <h2 className="text-heading font-semibold text-foreground">
+              La tua sessione in un colpo d'occhio
+            </h2>
+          </div>
+          <FocusHub />
+        </div>
 
         {/* Card informative */}
         <div className="mx-auto mt-14 max-w-2xl">

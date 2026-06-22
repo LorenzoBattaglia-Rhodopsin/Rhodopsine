@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import {
   Play,
   Pause,
@@ -16,27 +16,15 @@ import { Badge } from "@/components/ui/badge";
 import { CircularProgress } from "@/components/timer/circular-progress";
 import { DynamicReminderBar } from "@/components/timer/dynamic-reminder-bar";
 import { MiniTimer } from "@/components/timer/mini-timer";
-import {
-  useTimerMachine,
-  WORK_DURATION_S,
-  BREAK_DURATION_S,
-  type TimerPhase,
-} from "@/hooks/use-timer-machine";
-import { useTimerSound } from "@/hooks/use-timer-sound";
-import { useBreakNotifications } from "@/hooks/use-break-notifications";
-
-function formatTime(seconds: number): string {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-}
+import { WORK_DURATION_S, BREAK_DURATION_S } from "@/hooks/use-timer-machine";
+import { useTimerContext } from "@/components/timer/timer-provider";
+import { formatTime } from "@/components/timer/format-time";
 
 function cycleLabel(n: number): string {
   if (n === 0) return "Nessuna ancora";
   return n === 1 ? "1 completata" : `${n} completate`;
 }
 
-// Fuori dal componente: ricreato a ogni render altrimenti (GC ogni 500ms)
 type BadgeVariant = "neutral" | "primary" | "warning" | "success";
 const PHASE_BADGE: Record<string, { variant: BadgeVariant; label: string }> = {
   idle:           { variant: "neutral",  label: "Inattivo" },
@@ -48,73 +36,13 @@ const PHASE_BADGE: Record<string, { variant: BadgeVariant; label: string }> = {
 };
 
 export function Timer202020() {
-  const timer = useTimerMachine();
-
-  // Destrutturiamo i callback stabili (useCallback) per usarli nelle deps
-  // degli effetti invece degli oggetti interi (ricreati a ogni render)
-  const { playWorkEnd, playBreakEnd } = useTimerSound();
-  const {
-    permission: notifPermission,
-    request: requestNotif,
-    notify,
-  } = useBreakNotifications();
+  // Stato e azioni vengono dal TimerProvider (sorgente unica): così questo
+  // display circolare, il FocusHub e il TimerTrigger nell'header comandano
+  // lo STESSO timer. Gli effetti collaterali (suono/notifiche/Media Session/
+  // annunci SR) vivono nel provider.
+  const timer = useTimerContext();
 
   const anchorRef = useRef<HTMLDivElement>(null);
-  // null = non ancora idratato; usato per distinguere "primo mount" da "fase cambiata"
-  const prevPhaseRef = useRef<TimerPhase | null>(null);
-  const autoNotifRequestedRef = useRef(false);
-  const [announcement, setAnnouncement] = useState("");
-
-  // Richiesta automatica permesso notifiche al primo caricamento
-  useEffect(() => {
-    if (notifPermission === "default" && !autoNotifRequestedRef.current) {
-      autoNotifRequestedRef.current = true;
-      const t = setTimeout(() => void requestNotif(), 1800);
-      return () => clearTimeout(t);
-    }
-  }, [notifPermission, requestNotif]);
-
-  // Post-idratazione: inizializza prevPhaseRef con la fase reale ripristinata
-  // e gestisce il caso "pagina ricaricata mentre era in break-prompt"
-  useEffect(() => {
-    if (!timer.isHydrated) return;
-    if (prevPhaseRef.current !== null) return; // già inizializzato
-    prevPhaseRef.current = timer.phase;
-
-    if (timer.phase === "break-prompt") {
-      if (timer.soundOn) playWorkEnd();
-      notify("Pausa visiva", "Guarda qualcosa a 6 metri di distanza per 20 secondi.");
-      setAnnouncement("Pausa visiva: guarda un oggetto lontano per 20 secondi.");
-    }
-  }, [timer.isHydrated, timer.phase, timer.soundOn, playWorkEnd, notify]);
-
-  // Side-effect alle transizioni di fase normali (non quella iniziale di idratazione)
-  useEffect(() => {
-    if (prevPhaseRef.current === null) return; // aspetta idratazione
-    if (prevPhaseRef.current === timer.phase) return; // stessa fase
-    const prev = prevPhaseRef.current;
-    const next = timer.phase;
-    prevPhaseRef.current = next;
-
-    if (next === "break-prompt" && prev === "running") {
-      if (timer.soundOn) playWorkEnd();
-      notify("Pausa visiva", "Guarda qualcosa a 6 metri di distanza per 20 secondi.");
-      setAnnouncement("Pausa visiva: guarda un oggetto lontano per 20 secondi.");
-    }
-    if (next === "break-complete" && prev === "break-active") {
-      if (timer.soundOn) playBreakEnd();
-      setAnnouncement("Ottimo! Pausa visiva completata. Timer ripartito tra poco.");
-    }
-    if (next === "running" && prev === "idle") {
-      setAnnouncement("Timer avviato. Prossima pausa tra 20 minuti.");
-    }
-    if (next === "paused") {
-      setAnnouncement("Timer in pausa.");
-    }
-    if (next === "running" && prev === "paused") {
-      setAnnouncement("Timer ripreso.");
-    }
-  }, [timer.phase, timer.soundOn, playWorkEnd, playBreakEnd, notify]);
 
   const workProgress = (timer.workLeft / WORK_DURATION_S) * 100;
   const breakProgress =
@@ -145,18 +73,11 @@ export function Timer202020() {
 
   return (
     <>
-      {/* Regione live per gli screen reader: annunci ai cambi di fase.
-          Il countdown visuale NON ha aria-live (evita flood di annunci ogni secondo). */}
-      <p className="sr-only" aria-live="polite" aria-atomic="true">
-        {announcement}
-      </p>
-
       <DynamicReminderBar
         phase={timer.phase}
         breakLeft={timer.breakLeft}
         onStartBreak={timer.startBreak}
         onSkipBreak={timer.skipBreak}
-        onBreakEnd={timer.endBreak}
       />
 
       {/* MiniTimer montato solo dopo idratazione: così anchorRef è già popolato
@@ -185,7 +106,7 @@ export function Timer202020() {
           >
             <div className="flex select-none flex-col items-center gap-1">
               {/* Nessun aria-live: evita flood di annunci ogni secondo.
-                  I cambi di fase sono annunciati dal polite region separato. */}
+                  I cambi di fase sono annunciati dal polite region del provider. */}
               <span
                 className="font-mono text-4xl font-semibold tabular-nums tracking-tight text-foreground"
                 aria-label={`${formatTime(isIdle ? WORK_DURATION_S : timer.workLeft)} rimanenti`}
@@ -290,37 +211,38 @@ export function Timer202020() {
           <div className="flex items-center gap-1">
             <button
               onClick={
-                notifPermission === "default"
-                  ? () => void requestNotif()
+                timer.notifPermission === "default"
+                  ? () => void timer.requestNotif()
                   : undefined
               }
               disabled={
-                notifPermission === "denied" || notifPermission === "granted"
+                timer.notifPermission === "denied" ||
+                timer.notifPermission === "granted"
               }
               className={cn(
                 "rounded-md p-2 transition-colors",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                notifPermission === "granted" && "cursor-default text-primary",
-                notifPermission === "default" &&
+                timer.notifPermission === "granted" && "cursor-default text-primary",
+                timer.notifPermission === "default" &&
                   "text-muted-foreground hover:bg-accent hover:text-foreground",
-                notifPermission === "denied" &&
+                timer.notifPermission === "denied" &&
                   "cursor-not-allowed text-muted-foreground/40",
-                notifPermission === "unsupported" && "hidden",
+                timer.notifPermission === "unsupported" && "hidden",
               )}
               aria-label={
-                notifPermission === "granted"
+                timer.notifPermission === "granted"
                   ? "Notifiche attivate"
-                  : notifPermission === "denied"
+                  : timer.notifPermission === "denied"
                     ? "Notifiche bloccate dal browser"
                     : "Attiva notifiche di sistema"
               }
               title={
-                notifPermission === "denied"
+                timer.notifPermission === "denied"
                   ? "Notifiche bloccate. Abilitale dalle impostazioni del browser."
                   : undefined
               }
             >
-              {notifPermission === "granted" ? (
+              {timer.notifPermission === "granted" ? (
                 <Bell className="size-4" aria-hidden="true" />
               ) : (
                 <BellOff className="size-4" aria-hidden="true" />
