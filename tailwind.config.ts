@@ -124,6 +124,13 @@ const config: Config = {
       animation: {
         "fade-in-up": "fade-in-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both",
         "soft-pulse": "soft-pulse 9s ease-in-out infinite",
+        // Timer 20-20-20
+        "island-in": "island-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both",
+        "check-draw": "check-draw 0.5s ease-out 0.1s both",
+        "pulse-ring": "pulse-ring 1.5s ease-out infinite",
+      },
+      transitionTimingFunction: {
+        spring: "cubic-bezier(0.34, 1.56, 0.64, 1)",
       },
     },
   },

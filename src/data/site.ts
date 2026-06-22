@@ -38,4 +38,5 @@ export const routes = {
   home: "/",
   test: "/test",
   results: "/risultati",
+  timer: "/timer",
 } as const;
