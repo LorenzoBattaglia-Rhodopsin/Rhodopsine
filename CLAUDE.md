@@ -40,7 +40,7 @@ npm run typecheck && npm run build
 
 ## 3. Stack e versioni
 
-- **Next.js 15** (App Router) · **React 19** · **TypeScript 5.7** (strict)
+- **Next.js 16** (App Router) · **React 19** · **TypeScript 5.7** (strict)
 - **TailwindCSS 3.4** (NON v4) con variabili CSS HSL + convenzione shadcn
 - Componenti **shadcn/ui** (stile new-york) scritti a mano su **Radix UI**
   (`slot`, `radio-group`, `progress`, `label`)

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/shared/logo";
 import { Button } from "@/components/ui/button";
+import { TimerTrigger } from "@/components/timer/timer-trigger";
 import { mainNav, routes, siteConfig } from "@/data/site";
 
 /**
@@ -37,9 +38,14 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <Button asChild size="sm" className="shrink-0">
-          <Link href={routes.test}>Inizia il test</Link>
-        </Button>
+        {/* Controllo timer globale + CTA: il trigger comanda lo stesso timer
+            della pagina /timer (stato condiviso via TimerProvider). */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <TimerTrigger />
+          <Button asChild size="sm" className="shrink-0">
+            <Link href={routes.test}>Inizia il test</Link>
+          </Button>
+        </div>
       </div>
     </header>
   );

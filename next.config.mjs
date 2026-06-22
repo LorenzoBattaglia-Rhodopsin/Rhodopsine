@@ -13,9 +13,6 @@
 const nextConfig = {
   reactStrictMode: true,
 
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
 
   // Header di sicurezza applicati a tutte le rotte.
   async headers() {

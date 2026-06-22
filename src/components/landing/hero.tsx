@@ -44,7 +44,9 @@ export function Hero() {
               href={routes.timer}
               className="rounded font-medium text-foreground underline underline-offset-4 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              Prova il Timer 20‑20‑20
+              
+                Prova il Timer 20‑20‑20
+            
             </Link>
           </p>
 

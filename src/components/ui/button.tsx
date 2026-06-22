@@ -24,6 +24,8 @@ const buttonVariants = cva(
         sm: "h-11 px-4",
         md: "h-12 px-6",
         lg: "h-14 px-8 text-base",
+        // Bottone "hero" per la sezione dedicata (FocusHub): icona più grande.
+        xl: "h-16 px-10 text-lg [&_svg]:size-5",
         icon: "h-11 w-11",
       },
     },

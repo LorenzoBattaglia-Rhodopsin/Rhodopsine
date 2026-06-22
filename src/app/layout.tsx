@@ -5,6 +5,7 @@ import "./globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { JsonLd } from "@/components/shared/json-ld";
+import { TimerProvider } from "@/components/timer/timer-provider";
 import { buildMetadata, getWebsiteJsonLd } from "@/lib/seo";
 import { siteConfig } from "@/data/site";
 
@@ -45,13 +46,17 @@ export default function RootLayout({
 
         <JsonLd data={getWebsiteJsonLd()} />
 
-        <div className="flex min-h-dvh flex-col">
-          <SiteHeader />
-          <main id="main" className="flex-1">
-            {children}
-          </main>
-          <SiteFooter />
-        </div>
+        {/* Provider del Timer 20-20-20: avvolge tutta l'app così header,
+            pagina /timer e FocusHub condividono un'unica state machine. */}
+        <TimerProvider>
+          <div className="flex min-h-dvh flex-col">
+            <SiteHeader />
+            <main id="main" className="flex-1">
+              {children}
+            </main>
+            <SiteFooter />
+          </div>
+        </TimerProvider>
       </body>
     </html>
   );

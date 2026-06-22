@@ -14,7 +14,6 @@ interface DynamicReminderBarProps {
   breakLeft: number;
   onStartBreak: () => void;
   onSkipBreak: () => void;
-  onBreakEnd: () => void;
 }
 
 export function DynamicReminderBar({
@@ -22,7 +21,6 @@ export function DynamicReminderBar({
   breakLeft,
   onStartBreak,
   onSkipBreak,
-  onBreakEnd,
 }: DynamicReminderBarProps) {
   const [barState, setBarState] = useState<BarState>("hidden");
   const [mounted, setMounted] = useState(false);
@@ -48,20 +46,18 @@ export function DynamicReminderBar({
       if (typeof navigator !== "undefined" && navigator.vibrate) {
         navigator.vibrate([80, 40, 80]);
       }
-      // FIX: entrambi i timeout tracciati dal cleanup, nessun timeout annidato
+      // Solo auto-nascondi VISIVO della pill. La transizione break-complete →
+      // running è ora del TimerProvider (vedi commento lì): owner unico, così
+      // funziona anche quando questa barra non è montata (fuori da /timer).
       const t1 = setTimeout(() => setBarState("hidden"), 3000);
-      const t2 = setTimeout(() => {
-        setMounted(false);
-        onBreakEnd();
-      }, 3350);
-      return () => { clearTimeout(t1); clearTimeout(t2); };
+      return () => clearTimeout(t1);
     }
 
     // idle / running / paused: chiudi la barra
     setBarState("hidden");
     const t = setTimeout(() => setMounted(false), 350);
     return () => clearTimeout(t);
-  }, [phase, onBreakEnd]);
+  }, [phase]);
 
   // Sposta il focus sul CTA quando la pill si espande (accessibilità tastiera)
   useEffect(() => {
