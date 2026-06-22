@@ -21,7 +21,15 @@ import { siteConfig } from "@/data/site";
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   ...buildMetadata(),
-  icons: { icon: "/icon.svg", apple: "/icon.svg" },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    // iOS usa un PNG raster per l'icona "Aggiungi a Home" (no SVG).
+    apple: { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+  },
   manifest: "/manifest.webmanifest",
 };
 

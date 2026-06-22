@@ -19,7 +19,7 @@ import {
   useBreakNotifications,
   type NotifPermission,
 } from "@/hooks/use-break-notifications";
-import { useMediaSession } from "@/hooks/use-media-session";
+import { useMediaSession, SILENCE_SRC } from "@/hooks/use-media-session";
 import { formatTime } from "@/components/timer/format-time";
 
 /**
@@ -97,6 +97,7 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
   // Media Session: countdown in lockscreen / Dynamic Island. Gli action handler
   // catturano `phase` fresco (il hook li rimemorizza ad ogni render).
   const {
+    audioRef,
     activate: activateMedia,
     update: updateMedia,
     pauseSession: pauseMedia,
@@ -244,6 +245,20 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <TimerContext.Provider value={value}>
+      {/* Audio di keep-alive (silenzio reale) per la Media Session: montato nel
+          DOM — su iOS Safari più affidabile di `new Audio()` — e inerte
+          (nessun `controls`, invisibile, fuori dal tab order, aria-hidden).
+          NON aggiungere `muted`: bloccherebbe l'esposizione della Media Session.
+          `preload="metadata"`: il WAV si scarica solo all'avvio del timer, non
+          al caricamento di ogni pagina (budget performance / Lighthouse). */}
+      <audio
+        ref={audioRef}
+        src={SILENCE_SRC}
+        loop
+        preload="metadata"
+        aria-hidden="true"
+      />
+
       {/* Regione live UNICA per gli screen reader: annunci ai cambi di fase.
           Il countdown visuale NON ha aria-live (evita flood ogni secondo). */}
       <p className="sr-only" aria-live="polite" aria-atomic="true">

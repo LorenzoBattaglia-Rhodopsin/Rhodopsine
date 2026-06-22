@@ -8,7 +8,7 @@ import { siteConfig } from "@/data/site";
  * browser mobile mostrando il countdown nella lockscreen e nel centro
  * notifiche, con barra di avanzamento e controlli (play/pausa/stop).
  *
- * Meccanismo: si riproduce in loop una micro-clip di SILENZIO. Un elemento
+ * Meccanismo: si riproduce in loop una clip di SILENZIO. Un elemento
  * <audio> attivo è il prerequisito perché il browser esponga i metadati della
  * Media Session; come effetto collaterale, un tab che riproduce media tende a
  * essere esente dal throttling dei timer in background. La correttezza del
@@ -19,12 +19,20 @@ import { siteConfig } from "@/data/site";
  * MediaPositionState): nessun `any`, nessuna estensione di `navigator`.
  */
 
-/** Clip di silenzio (~0.4s) caricata in loop. Asset statico same-origin. */
-const SILENCE_SRC = "/silence.wav";
+/**
+ * Clip di silenzio reale (~30s) riprodotta in loop. Asset statico same-origin.
+ * Durata "lunga" voluta: iOS Safari tende a sospendere un loop sub-secondo
+ * quando lo schermo si blocca, perdendo la Media Session. Esportata perché
+ * l'elemento <audio> è ora montato nel DOM dal TimerProvider (vedi sotto).
+ */
+export const SILENCE_SRC = "/silence.wav";
 
 const ALBUM = `${siteConfig.shortName} · Timer 20-20-20`;
+// iOS Now Playing NON renderizza artwork SVG: servono PNG raster. Più dimensioni
+// così il sistema sceglie quella adatta a lockscreen/Control Center.
 const ARTWORK: MediaImage[] = [
-  { src: "/icon.svg", sizes: "any", type: "image/svg+xml" },
+  { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
+  { src: "/icon-512.png", sizes: "512x512", type: "image/png" },
 ];
 
 export interface MediaSessionMeta {
@@ -51,6 +59,11 @@ interface MediaSessionHandlers {
 }
 
 export function useMediaSession(handlers: MediaSessionHandlers) {
+  // Ref all'elemento <audio> di keep-alive, MONTATO NEL DOM dal TimerProvider
+  // (non più un `new Audio()` staccato): su iOS Safari un <audio> presente nel
+  // documento è molto più affidabile per esporre la card "In riproduzione".
+  // L'elemento non va mutato (volume di default 1, clip già silenziosa): alcuni
+  // browser smettono di esporre la Media Session se l'audio è `muted`.
   const audioRef = useRef<HTMLAudioElement | null>(null);
   // I callback più recenti, senza dover riregistrare gli action handler.
   const handlersRef = useRef(handlers);
@@ -60,19 +73,6 @@ export function useMediaSession(handlers: MediaSessionHandlers) {
 
   const supported =
     typeof navigator !== "undefined" && "mediaSession" in navigator;
-
-  const getAudio = useCallback((): HTMLAudioElement | null => {
-    if (typeof window === "undefined") return null;
-    if (!audioRef.current) {
-      const audio = new Audio(SILENCE_SRC);
-      audio.loop = true;
-      audio.preload = "auto";
-      // Volume di default (1): la clip è già silenziosa. Mutare l'audio può
-      // impedire ad alcuni browser di esporre la Media Session.
-      audioRef.current = audio;
-    }
-    return audioRef.current;
-  }, []);
 
   const registerHandlers = useCallback(() => {
     if (!supported) return;
@@ -92,12 +92,12 @@ export function useMediaSession(handlers: MediaSessionHandlers) {
   /** Avvia la sessione media. DEVE essere chiamata dentro un gesto utente. */
   const activate = useCallback(() => {
     if (!supported) return;
-    const audio = getAudio();
+    const audio = audioRef.current;
     // play() può essere rifiutata senza gesto utente: degradiamo in silenzio.
     if (audio) void audio.play().catch(() => {});
     registerHandlers();
     navigator.mediaSession.playbackState = "playing";
-  }, [supported, getAudio, registerHandlers]);
+  }, [supported, registerHandlers]);
 
   /** Aggiorna titolo/sottotitolo e (se possibile) la barra di avanzamento. */
   const update = useCallback(
@@ -169,5 +169,5 @@ export function useMediaSession(handlers: MediaSessionHandlers) {
     };
   }, [deactivate]);
 
-  return { supported, activate, update, pauseSession, deactivate };
+  return { audioRef, supported, activate, update, pauseSession, deactivate };
 }
