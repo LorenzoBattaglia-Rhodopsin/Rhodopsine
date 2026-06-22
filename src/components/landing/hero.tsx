@@ -38,6 +38,16 @@ export function Hero() {
             </Button>
           </div>
 
+          <p className="mt-4 text-sm text-muted-foreground">
+            Cerchi solo una pausa veloce?{" "}
+            <Link
+              href={routes.timer}
+              className="rounded font-medium text-foreground underline underline-offset-4 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Prova il Timer 20‑20‑20
+            </Link>
+          </p>
+
           {/* Indicatori di affidabilità */}
           <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground">
             <li className="inline-flex items-center gap-2">

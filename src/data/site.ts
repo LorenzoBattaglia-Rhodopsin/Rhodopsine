@@ -31,6 +31,7 @@ export const mainNav = [
   { title: "Il problema", href: "/#problema" },
   { title: "Benefici", href: "/#benefici" },
   { title: "Come funziona", href: "/#come-funziona" },
+  { title: "Timer 20-20-20", href: "/timer" },
 ] as const;
 
 /** Rotte applicative riutilizzabili (evita stringhe magiche sparse). */
