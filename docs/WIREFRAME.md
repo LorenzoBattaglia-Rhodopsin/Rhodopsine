@@ -1,4 +1,4 @@
-# Wireframe — WELL-BEING-EYE (WBe)
+# Wireframe — Rhodopsin
 
 > Schemi a bassa fedeltà delle pagine MVP. Approccio **mobile-first**: a
 > sinistra il mobile, a destra il desktop. Le ancore (`#problema`, `#benefici`,
@@ -8,17 +8,17 @@
 
 ```
 ┌───────────────────────────────────────┐
-│ [WBe ◉]            Il problema  Benefici│  ← Header sticky, blur
+│ [Rhodopsin ◉]            Il problema  Benefici│  ← Header sticky, blur
 │                    Come funziona  [Test]│     (nav nascosta < md)
 ├───────────────────────────────────────┤
 │                                         │
 │              CONTENUTO                  │  ← <main id="main">
 │                                         │
 ├───────────────────────────────────────┤
-│ [WBe ◉]  claim            Esplora       │  ← Footer
+│ [Rhodopsin ◉]  claim            Esplora       │  ← Footer
 │                           · Il problema │
 │  ▸ AVVERTENZE IMPORTANTI (disclaimer)   │     + DISCLAIMER medico-legale
-│  © 2026 WELL-BEING-EYE                  │
+│  © 2026 Rhodopsin                  │
 └───────────────────────────────────────┘
 ```
 

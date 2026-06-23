@@ -1,4 +1,4 @@
-# Design System — WELL-BEING-EYE (WBe)
+# Design System — Rhodopsin
 
 > Palette, tipografia, spaziature e principi visivi. I valori sono definiti come
 > variabili CSS HSL in `src/app/globals.css` e mappati in `tailwind.config.ts`.

@@ -2,13 +2,13 @@ import Link from "next/link";
 import { Logo } from "@/components/shared/logo";
 import { Button } from "@/components/ui/button";
 import { TimerTrigger } from "@/components/timer/timer-trigger";
-import { mainNav, routes, siteConfig } from "@/data/site";
+import { routes, siteConfig } from "@/data/site";
 
 /**
  * Header del sito (Server Component).
- * Sticky, con sfondo semitrasparente sfocato. Su mobile la navigazione
- * secondaria è nascosta per privilegiare la CTA (mobile-first); le ancore
- * restano raggiungibili dal footer e dalle sezioni.
+ * Sticky, con sfondo semitrasparente sfocato. Flusso volutamente essenziale:
+ * marchio a sinistra, controllo timer globale + CTA principale a destra.
+ * I link di navigazione di sezione restano raggiungibili dal footer.
  */
 export function SiteHeader() {
   return (
@@ -21,22 +21,6 @@ export function SiteHeader() {
         >
           <Logo />
         </Link>
-
-        {/* Navigazione principale (visibile da tablet in su) */}
-        <nav aria-label="Navigazione principale" className="hidden md:block">
-          <ul className="flex items-center gap-8">
-            {mainNav.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="rounded text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                >
-                  {item.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
 
         {/* Controllo timer globale + CTA: il trigger comanda lo stesso timer
             della pagina /timer (stato condiviso via TimerProvider). */}

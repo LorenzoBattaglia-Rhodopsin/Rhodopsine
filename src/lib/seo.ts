@@ -32,7 +32,7 @@ export function buildMetadata({
   const url = new URL(path, siteConfig.url).toString();
   const ogImage = getOgImageUrl();
 
-  // Title pattern: pagina interna "Titolo · WBe", home con claim completo.
+  // Title pattern: pagina interna "Titolo · Rhodopsin", home con claim completo.
   const computedTitle = title
     ? `${title} · ${siteConfig.shortName}`
     : `${siteConfig.name} — ${siteConfig.mission}`;

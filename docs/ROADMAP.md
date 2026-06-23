@@ -1,4 +1,4 @@
-# Roadmap — WELL-BEING-EYE (WBe)
+# Roadmap — Rhodopsin
 
 > Evoluzione proposta oltre l'MVP. L'architettura attuale è pensata per
 > crescere senza riscritture: dati e logica sono già isolati dalla UI.

@@ -2,34 +2,46 @@ import Link from "next/link";
 import { ShieldCheck, FlaskConical, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EyeIllustration } from "@/components/shared/eye-illustration";
-import { routes } from "@/data/site";
+import { routes, siteConfig } from "@/data/site";
 
 /**
- * HERO — Tesi della pagina.
- * Apre con il claim "La tua vista conta." e l'elemento-firma (l'iride),
- * due CTA chiare e indicatori di affidabilità.
+ * HERO — Chi siamo / Mission.
+ * Sezione centrata e mobile-first che apre la pagina presentando il progetto
+ * e la sua missione. L'iride resta l'elemento-firma del marchio. Il disclaimer
+ * medico-legale è mantenuto a fondo pagina (vedi DisclaimerSection).
  */
 export function Hero() {
   return (
     <section className="relative overflow-hidden">
-      <div className="container grid items-center gap-12 py-16 sm:py-24 lg:grid-cols-2 lg:gap-8 lg:py-28">
-        {/* Colonna testo */}
-        <div className="max-w-xl animate-fade-in-up">
+      <div className="container flex flex-col items-center py-16 text-center sm:py-24 lg:py-28">
+        <div className="flex max-w-2xl flex-col items-center animate-fade-in-up">
+          {/* Elemento-firma: l'iride */}
+          <EyeIllustration className="mb-8 h-auto w-32 sm:w-40" />
+
           <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-3 py-1 text-xs text-muted-foreground">
             <Eye className="size-3.5 text-primary" aria-hidden="true" />
-            La tua vista conta.
+            Chi siamo
           </p>
 
           <h1 className="text-display text-balance font-semibold text-foreground">
-            Il benessere visivo a portata di mano.
+            Il benessere visivo digitale, spiegato bene.
           </h1>
 
           <p className="mt-5 text-pretty text-lg leading-relaxed text-muted-foreground">
-            Passi più di 6 ore al giorno davanti a uno schermo? <br/>
-            Scopri in 2 minuti se le tue abitudini stanno affaticando i tuoi occhi.
+            {siteConfig.name} nasce per aiutarti a capire e prendere cura della
+            tua vista nell&apos;era degli schermi. Uniamo contenuti
+            scientificamente corretti e strumenti pratici per ridurre
+            l&apos;affaticamento visivo digitale, con un approccio educativo e
+            preventivo &mdash; mai diagnostico.
           </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground">
+            <span className="font-medium text-foreground">La nostra missione:</span>{" "}
+            rendere la cura della vista semplice, quotidiana e accessibile a
+            tutti, senza allarmismi.
+          </p>
+
+          <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
             <Button asChild size="lg">
               <Link href={routes.test}>Fai ora il test gratuito</Link>
             </Button>
@@ -38,20 +50,15 @@ export function Hero() {
             </Button>
           </div>
 
-          <p className="mt-4 text-sm text-muted-foreground">
-            Cerchi solo una pausa veloce?{" "}
-            <Link
-              href={routes.timer}
-              className="rounded font-medium text-foreground underline underline-offset-4 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            >
-              
-                Prova il Timer 20‑20‑20
-            
-            </Link>
+          {/* Origine del nome: tocco educativo coerente col marchio */}
+          <p className="mt-6 max-w-prose text-sm text-muted-foreground">
+            Il nome viene dalla <span className="text-foreground">rodopsina</span>,
+            il pigmento della retina che rende possibile la visione: un piccolo
+            promemoria di quanto sia preziosa.
           </p>
 
           {/* Indicatori di affidabilità */}
-          <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground">
+          <ul className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-muted-foreground">
             <li className="inline-flex items-center gap-2">
               <FlaskConical className="size-4 text-primary" aria-hidden="true" />
               Basato sulla letteratura su DES/CVS
@@ -61,11 +68,6 @@ export function Hero() {
               Nessuna diagnosi, solo prevenzione
             </li>
           </ul>
-        </div>
-
-        {/* Colonna illustrazione (decorativa, in secondo piano su mobile) */}
-        <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-          <EyeIllustration className="mx-auto h-auto w-2/3 max-w-sm lg:w-full" />
         </div>
       </div>
     </section>

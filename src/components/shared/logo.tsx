@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { siteConfig } from "@/data/site";
 
 /**
- * Logo WBe: marchio "iris" (SVG inline, scalabile, zero richieste di rete)
+ * Logo Rhodopsin: marchio "iris" (SVG inline, scalabile, zero richieste di rete)
  * + wordmark. Decorativo: l'etichetta accessibile è fornita dal contenitore.
  */
 export function Logo({
