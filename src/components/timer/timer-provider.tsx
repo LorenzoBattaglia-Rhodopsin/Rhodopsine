@@ -19,8 +19,12 @@ import {
   useBreakNotifications,
   type NotifPermission,
 } from "@/hooks/use-break-notifications";
-import { useMediaSession, SILENCE_SRC } from "@/hooks/use-media-session";
-import { formatTime } from "@/components/timer/format-time";
+import {
+  useMediaSession,
+  SILENCE_SRC,
+  type MediaSessionMeta,
+  type MediaSessionPosition,
+} from "@/hooks/use-media-session";
 
 /**
  * TimerProvider — sorgente di verità UNICA del Timer 20-20-20.
@@ -158,33 +162,102 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
     }
   }, [phase, soundOn, playWorkEnd, playBreakEnd, notify]);
 
-  // Aggiorna i metadati Media Session col countdown. Le deps su workLeft/
-  // breakLeft fanno girare l'effetto ~1 volta al secondo (no flood).
+  // ─── Sincronizzazione Media Session (lockscreen / Dynamic Island) ─────────
+  //
+  // ROOT CAUSE del bug iOS Safari (flicker dell'icona + barra che "riparte"):
+  // questo effetto dipende da `workLeft`/`breakLeft`, quindi girava ~1 volta al
+  // secondo. La vecchia versione chiamava `updateMedia` ad OGNI tick, e
+  // `updateMedia` riassegna `navigator.mediaSession.metadata = new MediaMetadata`
+  // (artwork incluso) + `setPositionState`. Su iOS ogni riassegnazione di
+  // metadata con artwork forza il sistema a ricostruire la card "In
+  // riproduzione" / Live Activity nella Dynamic Island → l'icona lampeggia di
+  // continuo; e un `setPositionState` ogni secondo riazzera l'origine
+  // dell'animazione → la barra sembra ripartire. In pratica iOS riavviava la
+  // rappresentazione della Live Activity una volta al secondo.
+  //
+  // FIX: calcoliamo una "chiave" che cambia SOLO quando cambia qualcosa di
+  // realmente visibile (la fase, oppure lo scatto di minuto durante "running").
+  // Se la chiave non cambia, NON tocchiamo `navigator.mediaSession`. Così la
+  // Media Session viene aggiornata al massimo ~1 volta al minuto (non al
+  // secondo), e la barra viene ANIMATA da iOS stesso grazie a `playbackRate`
+  // passato a `setPositionState`. Il countdown a video resta preciso al secondo
+  // (è guidato dalla state machine, non da questo effetto).
+  const lastMediaKeyRef = useRef<string>("");
+
   useEffect(() => {
     if (!isHydrated) return;
+
+    // Tornati a "idle" (reset): azzera la chiave così un nuovo avvio riscrive
+    // sempre i metadati, anche se ricominciasse dallo stesso minuto.
+    if (phase === "idle") {
+      lastMediaKeyRef.current = "";
+      return;
+    }
+
+    let key: string;
+    let meta: MediaSessionMeta;
+    let position: MediaSessionPosition | undefined;
+    let rate = 1;
+
     switch (phase) {
-      case "running":
-        updateMedia(
-          { title: `${formatTime(workLeft)} rimanenti`, artist: "Prossima pausa visiva" },
-          { duration: WORK_DURATION_S, position: WORK_DURATION_S - workLeft },
-        );
+      case "running": {
+        // Granularità al minuto: la chiave cambia ~20 volte in 20 minuti, non
+        // 1200. Tra uno scatto e l'altro è iOS ad animare la barra (rate = 1).
+        const minutesLeft = Math.max(1, Math.ceil(workLeft / 60));
+        key = `running:${minutesLeft}`;
+        meta = {
+          title:
+            minutesLeft === 1
+              ? "Meno di un minuto alla pausa"
+              : `~${minutesLeft} minuti alla pausa visiva`,
+          artist: "Timer 20-20-20 in corso",
+        };
+        position = {
+          duration: WORK_DURATION_S,
+          position: WORK_DURATION_S - workLeft,
+        };
         break;
-      case "break-active":
-        updateMedia(
-          { title: `Pausa visiva · ${breakLeft}s`, artist: "Guarda lontano 6 metri" },
-          { duration: BREAK_DURATION_S, position: BREAK_DURATION_S - breakLeft },
-        );
+      }
+      case "break-active": {
+        // 20 secondi: una sola scrittura all'inizio, poi iOS anima la barra.
+        key = "break-active";
+        meta = { title: "Pausa visiva in corso", artist: "Guarda lontano 6 metri" };
+        position = {
+          duration: BREAK_DURATION_S,
+          position: BREAK_DURATION_S - breakLeft,
+        };
         break;
+      }
       case "break-prompt":
-        updateMedia({ title: "È ora di una pausa visiva", artist: "Guarda lontano per 20 secondi" });
+        key = "break-prompt";
+        meta = {
+          title: "È ora di una pausa visiva",
+          artist: "Guarda lontano per 20 secondi",
+        };
         break;
       case "break-complete":
-        updateMedia({ title: "Pausa completata", artist: "Ottimo lavoro" });
+        key = "break-complete";
+        meta = { title: "Pausa completata", artist: "Ottimo lavoro" };
         break;
-      case "paused":
-        updateMedia({ title: `In pausa · ${formatTime(workLeft)}`, artist: "Timer 20-20-20" });
+      case "paused": {
+        const minutesLeft = Math.max(1, Math.ceil(workLeft / 60));
+        key = `paused:${minutesLeft}`;
+        meta = { title: `In pausa · ~${minutesLeft} min`, artist: "Timer 20-20-20" };
+        position = {
+          duration: WORK_DURATION_S,
+          position: WORK_DURATION_S - workLeft,
+        };
+        rate = 0; // barra ferma mentre è in pausa
         break;
+      }
+      default:
+        return;
     }
+
+    // Nessun cambiamento reale → non toccare iOS (niente flicker, niente reset).
+    if (key === lastMediaKeyRef.current) return;
+    lastMediaKeyRef.current = key;
+    updateMedia(meta, position, rate);
   }, [isHydrated, phase, workLeft, breakLeft, updateMedia]);
 
   // Auto-avanzamento break-complete → running, GLOBALE. Prima viveva solo nella

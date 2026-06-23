@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/shared/logo";
-import { mainNav, routes, siteConfig } from "@/data/site";
+import { mainNav, siteConfig } from "@/data/site";
 
 /**
  * Footer del sito (Server Component).
@@ -14,8 +14,9 @@ export function SiteFooter() {
     <footer className="border-t border-border bg-card/40">
       <div className="container py-14">
         <div className="grid gap-10 md:grid-cols-[1.5fr_1fr]">
-          {/* Identità + claim */}
-          <div className="max-w-prose">
+          {/* Identità + claim. id="chi-siamo": destinazione della voce di nav
+              "Chi siamo" (il footer è presente su tutte le pagine). */}
+          <div id="chi-siamo" className="max-w-prose scroll-mt-24">
             <Logo />
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               {siteConfig.name} ({siteConfig.shortName}) — “{siteConfig.mission}”.
@@ -40,14 +41,6 @@ export function SiteFooter() {
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link
-                  href={routes.test}
-                  className="rounded text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                >
-                  Test affaticamento visivo
-                </Link>
-              </li>
             </ul>
           </nav>
         </div>

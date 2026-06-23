@@ -118,7 +118,7 @@ export default async function ResultsPage({
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
             Suggerimenti generali di igiene visiva, ordinati per pertinenza.
-            Sono indicazioni educative, non prescrizioni mediche.
+            Sono indicazioni educative, NON prescrizioni mediche.
           </p>
           <div className="mt-6">
             <RecommendationList items={recommendations} />
