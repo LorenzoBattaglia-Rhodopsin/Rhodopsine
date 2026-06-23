@@ -1,11 +1,11 @@
-# Architettura — WELL-BEING-EYE (WBe)
+# Architettura — Rhodopsin
 
 > Documento di riferimento per sviluppatori. Descrive scelte tecniche,
 > struttura del codice e principi di estensione del progetto.
 
 ## 1. Obiettivo e vincoli
 
-WBe è un sito educativo sul **benessere visivo digitale** con uno strumento di
+Rhodopsin è un sito educativo sul **benessere visivo digitale** con uno strumento di
 **autovalutazione dell'affaticamento visivo** (Digital Eye Strain / Computer
 Vision Syndrome). Vincolo fondamentale e non negoziabile:
 

@@ -6,8 +6,8 @@
  */
 
 export const siteConfig = {
-  name: "WELL-BEING-EYE",
-  shortName: "WBe",
+  name: "Rhodopsin",
+  shortName: "Rhodopsin",
   mission: "La tua vista conta",
   description:
     "Educazione al benessere visivo: contenuti scientificamente corretti e uno strumento pratico di autovalutazione dell'affaticamento visivo digitale.",

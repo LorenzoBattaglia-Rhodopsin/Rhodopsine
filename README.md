@@ -1,4 +1,4 @@
-# WELL-BEING-EYE (WBe) — “La tua vista conta”
+# Rhodopsin — “La tua vista conta”
 
 Sito educativo sul **benessere visivo digitale** con uno strumento di
 **autovalutazione dell'affaticamento visivo** (Digital Eye Strain / Computer
@@ -50,7 +50,7 @@ In assenza, viene usato `http://localhost:3000`.
 
 ## Struttura del progetto
 ```
-wellbeing-eye/
+rhodopsin/
 ├─ src/
 │  ├─ app/                  # Routing (App Router)
 │  │  ├─ layout.tsx         # Layout radice: lang, metadata, header/footer, JSON-LD

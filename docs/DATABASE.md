@@ -1,4 +1,4 @@
-# Schema dati logico (per l'espansione futura) — WBe
+# Schema dati logico (per l'espansione futura) — Rhodopsin
 
 > ⚠️ **L'MVP non usa alcun database.** Le risposte del test restano nel browser
 > e non vengono inviate ad alcun server. Questo documento descrive uno schema
