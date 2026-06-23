@@ -99,9 +99,24 @@ export function useMediaSession(handlers: MediaSessionHandlers) {
     navigator.mediaSession.playbackState = "playing";
   }, [supported, registerHandlers]);
 
-  /** Aggiorna titolo/sottotitolo e (se possibile) la barra di avanzamento. */
+  /**
+   * Aggiorna titolo/sottotitolo e (se possibile) la barra di avanzamento.
+   *
+   * ⚠️ NON chiamare ad ogni secondo: riassegnare `mediaSession.metadata` (che
+   * include l'artwork) forza iOS Safari a ri-renderizzare la card "In
+   * riproduzione" / Dynamic Island → icona che lampeggia. Il chiamante
+   * (TimerProvider) limita gli aggiornamenti ai cambi reali (vedi commento lì).
+   *
+   * `playbackRate` viene passato a `setPositionState`: con rate = 1 il sistema
+   * ANIMA da solo la barra tra un aggiornamento e l'altro (così non serve
+   * scrivere ogni secondo); con rate = 0 la barra resta ferma (timer in pausa).
+   */
   const update = useCallback(
-    (meta: MediaSessionMeta, position?: MediaSessionPosition) => {
+    (
+      meta: MediaSessionMeta,
+      position?: MediaSessionPosition,
+      playbackRate = 1,
+    ) => {
       if (!supported) return;
       const ms = navigator.mediaSession;
       ms.metadata = new MediaMetadata({
@@ -114,7 +129,7 @@ export function useMediaSession(handlers: MediaSessionHandlers) {
         try {
           const duration = Math.max(0, position.duration);
           const pos = Math.min(Math.max(0, position.position), duration);
-          ms.setPositionState({ duration, position: pos, playbackRate: 1 });
+          ms.setPositionState({ duration, position: pos, playbackRate });
         } catch {
           // Alcuni browser lanciano se i valori sono incoerenti: best-effort.
         }

@@ -26,12 +26,22 @@ export const siteConfig = {
   ],
 } as const;
 
-/** Voci di navigazione principali. */
-export const mainNav = [
-  { title: "Il problema", href: "/#problema" },
-  { title: "Benefici", href: "/#benefici" },
-  { title: "Come funziona", href: "/#come-funziona" },
-  { title: "Timer 20-20-20", href: "/timer" },
+/**
+ * Voci di navigazione principali — UNICA fonte per header (desktop + mobile) e
+ * footer. Aggiungere/spostare una voce qui la propaga ovunque: niente liste di
+ * link hard-coded nei componenti.
+ */
+export type NavItem = {
+  title: string;
+  href: string;
+};
+
+export const mainNav: readonly NavItem[] = [
+  { title: "Home", href: "/" },
+  { title: "Test", href: "/test" },
+  { title: "Metodo 20-20-20", href: "/timer" },
+  { title: "Articoli", href: "/articoli" },
+  { title: "Chi siamo", href: "/#chi-siamo" },
 ] as const;
 
 /** Rotte applicative riutilizzabili (evita stringhe magiche sparse). */
@@ -40,4 +50,5 @@ export const routes = {
   test: "/test",
   results: "/risultati",
   timer: "/timer",
+  articles: "/articoli",
 } as const;

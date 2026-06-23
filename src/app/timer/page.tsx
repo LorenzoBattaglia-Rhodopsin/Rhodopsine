@@ -20,12 +20,12 @@ const benefits = [
   {
     icon: Eye,
     title: "20 secondi di riposo",
-    text: "Fissa un punto a oltre 6 metri. Basta: i  tuoi muscoli accomodativi ti ringrazieranno.",
+    text: "Fissa un punto a oltre 6 metri. I tuoi occhi ti ringrazieranno.",
   },
   {
     icon: Microscope,
-    title: "Basato su evidenze",
-    text: "La regola 20-20-20 è raccomandata da optometristi per ridurre l'affaticamento da schermo.",
+    title: "Basato su evidenze scientifiche",
+    text: "La regola 20-20-20 è raccomandata da ottici e optometristi per ridurre l'affaticamento da schermo.",
   },
 ] as const;
 
