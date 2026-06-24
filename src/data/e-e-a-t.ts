@@ -57,8 +57,8 @@ export const contentAuthor: ContentContributor = {
  */
 export const contentReviewer: ContentContributor = {
   schemaType: "Person",
-  name: "Dott.ssa Elena Conti",
-  role: "Revisione scientifica",
+  name: "",
+  role: "",
   jobTitle: "Medico chirurgo, specialista in Oftalmologia",
   credentials: "Medico oculista, iscritta all'Ordine dei Medici Chirurghi e degli Odontoiatri",
   note: "Revisione dei contenuti a scopo informativo. Non costituisce una visita oculistica né una diagnosi personalizzata.",
