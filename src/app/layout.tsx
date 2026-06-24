@@ -5,6 +5,7 @@ import "./globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { JsonLd } from "@/components/shared/json-ld";
+import { Analytics } from "@/components/shared/analytics";
 import { TimerProvider } from "@/components/timer/timer-provider";
 import { buildMetadata, getWebsiteJsonLd } from "@/lib/seo";
 import { siteConfig } from "@/data/site";
@@ -21,6 +22,11 @@ import { siteConfig } from "@/data/site";
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   ...buildMetadata(),
+  // Verifica proprietà del sito su Google Search Console. Il meta tag viene
+  // emesso solo se il token è presente nell'ambiente (niente tag vuoto).
+  ...(siteConfig.googleSiteVerification
+    ? { verification: { google: siteConfig.googleSiteVerification } }
+    : {}),
   icons: {
     icon: [
       { url: "/icon.svg", type: "image/svg+xml" },
@@ -53,6 +59,10 @@ export default function RootLayout({
         </a>
 
         <JsonLd data={getWebsiteJsonLd()} />
+
+        {/* Statistiche aggregate, cookieless e senza dati personali (Plausible).
+            Attivo solo se NEXT_PUBLIC_PLAUSIBLE_DOMAIN è configurato. */}
+        <Analytics />
 
         {/* Provider del Timer 20-20-20: avvolge tutta l'app così header,
             pagina /timer e FocusHub condividono un'unica state machine. */}

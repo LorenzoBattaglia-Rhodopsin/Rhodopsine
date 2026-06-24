@@ -1,11 +1,20 @@
 import Link from "next/link";
+import { Mail } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import { mainNav, siteConfig } from "@/data/site";
+import {
+  contentAuthor,
+  contentReviewer,
+  formatReviewDate,
+} from "@/data/e-e-a-t";
 
 /**
  * Footer del sito (Server Component).
  * Contiene il DISCLAIMER MEDICO-LEGALE, requisito centrale del progetto:
  * il sito non fornisce diagnosi e non sostituisce visite professionali.
+ *
+ * Per l'E-E-A-T espone in modo sobrio: contatti diretti dell'organizzazione,
+ * autore dei contenuti e revisore scientifico (vedi @/data/e-e-a-t).
  */
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -13,9 +22,9 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-card/40">
       <div className="container py-14">
-        <div className="grid gap-10 md:grid-cols-[1.5fr_1fr]">
-          {/* Identità + claim. id="chi-siamo": destinazione della voce di nav
-              "Chi siamo" (il footer è presente su tutte le pagine). */}
+        <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
+          {/* Identità + claim + crediti. id="chi-siamo": destinazione della voce
+              di nav "Chi siamo" (il footer è presente su tutte le pagine). */}
           <div id="chi-siamo" className="max-w-prose scroll-mt-24">
             <Logo />
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -23,6 +32,37 @@ export function SiteFooter() {
               Educazione al benessere visivo attraverso contenuti affidabili e
               strumenti pratici di autovalutazione.
             </p>
+
+            {/* Trasparenza editoriale: autore + revisione scientifica. */}
+            <dl className="mt-6 space-y-4">
+              <div>
+                <dt className="text-eyebrow font-medium uppercase text-muted-foreground">
+                  A cura di
+                </dt>
+                <dd className="mt-1 text-sm font-medium text-foreground">
+                  {contentAuthor.name}
+                </dd>
+                <dd className="text-xs text-muted-foreground">
+                  {contentAuthor.role}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-eyebrow font-medium uppercase text-muted-foreground">
+                  Revisione scientifica
+                </dt>
+                <dd className="mt-1 text-sm font-medium text-foreground">
+                  {contentReviewer.name}
+                </dd>
+                {contentReviewer.credentials && (
+                  <dd className="text-xs text-muted-foreground">
+                    {contentReviewer.credentials}
+                  </dd>
+                )}
+                <dd className="text-xs text-muted-foreground">
+                  Ultima revisione: {formatReviewDate()}
+                </dd>
+              </div>
+            </dl>
           </div>
 
           {/* Navigazione */}
@@ -43,6 +83,28 @@ export function SiteFooter() {
               ))}
             </ul>
           </nav>
+
+          {/* Contatti diretti dell'organizzazione (canale editoriale). */}
+          <div>
+            <h2 className="text-eyebrow font-medium uppercase text-muted-foreground">
+              Contatti
+            </h2>
+            <ul className="mt-4 space-y-3 text-sm">
+              <li>
+                <a
+                  href={`mailto:${siteConfig.contact.email}`}
+                  className="inline-flex items-center gap-2 rounded text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                >
+                  <Mail className="size-4 text-primary" aria-hidden="true" />
+                  {siteConfig.contact.email}
+                </a>
+              </li>
+            </ul>
+            <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+              Per richieste editoriali e segnalazioni sui contenuti. Non è un
+              canale per consulenze cliniche, urgenze o emergenze sanitarie.
+            </p>
+          </div>
         </div>
 
         {/* DISCLAIMER MEDICO-LEGALE */}
@@ -59,16 +121,18 @@ export function SiteFooter() {
           <div className="mt-2 space-y-2 text-xs leading-relaxed text-muted-foreground">
             <p>
               I contenuti e gli strumenti presenti su {siteConfig.name} hanno
-              esclusivamente finalità informative ed educative. Non
+              esclusivamente finalità informative, educative e preventive. Non
               costituiscono in alcun modo una diagnosi medica, un parere clinico
               o una prescrizione.
             </p>
             <p>
               Il test di autovalutazione e i relativi risultati non sostituiscono
-              la visita, la valutazione o la consulenza di un medico oculista o
-              di un professionista della visione qualificato. In presenza di
-              sintomi persistenti, intensi o che destano preoccupazione, rivolgiti
-              a un professionista sanitario.
+              la visita, la valutazione o la consulenza di un professionista. Per
+              sintomi, sospette patologie o una diagnosi rivolgiti a un{" "}
+              <span className="text-foreground">medico oculista</span>; per un
+              controllo della vista o degli occhiali la figura di riferimento è
+              l&apos;<span className="text-foreground">ottico-optometrista</span>,
+              che non effettua diagnosi.
             </p>
             <p>
               In caso di disturbi improvvisi della vista (per esempio perdita

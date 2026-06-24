@@ -83,69 +83,83 @@ export default async function ResultsPage({
 
   return (
     <Section eyebrow="Risultati" className="pt-12 sm:pt-16">
-      <div className="mx-auto max-w-3xl">
-        {/* Sintesi: gauge + testo educativo */}
-        <div className="grid items-center gap-8 sm:grid-cols-[auto_1fr] sm:gap-10">
-          <ScoreGauge score={score} level={level} levelLabel={content.badge} />
+      <div className="mx-auto max-w-3xl lg:max-w-none">
+        {/*
+          Mobile: blocco verticale unico (sintesi → summary → consigli → avvertenza).
+          Desktop (lg+): due colonne — sintesi (gauge + esito) a sinistra e sticky,
+          consigli pratici + avvertenza a destra. L'ordine nel DOM è invariato,
+          così il mobile resta identico.
+        */}
+        <div className="flex flex-col lg:grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start lg:gap-12">
+          {/* COLONNA SINISTRA — sintesi del risultato */}
+          <div className="lg:sticky lg:top-24">
+            {/* Sintesi: gauge + testo educativo */}
+            <div className="grid items-center gap-8 sm:grid-cols-[auto_1fr] sm:gap-10 lg:grid-cols-1 lg:gap-8">
+              <ScoreGauge score={score} level={level} levelLabel={content.badge} />
 
+              <div>
+                <Badge variant={LEVEL_BADGE[level]}>
+                  Affaticamento {content.badge.toLowerCase()}
+                </Badge>
+                <h1 className="mt-3 text-heading font-semibold text-balance text-foreground">
+                  {content.title}
+                </h1>
+                {topDomain && (
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    Area che incide di più:{" "}
+                    <span className="text-foreground">
+                      {domainLabels[topDomain]}
+                    </span>
+                    .
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <p className="mt-8 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+              {content.summary}
+            </p>
+          </div>
+
+          {/* COLONNA DESTRA — consigli pratici + avvertenza */}
           <div>
-            <Badge variant={LEVEL_BADGE[level]}>
-              Affaticamento {content.badge.toLowerCase()}
-            </Badge>
-            <h1 className="mt-3 text-heading font-semibold text-balance text-foreground">
-              {content.title}
-            </h1>
-            {topDomain && (
-              <p className="mt-3 text-sm text-muted-foreground">
-                Area che incide di più:{" "}
-                <span className="text-foreground">
-                  {domainLabels[topDomain]}
-                </span>
-                .
+            {/* Consigli pratici */}
+            <div className="mt-12 lg:mt-0">
+              <h2 className="text-heading font-semibold text-foreground">
+                Consigli pratici per te
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Suggerimenti generali di igiene visiva, ordinati per pertinenza.
+                Sono indicazioni educative, NON prescrizioni mediche.
               </p>
-            )}
-          </div>
-        </div>
+              <div className="mt-6">
+                <RecommendationList items={recommendations} />
+              </div>
+            </div>
 
-        <p className="mt-8 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-          {content.summary}
-        </p>
-
-        {/* Consigli pratici */}
-        <div className="mt-12">
-          <h2 className="text-heading font-semibold text-foreground">
-            Consigli pratici per te
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Suggerimenti generali di igiene visiva, ordinati per pertinenza.
-            Sono indicazioni educative, NON prescrizioni mediche.
-          </p>
-          <div className="mt-6">
-            <RecommendationList items={recommendations} />
-          </div>
-        </div>
-
-        {/* Avvertenza + ripeti */}
-        <div className="mt-12 rounded-lg border border-border bg-muted/40 p-6">
-          <h2 className="text-base font-semibold text-foreground">
-            Un promemoria importante
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Questo riscontro è puramente informativo e preventivo: non è una
-            diagnosi e non sostituisce il parere di un professionista della
-            visione. Se i disturbi sono frequenti, intensi o persistenti,
-            rivolgiti a un oculista o a un ottico-optometrista.
-          </p>
-          <div className="mt-5 flex flex-wrap gap-3">
-            <Button asChild variant="secondary">
-              <Link href={routes.test}>
-                <RotateCcw aria-hidden="true" />
-                Ripeti il test
-              </Link>
-            </Button>
-            <Button asChild variant="ghost">
-              <Link href={routes.home}>Torna alla home</Link>
-            </Button>
+            {/* Avvertenza + ripeti */}
+            <div className="mt-12 rounded-lg border border-border bg-muted/40 p-6">
+              <h2 className="text-base font-semibold text-foreground">
+                Un promemoria importante
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Questo riscontro è puramente informativo e preventivo: non è una
+                diagnosi e non sostituisce il parere di un professionista della
+                visione. Se i disturbi sono frequenti, intensi o persistenti,
+                rivolgiti a un oculista o a un ottico-optometrista.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <Button asChild variant="secondary">
+                  <Link href={routes.test}>
+                    <RotateCcw aria-hidden="true" />
+                    Ripeti il test
+                  </Link>
+                </Button>
+                <Button asChild variant="ghost">
+                  <Link href={routes.home}>Torna alla home</Link>
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
