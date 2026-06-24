@@ -19,12 +19,7 @@ import {
   useBreakNotifications,
   type NotifPermission,
 } from "@/hooks/use-break-notifications";
-import {
-  useMediaSession,
-  SILENCE_SRC,
-  type MediaSessionMeta,
-  type MediaSessionPosition,
-} from "@/hooks/use-media-session";
+import { useMediaSession, SILENCE_SRC } from "@/hooks/use-media-session";
 
 /**
  * TimerProvider — sorgente di verità UNICA del Timer 20-20-20.
@@ -164,100 +159,59 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
 
   // ─── Sincronizzazione Media Session (lockscreen / Dynamic Island) ─────────
   //
-  // ROOT CAUSE del bug iOS Safari (flicker dell'icona + barra che "riparte"):
-  // questo effetto dipende da `workLeft`/`breakLeft`, quindi girava ~1 volta al
-  // secondo. La vecchia versione chiamava `updateMedia` ad OGNI tick, e
-  // `updateMedia` riassegna `navigator.mediaSession.metadata = new MediaMetadata`
-  // (artwork incluso) + `setPositionState`. Su iOS ogni riassegnazione di
-  // metadata con artwork forza il sistema a ricostruire la card "In
-  // riproduzione" / Live Activity nella Dynamic Island → l'icona lampeggia di
-  // continuo; e un `setPositionState` ogni secondo riazzera l'origine
-  // dell'animazione → la barra sembra ripartire. In pratica iOS riavviava la
-  // rappresentazione della Live Activity una volta al secondo.
+  // ROOT CAUSE del bug iOS Safari (flicker dell'icona): la vecchia versione
+  // riassegnava `navigator.mediaSession.metadata = new MediaMetadata` (ARTWORK
+  // incluso) ad OGNI secondo. Su iOS ogni riassegnazione dei metadati fa
+  // ri-renderizzare l'artwork della card "In riproduzione" → icona che lampeggia
+  // di continuo.
   //
-  // FIX: calcoliamo una "chiave" che cambia SOLO quando cambia qualcosa di
-  // realmente visibile (la fase, oppure lo scatto di minuto durante "running").
-  // Se la chiave non cambia, NON tocchiamo `navigator.mediaSession`. Così la
-  // Media Session viene aggiornata al massimo ~1 volta al minuto (non al
-  // secondo), e la barra viene ANIMATA da iOS stesso grazie a `playbackRate`
-  // passato a `setPositionState`. Il countdown a video resta preciso al secondo
-  // (è guidato dalla state machine, non da questo effetto).
-  const lastMediaKeyRef = useRef<string>("");
-
+  // Ma la card su iOS va anche TENUTA VIVA: tra un loop dell'audio di keep-alive
+  // e l'altro, se non si aggiorna nulla la card sparisce. Per questo l'effetto
+  // continua a girare ad ogni tick (dipende da workLeft/breakLeft) e chiama
+  // `updateMedia` ogni secondo. La distinzione la fa il hook (vedi
+  // use-media-session): aggiorna `setPositionState` ad ogni tick (economico,
+  // niente artwork → niente flicker, mantiene viva la sessione), ma riscrive i
+  // `metadata` SOLO quando cambia il TITOLO. Per questo qui i titoli sono
+  // COSTANTI per fase: i metadati vengono scritti una sola volta per fase, il
+  // countdown lo mostra iOS dalla `setPositionState` (durata + posizione).
   useEffect(() => {
-    if (!isHydrated) return;
-
-    // Tornati a "idle" (reset): azzera la chiave così un nuovo avvio riscrive
-    // sempre i metadati, anche se ricominciasse dallo stesso minuto.
-    if (phase === "idle") {
-      lastMediaKeyRef.current = "";
-      return;
-    }
-
-    let key: string;
-    let meta: MediaSessionMeta;
-    let position: MediaSessionPosition | undefined;
-    let rate = 1;
+    if (!isHydrated || phase === "idle") return;
 
     switch (phase) {
-      case "running": {
-        // Granularità al minuto: la chiave cambia ~20 volte in 20 minuti, non
-        // 1200. Tra uno scatto e l'altro è iOS ad animare la barra (rate = 1).
-        const minutesLeft = Math.max(1, Math.ceil(workLeft / 60));
-        key = `running:${minutesLeft}`;
-        meta = {
-          title:
-            minutesLeft === 1
-              ? "Meno di un minuto alla pausa"
-              : `~${minutesLeft} minuti alla pausa visiva`,
-          artist: "Timer 20-20-20 in corso",
-        };
-        position = {
-          duration: WORK_DURATION_S,
-          position: WORK_DURATION_S - workLeft,
-        };
+      case "running":
+        updateMedia(
+          { title: "Al lavoro · prossima pausa visiva", artist: "Timer 20-20-20" },
+          { duration: WORK_DURATION_S, position: WORK_DURATION_S - workLeft },
+          1,
+        );
         break;
-      }
-      case "break-active": {
-        // 20 secondi: una sola scrittura all'inizio, poi iOS anima la barra.
-        key = "break-active";
-        meta = { title: "Pausa visiva in corso", artist: "Guarda lontano 6 metri" };
-        position = {
-          duration: BREAK_DURATION_S,
-          position: BREAK_DURATION_S - breakLeft,
-        };
+      case "break-active":
+        updateMedia(
+          { title: "Pausa visiva · guarda lontano 6 metri", artist: "Timer 20-20-20" },
+          { duration: BREAK_DURATION_S, position: BREAK_DURATION_S - breakLeft },
+          1,
+        );
         break;
-      }
       case "break-prompt":
-        key = "break-prompt";
-        meta = {
+        updateMedia({
           title: "È ora di una pausa visiva",
           artist: "Guarda lontano per 20 secondi",
-        };
+        });
         break;
       case "break-complete":
-        key = "break-complete";
-        meta = { title: "Pausa completata", artist: "Ottimo lavoro" };
+        updateMedia({
+          title: "Pausa completata · ottimo lavoro",
+          artist: "Timer 20-20-20",
+        });
         break;
-      case "paused": {
-        const minutesLeft = Math.max(1, Math.ceil(workLeft / 60));
-        key = `paused:${minutesLeft}`;
-        meta = { title: `In pausa · ~${minutesLeft} min`, artist: "Timer 20-20-20" };
-        position = {
-          duration: WORK_DURATION_S,
-          position: WORK_DURATION_S - workLeft,
-        };
-        rate = 0; // barra ferma mentre è in pausa
+      case "paused":
+        updateMedia(
+          { title: "Timer in pausa", artist: "Timer 20-20-20" },
+          { duration: WORK_DURATION_S, position: WORK_DURATION_S - workLeft },
+          0, // barra ferma mentre è in pausa
+        );
         break;
-      }
-      default:
-        return;
     }
-
-    // Nessun cambiamento reale → non toccare iOS (niente flicker, niente reset).
-    if (key === lastMediaKeyRef.current) return;
-    lastMediaKeyRef.current = key;
-    updateMedia(meta, position, rate);
   }, [isHydrated, phase, workLeft, breakLeft, updateMedia]);
 
   // Auto-avanzamento break-complete → running, GLOBALE. Prima viveva solo nella

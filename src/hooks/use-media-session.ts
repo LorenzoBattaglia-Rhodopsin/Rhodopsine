@@ -70,6 +70,11 @@ export function useMediaSession(handlers: MediaSessionHandlers) {
   useEffect(() => {
     handlersRef.current = handlers;
   });
+  // Ultimo titolo scritto nei metadati. È la chiave per NON riassegnare
+  // `mediaSession.metadata` (artwork incluso) ad ogni tick: su iOS Safari ogni
+  // riassegnazione fa ri-renderizzare la card "In riproduzione" → flicker.
+  // Riscriviamo i metadati solo quando il titolo cambia davvero (cambio fase).
+  const lastTitleRef = useRef<string | null>(null);
 
   const supported =
     typeof navigator !== "undefined" && "mediaSession" in navigator;
@@ -100,16 +105,20 @@ export function useMediaSession(handlers: MediaSessionHandlers) {
   }, [supported, registerHandlers]);
 
   /**
-   * Aggiorna titolo/sottotitolo e (se possibile) la barra di avanzamento.
+   * Aggiorna la card "In riproduzione" (lockscreen / Dynamic Island).
    *
-   * ⚠️ NON chiamare ad ogni secondo: riassegnare `mediaSession.metadata` (che
-   * include l'artwork) forza iOS Safari a ri-renderizzare la card "In
-   * riproduzione" / Dynamic Island → icona che lampeggia. Il chiamante
-   * (TimerProvider) limita gli aggiornamenti ai cambi reali (vedi commento lì).
+   * Può (e DOVREBBE) essere chiamata ad ogni secondo: è ciò che TIENE VIVA la
+   * card su iOS Safari tra un loop dell'audio e l'altro. Per evitare il flicker
+   * dell'icona, le due scritture hanno cadenze diverse:
    *
-   * `playbackRate` viene passato a `setPositionState`: con rate = 1 il sistema
-   * ANIMA da solo la barra tra un aggiornamento e l'altro (così non serve
-   * scrivere ogni secondo); con rate = 0 la barra resta ferma (timer in pausa).
+   * - `metadata` (titolo/artist/ARTWORK): riassegnata SOLO quando il titolo
+   *   cambia (cioè al cambio di fase). Riassegnarla ad ogni tick fa
+   *   ri-renderizzare l'artwork → icona che lampeggia (era questo il bug iOS).
+   * - `setPositionState` (barra + tempo rimanente): aggiornata ad OGNI chiamata.
+   *   È economica, NON tocca l'artwork (niente flicker) e mantiene attiva la
+   *   sessione, così la card resta visibile e iOS mostra il countdown da sé.
+   *
+   * `playbackRate`: 1 mentre scorre (iOS anima la barra), 0 in pausa (ferma).
    */
   const update = useCallback(
     (
@@ -119,12 +128,19 @@ export function useMediaSession(handlers: MediaSessionHandlers) {
     ) => {
       if (!supported) return;
       const ms = navigator.mediaSession;
-      ms.metadata = new MediaMetadata({
-        title: meta.title,
-        artist: meta.artist ?? siteConfig.mission,
-        album: ALBUM,
-        artwork: ARTWORK,
-      });
+
+      // Metadati (con artwork): solo al cambio di titolo → niente flicker.
+      if (meta.title !== lastTitleRef.current) {
+        lastTitleRef.current = meta.title;
+        ms.metadata = new MediaMetadata({
+          title: meta.title,
+          artist: meta.artist ?? siteConfig.mission,
+          album: ALBUM,
+          artwork: ARTWORK,
+        });
+      }
+
+      // Posizione: aggiornata ad ogni tick (keep-alive + countdown preciso).
       if (position && typeof ms.setPositionState === "function") {
         try {
           const duration = Math.max(0, position.duration);
@@ -156,6 +172,8 @@ export function useMediaSession(handlers: MediaSessionHandlers) {
     }
     ms.playbackState = "none";
     ms.metadata = null;
+    // Azzera la chiave così la prossima sessione riscrive sempre i metadati.
+    lastTitleRef.current = null;
     (["play", "pause", "stop"] as const).forEach((action) => {
       try {
         ms.setActionHandler(action, null);
