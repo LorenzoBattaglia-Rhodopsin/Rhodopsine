@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/data/site";
+import {
+  contentAuthor,
+  contentReviewer,
+  contentReviewedAt,
+  type ContentContributor,
+} from "@/data/e-e-a-t";
 
 /**
  * SEO — Helper centralizzati
@@ -92,8 +98,28 @@ export function getWebsiteJsonLd() {
 }
 
 /**
+ * Converte un contributore (autore/revisore) in un nodo Schema.org Person/
+ * Organization, includendo solo i campi valorizzati. Usato per le proprietà
+ * `author` e `reviewedBy` (segnali di E-E-A-T).
+ */
+function contributorToSchema(
+  contributor: ContentContributor,
+): Record<string, unknown> {
+  const node: Record<string, unknown> = {
+    "@type": contributor.schemaType,
+    name: contributor.name,
+  };
+  if (contributor.jobTitle) node.jobTitle = contributor.jobTitle;
+  if (contributor.url) node.url = contributor.url;
+  return node;
+}
+
+/**
  * JSON-LD per lo strumento di autovalutazione, modellato come MedicalWebPage
  * a scopo informativo. Esplicita che NON fornisce diagnosi.
+ *
+ * `author` e `reviewedBy` comunicano paternità e revisione dei contenuti
+ * (E-E-A-T). I dati provengono da `@/data/e-e-a-t`.
  */
 export function getAssessmentJsonLd() {
   return {
@@ -105,6 +131,9 @@ export function getAssessmentJsonLd() {
     inLanguage: "it-IT",
     url: new URL("/test", siteConfig.url).toString(),
     audience: { "@type": "Audience", audienceType: "Pubblico generale" },
+    author: contributorToSchema(contentAuthor),
+    reviewedBy: contributorToSchema(contentReviewer),
+    lastReviewed: contentReviewedAt,
     // Nota: nessuna proprietà diagnostica viene dichiarata, di proposito.
   };
 }

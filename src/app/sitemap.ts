@@ -45,6 +45,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.6,
     },
+    {
+      url: new URL("/fonti", siteConfig.url).toString(),
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.4,
+    },
     ...articleEntries,
   ];
 }
