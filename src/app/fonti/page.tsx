@@ -14,7 +14,7 @@ import { contentReviewer, formatReviewDate } from "@/data/e-e-a-t";
 export const metadata: Metadata = buildMetadata({
   title: "Fonti scientifiche",
   description:
-    "Le referenze scientifiche e le fonti ufficiali su cui si basano i contenuti di Rhodopsin in tema di affaticamento visivo digitale (DES/CVS). Informazioni educative, mai diagnosi.",
+    "Le referenze scientifiche e le fonti ufficiali su cui si basano i contenuti di Rhodopsine in tema di affaticamento visivo digitale (DES/CVS). Informazioni educative, mai diagnosi.",
   path: "/fonti",
 });
 

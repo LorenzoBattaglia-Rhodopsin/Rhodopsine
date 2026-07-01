@@ -1,4 +1,4 @@
-# CLAUDE.md — Istruzioni tecniche per Rhodopsin
+# CLAUDE.md — Istruzioni tecniche per Rhodopsine
 
 Guida operativa per sviluppatori e assistenti AI che lavorano su questo repository.
 Leggi prima di tutto la sezione **Regole critiche**: alcuni vincoli non sono opzionali.
@@ -7,7 +7,7 @@ Leggi prima di tutto la sezione **Regole critiche**: alcuni vincoli non sono opz
 
 ## 1. Cos'è il progetto
 
-Rhodopsin è un sito **educativo** sul benessere visivo digitale con uno strumento di
+Rhodopsine è un sito **educativo** sul benessere visivo digitale con uno strumento di
 **autovalutazione dell'affaticamento visivo** (Digital Eye Strain / Computer Vision
 Syndrome). Il modello di business ha due facce: vetrina educativa gratuita per il
 pubblico (B2C) e directory a pagamento per oculisti/ottici (B2B, in roadmap).

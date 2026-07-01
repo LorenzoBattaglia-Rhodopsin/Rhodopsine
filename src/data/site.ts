@@ -6,8 +6,8 @@
  */
 
 export const siteConfig = {
-  name: "Rhodopsin",
-  shortName: "Rhodopsin",
+  name: "Rhodopsine",
+  shortName: "Rhodopsine",
   mission: "La tua vista conta",
   description:
     "Educazione al benessere visivo: contenuti scientificamente corretti e uno strumento pratico di autovalutazione dell'affaticamento visivo digitale.",
