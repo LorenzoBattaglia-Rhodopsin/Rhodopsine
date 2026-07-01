@@ -1,4 +1,4 @@
-# Design System — Rhodopsin
+# Design System — Rhodopsine
 
 > Palette, tipografia, spaziature e principi visivi. I valori sono definiti come
 > variabili CSS HSL in `src/app/globals.css` e mappati in `tailwind.config.ts`.

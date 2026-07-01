@@ -1,4 +1,4 @@
-# Wireframe — Rhodopsin
+# Wireframe — Rhodopsine
 
 > Schemi a bassa fedeltà delle pagine MVP. Approccio **mobile-first**: a
 > sinistra il mobile, a destra il desktop. Le ancore (`#problema`, `#benefici`,
@@ -8,17 +8,17 @@
 
 ```
 ┌───────────────────────────────────────┐
-│ [Rhodopsin ◉]            Il problema  Benefici│  ← Header sticky, blur
+│ [Rhodopsine ◉]            Il problema  Benefici│  ← Header sticky, blur
 │                    Come funziona  [Test]│     (nav nascosta < md)
 ├───────────────────────────────────────┤
 │                                         │
 │              CONTENUTO                  │  ← <main id="main">
 │                                         │
 ├───────────────────────────────────────┤
-│ [Rhodopsin ◉]  claim            Esplora       │  ← Footer
+│ [Rhodopsine ◉]  claim            Esplora       │  ← Footer
 │                           · Il problema │
 │  ▸ AVVERTENZE IMPORTANTI (disclaimer)   │     + DISCLAIMER medico-legale
-│  © 2026 Rhodopsin                  │
+│  © 2026 Rhodopsine                  │
 └───────────────────────────────────────┘
 ```
 
