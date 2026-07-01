@@ -2,8 +2,12 @@ import { cn } from "@/lib/utils";
 import { siteConfig } from "@/data/site";
 
 /**
- * Logo Rhodopsin: marchio "iris" (SVG inline, scalabile, zero richieste di rete)
+ * Logo Rhodopsine: marchio "iris" (SVG inline, scalabile, zero richieste di rete)
  * + wordmark. Decorativo: l'etichetta accessibile è fornita dal contenitore.
+ *
+ * Nel wordmark la "e" finale (che sta per "eyes") è evidenziata nel colore
+ * accento teal del token `primary` (hsl 172 30% 54%). Il resto mantiene lo
+ * stile `foreground`.
  */
 export function Logo({
   className,
@@ -44,7 +48,9 @@ export function Logo({
       </svg>
       {showWordmark && (
         <span className="text-lg font-semibold tracking-tight text-foreground">
-          {siteConfig.shortName}
+          {siteConfig.shortName.slice(0, -1)}
+          {/* "e" = eyes: unica lettera evidenziata (token primary / accento teal). */}
+          <span className="text-primary">{siteConfig.shortName.slice(-1)}</span>
         </span>
       )}
     </span>
