@@ -12,7 +12,12 @@ import {
  * --------------------------------------------------------------------------
  * `buildMetadata` produce un oggetto Metadata coerente (title, description,
  * canonical, Open Graph, Twitter Card) a partire da pochi parametri.
- * `getOgImageUrl` costruisce l'URL assoluto dell'immagine social.
+ *
+ * Le immagini social (og:image / twitter:image) NON sono definite qui: le
+ * generano le file convention `src/app/opengraph-image.tsx` e
+ * `src/app/twitter-image.tsx` (PNG 1200×630, URL assoluto via `metadataBase`,
+ * con hash di cache-busting aggiunto da Next). Non aggiungere `images` qui,
+ * o creeresti metadata duplicati/conflittuali.
  */
 
 interface BuildMetadataParams {
@@ -24,11 +29,6 @@ interface BuildMetadataParams {
   noIndex?: boolean;
 }
 
-/** URL assoluto dell'immagine Open Graph (SVG generato in /public). */
-export function getOgImageUrl(): string {
-  return new URL("/og-image.svg", siteConfig.url).toString();
-}
-
 export function buildMetadata({
   title,
   description = siteConfig.description,
@@ -36,7 +36,6 @@ export function buildMetadata({
   noIndex = false,
 }: BuildMetadataParams = {}): Metadata {
   const url = new URL(path, siteConfig.url).toString();
-  const ogImage = getOgImageUrl();
 
   // Title pattern: pagina interna "Titolo · Rhodopsine", home con claim completo.
   const computedTitle = title
@@ -58,20 +57,11 @@ export function buildMetadata({
       url,
       title: computedTitle,
       description,
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: `${siteConfig.name} — ${siteConfig.mission}`,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title: computedTitle,
       description,
-      images: [ogImage],
     },
   };
 }

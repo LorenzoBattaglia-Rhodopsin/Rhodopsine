@@ -58,7 +58,7 @@ export default function TimerPage() {
               Modalità focus
             </p>
             <h2 className="text-heading font-semibold text-foreground">
-              La tua sessione in un colpo d'occhio
+              La tua sessione in un colpo d&apos;occhio
             </h2>
           </div>
           <FocusHub />

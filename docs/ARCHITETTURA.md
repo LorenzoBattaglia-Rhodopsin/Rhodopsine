@@ -19,7 +19,7 @@ nessuna proprietà diagnostica), copy dei risultati e disclaimer onnipresente.
 
 | Ambito        | Scelta                                   | Motivazione |
 |---------------|------------------------------------------|-------------|
-| Framework     | **Next.js 15** (App Router)              | RSC, routing a file, SEO/metadata API, performance |
+| Framework     | **Next.js 16** (App Router)              | RSC, routing a file, SEO/metadata API, performance |
 | Linguaggio    | **TypeScript** (strict)                  | Sicurezza dei tipi end-to-end |
 | Stile         | **TailwindCSS 3.4** + variabili CSS HSL  | Theming centralizzato, zero CSS morto |
 | Componenti UI | **shadcn/ui** (stile new-york) scritti a mano su **Radix** | Accessibilità nativa, pieno controllo |
