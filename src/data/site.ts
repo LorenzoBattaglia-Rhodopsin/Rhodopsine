@@ -39,7 +39,7 @@ export const siteConfig = {
   // Contatti diretti dell'organizzazione (mostrati nel footer per trasparenza).
   // Sono contatti editoriali, NON un canale clinico o di emergenza.
   contact: {
-    email: "redazione@wellbeingeye.it",
+    email: "info.rhodopsine@gmail.com",
   },
   // Parole chiave principali (vedi docs e Metadata API).
   keywords: [
