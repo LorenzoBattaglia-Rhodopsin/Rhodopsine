@@ -11,8 +11,10 @@ export const siteConfig = {
   mission: "La tua vista conta",
   description:
     "Educazione al benessere visivo: contenuti scientificamente corretti e uno strumento pratico di autovalutazione dell'affaticamento visivo digitale.",
-  // L'URL pubblico arriva dall'ambiente; fallback per lo sviluppo locale.
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  // L'URL pubblico arriva dall'ambiente; il fallback è il dominio di produzione
+  // così canonical/OG/sitemap non puntano MAI a localhost, nemmeno se la
+  // variabile manca sull'hosting.
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.wellbeingeye.it",
   locale: "it_IT",
   // Token di verifica proprietà del sito per Google Search Console.
   // Arriva dall'ambiente: se assente, il meta tag non viene emesso.
@@ -22,6 +24,17 @@ export const siteConfig = {
   // configurato il dominio; in sviluppo o senza config non viene iniettato nulla.
   analytics: {
     plausibleDomain: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? "",
+    // Google Analytics 4: si attiva SOLO se l'ID è configurato nell'ambiente.
+    // GA4 usa cookie → richiede consenso preventivo: viene caricato insieme al
+    // banner Iubenda (vedi `iubenda` sotto e components/shared/cookie-consent).
+    gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "",
+  },
+  // Iubenda Cookie Solution: banner di consenso + blocco preventivo degli
+  // script che usano cookie (GA4). Gli ID non sono segreti: identificano solo
+  // la configurazione pubblica del banner.
+  iubenda: {
+    siteId: 4593728,
+    cookiePolicyId: 55560426,
   },
   // Contatti diretti dell'organizzazione (mostrati nel footer per trasparenza).
   // Sono contatti editoriali, NON un canale clinico o di emergenza.

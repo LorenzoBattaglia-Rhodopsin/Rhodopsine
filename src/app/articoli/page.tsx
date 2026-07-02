@@ -32,7 +32,7 @@ export default function ArticlesPage() {
             Articoli sul benessere visivo
           </h1>
           <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Contenuti educativi per capire l'affaticamento visivo digitale e
+            Contenuti educativi per capire l&apos;affaticamento visivo digitale e
             adottare abitudini semplici davanti agli schermi. Informazioni
             preventive, mai diagnosi.
           </p>

@@ -164,7 +164,11 @@ src/
 - Metadata centralizzati in `lib/seo.ts` → `buildMetadata({ title, description, path, noIndex })`.
 - JSON-LD: `getWebsiteJsonLd()` (globale, nel layout) e `getAssessmentJsonLd()`
   (`MedicalWebPage` informativa, nella pagina test), iniettati via `<JsonLd>`.
-- `metadataBase` da `NEXT_PUBLIC_SITE_URL` (vedi `.env.example`); in assenza, localhost.
+- `metadataBase` da `NEXT_PUBLIC_SITE_URL` (vedi `.env.example`); in assenza, fallback al
+  dominio di produzione (mai localhost nei canonical/OG).
+- Immagini social: `src/app/opengraph-image.tsx` + `twitter-image.tsx` (file convention,
+  PNG 1200×630 generato in build). NON aggiungere `images` in `buildMetadata`: creeresti
+  metadata duplicati.
 - Ogni pagina pubblica esporta il proprio `metadata`. La pagina risultati è `noindex`.
 
 ---
