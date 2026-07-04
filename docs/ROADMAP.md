@@ -52,3 +52,80 @@
 2. **Privacy prima di tutto.** Si introduce persistenza solo con basi legali e
    tutele adeguate.
 3. **Accessibilità e performance** come requisiti, non come extra.
+
+---
+
+## Storico revisioni
+
+### Revisione del 2026-07-04 — preparazione roadmap v1.0
+Il file `ROADMAP.md` fornito per la roadmap v1.0 coincide integralmente con la
+revisione già presente in `docs/`: il contenuto sopra è quindi invariato e non
+è stato necessario conservare una copia separata. Il file complementare
+`PROMPTS-CLAUDE-CODE.md` **non è stato ricevuto** insieme a questa revisione e
+resta da aggiungere quando disponibile.
+
+### Verifica ⚑ del 2026-07-04 (sola ricognizione, nessuna correzione applicata)
+
+**Versioni** (installate, da `npm ls --depth=0`):
+- Node **v24.16.0** · npm 11.13.0
+- **next 16.2.9** (build con Turbopack) · **react / react-dom 19.2.7** ·
+  **typescript 5.9.3** (in `package.json` dichiarato `^5.7.0`)
+- Nota: `eslint-config-next` è `^15.1.0`, una major indietro rispetto a Next 16.
+
+**Rotte reali in `src/app`:**
+- `/` (landing) · `/test` · `/risultati` (dinamica, noindex)
+- `/articoli` + `/articoli/[slug]` — SSG con 3 articoli:
+  `regola-20-20-20-funziona-davvero`, `affaticamento-visivo-sintomi-prevenzione`,
+  `luce-blu-miti-e-realta`
+- `/fonti` · `/timer`
+- File convention: `sitemap.ts`, `robots.ts`, `manifest.ts`,
+  `opengraph-image.tsx`, `twitter-image.tsx`
+- ⚠️ `/articoli`, `/fonti` e `/timer` non compaiono nella mappa di CLAUDE.md §4.
+
+**Esito comandi:**
+- `npm run typecheck` → ✅ 0 errori.
+- `npm run build` → ✅ verde. Pagine: **○ statiche** `/`, `/_not-found`,
+  `/articoli`, `/fonti`, `/test`, `/timer`, `manifest.webmanifest`,
+  `robots.txt`, `sitemap.xml`, `opengraph-image`, `twitter-image` ·
+  **● SSG** `/articoli/[slug]` (3 percorsi) · **ƒ dinamica** `/risultati`
+  (conforme a CLAUDE.md §6.5).
+
+**Presenza / assenza:**
+- **Pagine legali dedicate: assenti** (nessuna rotta privacy/cookie/termini e
+  nessun link a una policy nel footer). Esiste però il banner **Iubenda** con
+  blocco preventivo per GA4 (`components/shared/cookie-consent.tsx`, ID in
+  `data/site.ts`) e analytics cookieless Plausible
+  (`components/shared/analytics.tsx`).
+- **`not-found.tsx` / `error.tsx` / `global-error.tsx`: assenti** (la
+  `/_not-found` in build è il default di Next).
+- **JSON-LD: presente** — `getWebsiteJsonLd()` iniettato in `app/layout.tsx`
+  e `getAssessmentJsonLd()` in `app/test/page.tsx`, entrambi via `<JsonLd>`.
+- **Test automatici: assenti** (nessun `*.test.*`/`*.spec.*`, nessun runner
+  configurato in `package.json`).
+- **Workflow CI: assente** (nessuna cartella `.github/`).
+
+**`/public/silence.wav`:** presente; referenziato da
+`src/hooks/use-media-session.ts` (`export const SILENCE_SRC = "/silence.wav"`,
+riga 28) e usato in `src/components/timer/timer-provider.tsx` (riga 283) come
+`src` dell'elemento `<audio>` che mantiene viva la Media Session del timer
+20-20-20 a schermo bloccato.
+
+**`NEXT_PUBLIC_SITE_URL`:**
+- `.env.example` → `https://www.wellbeingeye.it`
+- Nessun `.env`/`.env.local` presente nel working tree: in build vale il
+  fallback nel codice, `src/data/site.ts` riga 17 →
+  `https://www.wellbeingeye.it`.
+- ⚠️ Divergenza dal rebranding **Rhodopsine**: il dominio configurato è ancora
+  quello storico (wellbeingeye.it) sia negli env di esempio sia nel fallback.
+
+**Divergenze tra lo stato reale e la roadmap sopra:**
+- La Fase 2 «Blog/sezione educativa» è **già avviata**: `/articoli` con 3
+  articoli SSG, pagina `/fonti`, dati E-E-A-T in `src/data/e-e-a-t.ts`.
+- La Fase 4 «Promemoria (regola 20-20-20)» è **parzialmente realizzata**:
+  esiste `/timer` con `TimerProvider` e integrazione Media Session.
+- La «OG image dinamica» (Fase 1) è **già fatta**: `opengraph-image.tsx` e
+  `twitter-image.tsx` generano PNG 1200×630 in build.
+- Restano effettivamente aperti dalla Fase 1: **test automatici**, **i18n**,
+  **persistenza locale** della sessione. A questi si aggiungono, fuori roadmap:
+  workflow CI, pagine `not-found`/`error`, pagine legali dedicate e
+  aggiornamento del dominio in `NEXT_PUBLIC_SITE_URL`/`site.ts`.
