@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Mail } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
-import { mainNav, siteConfig } from "@/data/site";
+import { legalNav, mainNav, siteConfig } from "@/data/site";
+import { formatLegalDate, latestLegalUpdate } from "@/data/legal";
 import {
   contentAuthor,
   contentReviewer,
@@ -22,7 +23,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-card/40">
       <div className="container py-14">
-        <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
           {/* Identità + claim + crediti. id="chi-siamo": destinazione della voce
               di nav "Chi siamo" (il footer è presente su tutte le pagine). */}
           <div id="chi-siamo" className="max-w-prose scroll-mt-24">
@@ -105,6 +106,32 @@ export function SiteFooter() {
               canale per consulenze cliniche, urgenze o emergenze sanitarie.
             </p>
           </div>
+
+          {/* Documenti legali (testi in @/data/legal, in attesa di revisione). */}
+          <nav aria-label="Navigazione legale">
+            <h2 className="text-eyebrow font-medium uppercase text-muted-foreground">
+              Legale
+            </h2>
+            <ul className="mt-4 space-y-3 text-sm">
+              {legalNav.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="rounded text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  >
+                    {item.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+              Documenti aggiornati al{" "}
+              <time dateTime={latestLegalUpdate()}>
+                {formatLegalDate(latestLegalUpdate())}
+              </time>
+              .
+            </p>
+          </nav>
         </div>
 
         {/* DISCLAIMER MEDICO-LEGALE */}

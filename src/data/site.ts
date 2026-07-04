@@ -14,7 +14,7 @@ export const siteConfig = {
   // L'URL pubblico arriva dall'ambiente; il fallback è il dominio di produzione
   // così canonical/OG/sitemap non puntano MAI a localhost, nemmeno se la
   // variabile manca sull'hosting.
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.wellbeingeye.it",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://rhodopsine.com",
   locale: "it_IT",
   // Token di verifica proprietà del sito per Google Search Console.
   // Arriva dall'ambiente: se assente, il meta tag non viene emesso.
@@ -80,4 +80,17 @@ export const routes = {
   timer: "/timer",
   articles: "/articoli",
   sources: "/fonti",
+  privacyPolicy: "/privacy-policy",
+  cookiePolicy: "/cookie-policy",
+  terms: "/termini",
 } as const;
+
+/**
+ * Voci della colonna «Legale» del footer — unica fonte per i collegamenti ai
+ * documenti legali (i testi vivono in `@/data/legal`).
+ */
+export const legalNav: readonly NavItem[] = [
+  { title: "Privacy Policy", href: routes.privacyPolicy },
+  { title: "Cookie Policy", href: routes.cookiePolicy },
+  { title: "Termini e note legali", href: routes.terms },
+] as const;
