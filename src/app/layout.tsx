@@ -9,7 +9,11 @@ import { Analytics } from "@/components/shared/analytics";
 import { CookieConsent } from "@/components/shared/cookie-consent";
 import { GoogleAnalytics } from "@/components/shared/google-analytics";
 import { TimerProvider } from "@/components/timer/timer-provider";
-import { buildMetadata, getWebsiteJsonLd } from "@/lib/seo";
+import {
+  buildMetadata,
+  getOrganizationJsonLd,
+  getWebsiteJsonLd,
+} from "@/lib/seo";
 import { siteConfig } from "@/data/site";
 
 /**
@@ -60,6 +64,9 @@ export default function RootLayout({
           Vai al contenuto
         </a>
 
+        {/* Grafo Schema.org globale: Organization (con @id referenziato dagli
+            altri nodi) + WebSite. Presenti su ogni pagina, una volta sola. */}
+        <JsonLd data={getOrganizationJsonLd()} />
         <JsonLd data={getWebsiteJsonLd()} />
 
         {/* Statistiche aggregate, cookieless e senza dati personali (Plausible).

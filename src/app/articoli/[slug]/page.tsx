@@ -3,7 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
+import {
+  buildMetadata,
+  getArticleJsonLd,
+  getBreadcrumbJsonLd,
+} from "@/lib/seo";
 import { routes } from "@/data/site";
 import {
   articles,
@@ -93,8 +98,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             ))}
           </div>
 
-          {/* Nota educativa coerente col vincolo non-diagnostico del progetto. */}
-          <p className="mt-10 rounded-lg border border-border bg-muted/40 p-5 text-sm leading-relaxed text-muted-foreground">
+          {/* Nota educativa coerente col vincolo non-diagnostico del progetto.
+              role="note": i crawler (anche AI) la associano al contenuto come
+              avvertenza complementare, non come parte del corpo. */}
+          <p
+            role="note"
+            className="mt-10 rounded-lg border border-border bg-muted/40 p-5 text-sm leading-relaxed text-muted-foreground"
+          >
             Questo articolo ha finalità informative ed educative. Non costituisce
             una diagnosi né sostituisce il parere di un professionista della
             visione. In presenza di disturbi persistenti o che destano
@@ -102,6 +112,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </p>
         </div>
       </div>
+
+      {/* Dati strutturati: Article (E-E-A-T: autore/publisher) + breadcrumb. */}
+      <JsonLd data={getArticleJsonLd(article)} />
+      <JsonLd
+        data={getBreadcrumbJsonLd([
+          { name: "Home", path: routes.home },
+          { name: "Articoli", path: routes.articles },
+          { name: article.title, path: `${routes.articles}/${article.slug}` },
+        ])}
+      />
     </article>
   );
 }

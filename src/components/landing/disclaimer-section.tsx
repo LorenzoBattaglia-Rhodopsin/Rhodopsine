@@ -9,7 +9,12 @@ export function DisclaimerSection() {
   return (
     <section aria-labelledby="disclaimer-heading" className="py-8">
       <div className="container">
-        <div className="mx-auto flex max-w-prose items-start gap-3 rounded-lg border border-border bg-muted/40 p-5">
+        {/* role="note": marca il riquadro come avvertenza complementare, così
+            crawler e AT lo associano al contenuto del test, non al corpo. */}
+        <div
+          role="note"
+          className="mx-auto flex max-w-prose items-start gap-3 rounded-lg border border-border bg-muted/40 p-5"
+        >
           <Info
             className="mt-0.5 size-5 shrink-0 text-primary"
             aria-hidden="true"

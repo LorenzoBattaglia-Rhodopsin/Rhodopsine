@@ -34,25 +34,31 @@ export function Problem() {
       title="L'affaticamento visivo digitale è sempre più comune"
       description="L'uso prolungato dei dispositivi mette alla prova il sistema visivo. Conoscere i meccanismi è il primo passo per prendersene cura."
     >
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Elenco vero (ul/li) per l'estrazione semantica: vedi Benefits. */}
+      <ul role="list" className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {points.map(({ icon: Icon, title, body }) => (
-          <Card key={title} className="h-full">
-            <CardContent className="flex h-full flex-col gap-4 p-6">
-              <span className="inline-flex size-11 items-center justify-center rounded-md bg-primary/12 text-primary">
-                <Icon className="size-5" aria-hidden="true" />
-              </span>
-              <h3 className="text-heading font-semibold text-foreground">
-                {title}
-              </h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {body}
-              </p>
-            </CardContent>
-          </Card>
+          <li key={title}>
+            <Card className="h-full">
+              <CardContent className="flex h-full flex-col gap-4 p-6">
+                <span className="inline-flex size-11 items-center justify-center rounded-md bg-primary/12 text-primary">
+                  <Icon className="size-5" aria-hidden="true" />
+                </span>
+                <h3 className="text-heading font-semibold text-foreground">
+                  {title}
+                </h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {body}
+                </p>
+              </CardContent>
+            </Card>
+          </li>
         ))}
-      </div>
+      </ul>
 
-      <p className="mt-8 max-w-prose text-xs leading-relaxed text-muted-foreground">
+      <p
+        role="note"
+        className="mt-8 max-w-prose text-xs leading-relaxed text-muted-foreground"
+      >
         Le affermazioni di questa sezione si basano sulla letteratura
         scientifica relativa al Digital Eye Strain e alla Computer Vision
         Syndrome. Hanno scopo informativo e non sostituiscono un parere

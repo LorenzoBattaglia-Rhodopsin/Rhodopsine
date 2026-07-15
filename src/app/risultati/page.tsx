@@ -137,9 +137,18 @@ export default async function ResultsPage({
               </div>
             </div>
 
-            {/* Avvertenza + ripeti */}
-            <div className="mt-12 rounded-lg border border-border bg-muted/40 p-6">
-              <h2 className="text-base font-semibold text-foreground">
+            {/* Avvertenza + ripeti. <aside role="note"> con etichetta: i
+                crawler (anche AI) associano l'avvertenza all'esito del test
+                come contenuto complementare, non come parte del risultato. */}
+            <aside
+              role="note"
+              aria-labelledby="results-reminder"
+              className="mt-12 rounded-lg border border-border bg-muted/40 p-6"
+            >
+              <h2
+                id="results-reminder"
+                className="text-base font-semibold text-foreground"
+              >
                 Un promemoria importante
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -159,7 +168,7 @@ export default async function ResultsPage({
                   <Link href={routes.home}>Torna alla home</Link>
                 </Button>
               </div>
-            </div>
+            </aside>
           </div>
         </div>
       </div>

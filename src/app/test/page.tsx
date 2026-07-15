@@ -39,7 +39,9 @@ export default function TestPage() {
               senti. Bastano pochi minuti. Riceverai un riscontro educativo con
               consigli pratici, mai una diagnosi.
             </p>
-            <p className="mt-3 text-sm text-muted-foreground">
+            {/* Nota privacy/non-diagnosi: role="note" la lega semanticamente
+                allo strumento (utile a screen reader e crawler AI). */}
+            <p role="note" className="mt-3 text-sm text-muted-foreground">
               Le risposte restano nel tuo browser e non vengono inviate ad alcun
               server.
             </p>

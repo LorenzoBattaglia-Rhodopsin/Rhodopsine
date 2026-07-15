@@ -16,6 +16,13 @@ export const siteConfig = {
   // variabile manca sull'hosting.
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://rhodopsine.com",
   locale: "it_IT",
+  // Targeting geografico e linguistico — unica fonte per hreflang (Metadata
+  // API) e per i parametri geo del JSON-LD Organization (vedi lib/seo.ts).
+  geo: {
+    country: "IT",
+    countryName: "Italia",
+    language: "it-IT",
+  },
   // Token di verifica proprietà del sito per Google Search Console.
   // Arriva dall'ambiente: se assente, il meta tag non viene emesso.
   googleSiteVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? "",
