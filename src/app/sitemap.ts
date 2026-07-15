@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/data/site";
 import { getAllArticles } from "@/data/articles";
-import { legalDocuments } from "@/data/legal";
 
 /**
  * SITEMAP
@@ -20,14 +19,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     }),
   );
-
-  // Pagine legali: pubbliche e indicizzabili, priorità bassa.
-  const legalEntries: MetadataRoute.Sitemap = legalDocuments.map((doc) => ({
-    url: new URL(`/${doc.slug}`, siteConfig.url).toString(),
-    lastModified: new Date(`${doc.updatedAt}T00:00:00`),
-    changeFrequency: "yearly",
-    priority: 0.3,
-  }));
 
   return [
     {
@@ -61,6 +52,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.4,
     },
     ...articleEntries,
-    ...legalEntries,
   ];
 }

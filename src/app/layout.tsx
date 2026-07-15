@@ -6,8 +6,6 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { JsonLd } from "@/components/shared/json-ld";
 import { Analytics } from "@/components/shared/analytics";
-import { CookieConsent } from "@/components/shared/cookie-consent";
-import { GoogleAnalytics } from "@/components/shared/google-analytics";
 import { TimerProvider } from "@/components/timer/timer-provider";
 import {
   buildMetadata,
@@ -70,14 +68,11 @@ export default function RootLayout({
         <JsonLd data={getWebsiteJsonLd()} />
 
         {/* Statistiche aggregate, cookieless e senza dati personali (Plausible).
-            Attivo solo se NEXT_PUBLIC_PLAUSIBLE_DOMAIN è configurato. */}
+            Attivo solo se NEXT_PUBLIC_PLAUSIBLE_DOMAIN è configurato. È l'UNICO
+            analytics ammesso: il sito è cookie-free per scelta (nessun banner
+            di consenso necessario). Non reintrodurre tracker basati su cookie
+            senza pagine legali e base privacy (CLAUDE.md §6.3). */}
         <Analytics />
-
-        {/* Banner consenso (Iubenda, con blocco preventivo) + Google Analytics 4:
-            attivi solo se NEXT_PUBLIC_GA_MEASUREMENT_ID è configurato. Iubenda
-            tiene bloccato gtag.js finché l'utente non acconsente. */}
-        <CookieConsent />
-        <GoogleAnalytics />
 
         {/* Provider del Timer 20-20-20: avvolge tutta l'app così header,
             pagina /timer e FocusHub condividono un'unica state machine. */}

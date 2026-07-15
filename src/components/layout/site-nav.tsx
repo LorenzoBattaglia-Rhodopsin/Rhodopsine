@@ -108,6 +108,9 @@ export function MobileNav({ className }: { className?: string }) {
   useEffect(() => {
     if (!open) return;
     const panel = panelRef.current;
+    // Copia locale per la cleanup: il nodo del pulsante è stabile finché il
+    // menu resta aperto, e la cleanup deve riportare il focus proprio a lui.
+    const toggle = toggleRef.current;
 
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -149,7 +152,7 @@ export function MobileNav({ className }: { className?: string }) {
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = prevOverflow;
       // Riporta il focus al pulsante che ha aperto il menu.
-      toggleRef.current?.focus();
+      toggle?.focus();
     };
   }, [open]);
 

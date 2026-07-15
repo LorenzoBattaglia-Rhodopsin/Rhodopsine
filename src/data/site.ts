@@ -29,19 +29,10 @@ export const siteConfig = {
   // Analytics privacy-first e COOKIELESS (Plausible): nessun cookie, nessun dato
   // personale, nessun banner di consenso bloccante. Si attiva SOLO se è
   // configurato il dominio; in sviluppo o senza config non viene iniettato nulla.
+  // È l'unico analytics del sito: niente tracker basati su cookie (il sito è
+  // cookie-free e non ha pagine legali dedicate — vedi CLAUDE.md §6.3).
   analytics: {
     plausibleDomain: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? "",
-    // Google Analytics 4: si attiva SOLO se l'ID è configurato nell'ambiente.
-    // GA4 usa cookie → richiede consenso preventivo: viene caricato insieme al
-    // banner Iubenda (vedi `iubenda` sotto e components/shared/cookie-consent).
-    gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "",
-  },
-  // Iubenda Cookie Solution: banner di consenso + blocco preventivo degli
-  // script che usano cookie (GA4). Gli ID non sono segreti: identificano solo
-  // la configurazione pubblica del banner.
-  iubenda: {
-    siteId: 4593728,
-    cookiePolicyId: 55560426,
   },
   // Contatti diretti dell'organizzazione (mostrati nel footer per trasparenza).
   // Sono contatti editoriali, NON un canale clinico o di emergenza.
@@ -87,17 +78,4 @@ export const routes = {
   timer: "/timer",
   articles: "/articoli",
   sources: "/fonti",
-  privacyPolicy: "/privacy-policy",
-  cookiePolicy: "/cookie-policy",
-  terms: "/termini",
 } as const;
-
-/**
- * Voci della colonna «Legale» del footer — unica fonte per i collegamenti ai
- * documenti legali (i testi vivono in `@/data/legal`).
- */
-export const legalNav: readonly NavItem[] = [
-  { title: "Privacy Policy", href: routes.privacyPolicy },
-  { title: "Cookie Policy", href: routes.cookiePolicy },
-  { title: "Termini e note legali", href: routes.terms },
-] as const;
