@@ -1,6 +1,6 @@
-# Rhodopsine — “La tua vista conta”
+# Rhodopsine — “La tua vista a portata di mano”
 
-Sito educativo sul **benessere visivo digitale** con uno strumento di
+Sito educativo sul **benessere visivo** con uno strumento di
 **autovalutazione dell'affaticamento visivo** (Digital Eye Strain / Computer
 Vision Syndrome).
 
