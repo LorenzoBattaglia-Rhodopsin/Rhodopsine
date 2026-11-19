@@ -34,7 +34,7 @@ export function Hero() {
             </p>
 
             <h1 className="text-display text-balance font-semibold text-foreground">
-              Il benessere visivo digitale, spiegato bene.
+              Il benessere visivo, a portata di mano.
             </h1>
 
             <p className="mt-5 text-pretty text-lg leading-relaxed text-muted-foreground">
