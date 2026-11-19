@@ -5,7 +5,6 @@ import "./globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { JsonLd } from "@/components/shared/json-ld";
-import { Analytics } from "@/components/shared/analytics";
 import { TimerProvider } from "@/components/timer/timer-provider";
 import {
   buildMetadata,
@@ -67,12 +66,10 @@ export default function RootLayout({
         <JsonLd data={getOrganizationJsonLd()} />
         <JsonLd data={getWebsiteJsonLd()} />
 
-        {/* Statistiche aggregate, cookieless e senza dati personali (Plausible).
-            Attivo solo se NEXT_PUBLIC_PLAUSIBLE_DOMAIN è configurato. È l'UNICO
-            analytics ammesso: il sito è cookie-free per scelta (nessun banner
-            di consenso necessario). Non reintrodurre tracker basati su cookie
-            senza pagine legali e base privacy (CLAUDE.md §6.3). */}
-        <Analytics />
+        {/* Statistiche: Cloudflare Web Analytics, attivato dalla dashboard
+            Cloudflare (iniezione automatica, cookieless). Nessuno script qui.
+            Non introdurre tracker basati su cookie senza aggiornare la cookie
+            policy e la base privacy (CLAUDE.md §6.3). */}
 
         {/* Provider del Timer 20-20-20: avvolge tutta l'app così header,
             pagina /timer e FocusHub condividono un'unica state machine. */}

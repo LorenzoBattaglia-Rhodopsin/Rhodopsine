@@ -34,14 +34,6 @@ export const siteConfig = {
   // Token di verifica proprietà del sito per Google Search Console.
   // Arriva dall'ambiente: se assente, il meta tag non viene emesso.
   googleSiteVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? "",
-  // Analytics privacy-first e COOKIELESS (Plausible): nessun cookie, nessun dato
-  // personale, nessun banner di consenso bloccante. Si attiva SOLO se è
-  // configurato il dominio; in sviluppo o senza config non viene iniettato nulla.
-  // È l'unico analytics del sito: niente tracker basati su cookie (il sito è
-  // cookie-free e non ha pagine legali dedicate — vedi CLAUDE.md §6.3).
-  analytics: {
-    plausibleDomain: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? "",
-  },
   // Contatti diretti dell'organizzazione (mostrati nel footer per trasparenza).
   // Sono contatti editoriali, NON un canale clinico o di emergenza.
   contact: {

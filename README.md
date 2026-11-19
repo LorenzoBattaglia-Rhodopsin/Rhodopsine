@@ -44,8 +44,9 @@ del test gira nel browser.
 - **Fonti** (`/fonti`): elenco dei riferimenti scientifici usati nei contenuti.
 - **SEO**: metadata per pagina, JSON-LD (`Organization`, `WebSite`, `MedicalWebPage`),
   sitemap, robots, manifest e immagine Open Graph generata in build.
-- **Statistiche opzionali** con Plausible (cookieless). Se la variabile d'ambiente non
-  è impostata, non viene caricato nessuno script. Il sito non usa cookie.
+- **Statistiche** con Cloudflare Web Analytics (cookieless), attivato dalla dashboard
+  Cloudflare: nel codice non c'è nessuno script di analytics. Il sito non usa cookie
+  di profilazione.
 
 ## Avvio in locale
 
@@ -69,7 +70,6 @@ Sono tutte opzionali in sviluppo.
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | URL pubblico, usato per canonical, Open Graph e sitemap. In locale si può mettere `http://localhost:3000`. Se manca, si usa il dominio di produzione. |
 | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | Token di Google Search Console (solo il valore del `content`). Se vuoto, il meta tag non viene emesso. |
-| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Dominio registrato su Plausible. Se vuoto, nessun analytics. |
 
 ### Script
 
