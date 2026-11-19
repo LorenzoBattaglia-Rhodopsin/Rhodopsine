@@ -82,12 +82,13 @@ export function ScoreGauge({ score, level, levelLabel }: ScoreGaugeProps) {
           />
         </g>
 
-        {/* Iride centrale (motivo del marchio) */}
+        {/* Iride centrale (motivo del marchio). L'anello racchiude la lettura
+            numerica: con un raggio piccolo finiva sotto la scritta "su 100". */}
         <circle cx={size / 2} cy={size / 2} r={radius - 26} fill="url(#gauge-iris)" />
         <circle
           cx={size / 2}
           cy={size / 2}
-          r="20"
+          r={radius - 30}
           fill="none"
           stroke={`hsl(${colorVar})`}
           strokeOpacity="0.5"
