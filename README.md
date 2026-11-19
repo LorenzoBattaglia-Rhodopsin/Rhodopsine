@@ -48,7 +48,7 @@ del test gira nel browser.
 Requisiti: **Node.js 20.9 o superiore** (richiesto da Next.js 16) e npm.
 
 ```bash
-git clone https://github.com/Pollozzz/Rhodopsine.git
+git clone https://github.com/LorenzoBattaglia-Rhodopsin/Rhodopsine.git
 cd Rhodopsine
 npm install
 cp .env.example .env.local
