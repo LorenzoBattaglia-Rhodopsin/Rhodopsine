@@ -2,6 +2,7 @@
   "name": "rhodopsine",
   "version": "0.1.0",
   "private": true,
+  "license": "UNLICENSED",
   "description": "Rhodopsine — Educazione al benessere visivo e strumento di autovalutazione dell'affaticamento visivo digitale.",
   "scripts": {
     "dev": "next dev",
