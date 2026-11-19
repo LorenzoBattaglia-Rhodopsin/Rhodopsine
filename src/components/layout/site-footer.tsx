@@ -46,22 +46,26 @@ export function SiteFooter() {
                   {contentAuthor.role}
                 </dd>
               </div>
-              <div>
-                <dt className="text-eyebrow font-medium uppercase text-muted-foreground">
-                  Revisione scientifica
-                </dt>
-                <dd className="mt-1 text-sm font-medium text-foreground">
-                  {contentReviewer.name}
-                </dd>
-                {contentReviewer.credentials && (
-                  <dd className="text-xs text-muted-foreground">
-                    {contentReviewer.credentials}
+              {/* Mostrato solo con un revisore reale (nome compilato in
+                  data/e-e-a-t.ts), come già avviene per `reviewedBy` nel JSON-LD. */}
+              {contentReviewer.name && (
+                <div>
+                  <dt className="text-eyebrow font-medium uppercase text-muted-foreground">
+                    Revisione scientifica
+                  </dt>
+                  <dd className="mt-1 text-sm font-medium text-foreground">
+                    {contentReviewer.name}
                   </dd>
-                )}
-                <dd className="text-xs text-muted-foreground">
-                  Ultima revisione: {formatReviewDate()}
-                </dd>
-              </div>
+                  {contentReviewer.credentials && (
+                    <dd className="text-xs text-muted-foreground">
+                      {contentReviewer.credentials}
+                    </dd>
+                  )}
+                  <dd className="text-xs text-muted-foreground">
+                    Ultima revisione: {formatReviewDate()}
+                  </dd>
+                </div>
+              )}
             </dl>
           </div>
 

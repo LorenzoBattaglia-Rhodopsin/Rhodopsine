@@ -223,10 +223,13 @@ export function getAssessmentJsonLd() {
       alternateName: ["Digital Eye Strain", "Computer Vision Syndrome"],
     },
     author: contributorToSchema(contentAuthor),
+    // Revisore e data di revisione solo se la revisione esiste davvero.
     ...(contentReviewer.name
-      ? { reviewedBy: contributorToSchema(contentReviewer) }
+      ? {
+          reviewedBy: contributorToSchema(contentReviewer),
+          lastReviewed: contentReviewedAt,
+        }
       : {}),
-    lastReviewed: contentReviewedAt,
     // Nota: nessuna proprietà diagnostica viene dichiarata, di proposito.
   };
 }

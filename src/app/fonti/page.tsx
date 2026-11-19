@@ -41,8 +41,13 @@ export default function SourcesPage() {
 
         {/* Nota su revisione e natura non diagnostica dei contenuti. */}
         <p className="mx-auto mt-10 max-w-3xl text-center text-xs leading-relaxed text-muted-foreground">
-          Contenuti con revisione scientifica a cura di {contentReviewer.name} (
-          {contentReviewer.jobTitle}). Ultima revisione: {formatReviewDate()}.
+          {/* Frase sulla revisione solo con un revisore reale (vedi data/e-e-a-t.ts). */}
+          {contentReviewer.name && (
+            <>
+              Contenuti con revisione scientifica a cura di {contentReviewer.name} (
+              {contentReviewer.jobTitle}). Ultima revisione: {formatReviewDate()}.{" "}
+            </>
+          )}
           Le informazioni hanno finalità educativa e preventiva e non
           sostituiscono il parere di un professionista.
         </p>
