@@ -24,3 +24,9 @@ yarn-error.log*
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# Cache TypeScript
+*.tsbuildinfo
+
+# Impostazioni locali degli strumenti
+/.claude/
