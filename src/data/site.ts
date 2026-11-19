@@ -5,16 +5,24 @@
  * Usata da layout, SEO, header e footer.
  */
 
+/**
+ * URL pubblico canonico del sito (senza slash finale).
+ * Arriva da `NEXT_PUBLIC_SITE_URL`; il fallback è il dominio di produzione,
+ * così canonical/OG/sitemap non puntano MAI a localhost, nemmeno se la
+ * variabile manca (o è vuota) sull'hosting. `||` e non `??`: una variabile
+ * definita ma vuota farebbe fallire `new URL(...)` in build.
+ */
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL || "https://rhodopsine.com"
+).replace(/\/+$/, "");
+
 export const siteConfig = {
   name: "Rhodopsine",
   shortName: "Rhodopsine",
   mission: "La tua vista conta",
   description:
     "Educazione al benessere visivo: contenuti scientificamente corretti e uno strumento pratico di autovalutazione dell'affaticamento visivo digitale.",
-  // L'URL pubblico arriva dall'ambiente; il fallback è il dominio di produzione
-  // così canonical/OG/sitemap non puntano MAI a localhost, nemmeno se la
-  // variabile manca sull'hosting.
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://rhodopsine.com",
+  url: SITE_URL,
   locale: "it_IT",
   // Targeting geografico e linguistico — unica fonte per hreflang (Metadata
   // API) e per i parametri geo del JSON-LD Organization (vedi lib/seo.ts).

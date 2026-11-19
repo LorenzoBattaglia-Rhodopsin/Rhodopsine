@@ -111,12 +111,14 @@ riga 28) e usato in `src/components/timer/timer-provider.tsx` (riga 283) come
 20-20-20 a schermo bloccato.
 
 **`NEXT_PUBLIC_SITE_URL`:**
-- `.env.example` → `https://www.wellbeingeye.it`
+- `.env.example` → il vecchio dominio del progetto (pre-rebranding)
 - Nessun `.env`/`.env.local` presente nel working tree: in build vale il
-  fallback nel codice, `src/data/site.ts` riga 17 →
-  `https://www.wellbeingeye.it`.
+  fallback nel codice, `src/data/site.ts` riga 17 → il vecchio dominio.
 - ⚠️ Divergenza dal rebranding **Rhodopsine**: il dominio configurato è ancora
-  quello storico (wellbeingeye.it) sia negli env di esempio sia nel fallback.
+  quello storico sia negli env di esempio sia nel fallback.
+- ✅ **Risolto** (2026-11-19): ovunque `https://rhodopsine.com` (costante
+  `SITE_URL` in `src/data/site.ts`). Il vecchio dominio è dismesso e non più
+  registrato: nessun redirect da mantenere.
 
 **Divergenze tra lo stato reale e la roadmap sopra:**
 - La Fase 2 «Blog/sezione educativa» è **già avviata**: `/articoli` con 3
