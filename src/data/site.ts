@@ -78,4 +78,8 @@ export const routes = {
   timer: "/timer",
   articles: "/articoli",
   sources: "/fonti",
+  privacy: "/privacy",
+  cookiePolicy: "/cookie-policy",
+  legalNotes: "/note-legali",
+  disclaimer: "/disclaimer",
 } as const;

@@ -60,6 +60,8 @@ src/
 │  ├─ globals.css             # ⭐ Token di tema (HSL) + sfondo decorativo + reduced-motion
 │  ├─ test/page.tsx           # Pagina test (monta il wizard)
 │  ├─ risultati/page.tsx      # Risultati: async, legge searchParams, noindex (vedi §6)
+│  ├─ privacy/ cookie-policy/ note-legali/ disclaimer/  # Pagine legali (testi in data/legal.ts)
+│  ├─ not-found.tsx           # 404 noindex, senza canonical
 │  ├─ sitemap.ts robots.ts manifest.ts
 ├─ components/
 │  ├─ ui/                     # Primitive (button, card, badge, progress, radio-group, label)
@@ -67,9 +69,11 @@ src/
 │  ├─ layout/                 # site-header, site-footer (contiene il disclaimer legale)
 │  ├─ landing/                # hero, problem, benefits, how-it-works, disclaimer-section
 │  ├─ assessment/             # likert-scale, question-step, assessment-wizard (client)
-│  └─ results/                # score-gauge (SVG), recommendation-list
+│  ├─ results/                # score-gauge (SVG), recommendation-list
+│  └─ legal/                  # legal-page (guscio comune delle pagine legali)
 ├─ data/                      # CONTENUTI tipizzati (modificare qui, non nei componenti)
-│  ├─ site.ts                 # nome, claim "La tua vista conta", URL, nav, keyword SEO
+│  ├─ site.ts                 # SITE_URL, nome, claim, nav, rotte, keyword SEO
+│  ├─ legal.ts                # testi legali, segnaposto titolare, data ultimo aggiornamento
 │  ├─ questions.ts            # 18 domande + opzioni Likert + etichette domini
 │  └─ recommendations.ts      # consigli pratici + getRecommendations()
 ├─ features/assessment/       # LOGICA di dominio (pura, testabile)
@@ -90,6 +94,7 @@ src/
 | Consigli | `src/data/recommendations.ts` |
 | Esiti per livello | `src/features/assessment/results-content.ts` |
 | Nome sito, claim, nav, keyword | `src/data/site.ts` |
+| Privacy, cookie, note legali, disclaimer | `src/data/legal.ts` (aggiorna `legalLastUpdated`) |
 | Meta SEO di pagina | il `metadata` in ogni `page.tsx` + default in `src/lib/seo.ts` |
 
 ---

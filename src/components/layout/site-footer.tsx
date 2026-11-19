@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Mail } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import { mainNav, siteConfig } from "@/data/site";
+import { legalDocuments } from "@/data/legal";
 import {
   contentAuthor,
   contentReviewer,
@@ -146,7 +147,23 @@ export function SiteFooter() {
           </div>
         </section>
 
-        <div className="mt-10 flex flex-col items-start justify-between gap-2 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center">
+        {/* Link alle pagine legali (privacy, cookie, note legali, disclaimer). */}
+        <nav aria-label="Informazioni legali" className="mt-10 border-t border-border pt-4">
+          <ul className="flex flex-wrap gap-x-6 text-sm">
+            {legalDocuments.map((doc) => (
+              <li key={doc.path}>
+                <Link
+                  href={doc.path}
+                  className="inline-flex min-h-11 items-center rounded text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                >
+                  {doc.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="mt-4 flex flex-col items-start justify-between gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center">
           <p>
             © {year} {siteConfig.name}. Tutti i diritti riservati.
           </p>
