@@ -7,9 +7,11 @@ pagine di approfondimento con le fonti citate.
 Il questionario ha scopo solo informativo: non fa diagnosi e non sostituisce una visita
 da un oculista o un controllo da un ottico/optometrista.
 
-[Inserire screenshot qui]
+Online su [rhodopsine.com](https://rhodopsine.com).
 
-Demo: [Link demo]
+| Home | Questionario | Risultati |
+|---|---|---|
+| ![Home](docs/screenshots/home.png) | ![Questionario](docs/screenshots/test.png) | ![Risultati](docs/screenshots/risultati.png) |
 
 ## Stack
 
@@ -35,8 +37,8 @@ del test gira nel browser.
   `localStorage` (sopravvive al refresh e si sincronizza tra schede), notifiche di
   sistema opzionali, segnale sonoro e controlli dalla schermata di blocco tramite
   Media Session API (con alcuni accorgimenti specifici per iOS).
-- **Articoli** (`/articoli`) generati staticamente da `src/data/articles.ts`.
-  Al momento sono tre testi di partenza.
+- **Articoli** (`/articoli`) generati staticamente da `src/data/articles.ts`, ognuno
+  con l'elenco delle fonti citate in fondo alla pagina.
 - **Fonti** (`/fonti`): elenco dei riferimenti scientifici usati nei contenuti.
 - **SEO**: metadata per pagina, JSON-LD (`Organization`, `WebSite`, `MedicalWebPage`),
   sitemap, robots, manifest e immagine Open Graph generata in build.
@@ -123,4 +125,5 @@ wireframe, schema dati per eventuali sviluppi futuri e roadmap.
 
 ## Licenza
 
-[Specificare la licenza]
+Tutti i diritti riservati. Il codice è pubblico solo per consultazione: per qualsiasi
+riutilizzo serve un'autorizzazione scritta. Dettagli in [`LICENSE`](./LICENSE).
