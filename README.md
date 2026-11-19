@@ -9,9 +9,11 @@ da un oculista o un controllo da un ottico/optometrista.
 
 Online su [rhodopsine.com](https://rhodopsine.com).
 
-| Home | Questionario | Risultati |
-|---|---|---|
-| ![Home](docs/screenshots/home.png) | ![Questionario](docs/screenshots/test.png) | ![Risultati](docs/screenshots/risultati.png) |
+| Home | Questionario |
+|---|---|
+| ![Home](docs/screenshots/home.png) | ![Questionario](docs/screenshots/test.png) |
+| **Risultati** | **Timer 20-20-20** |
+| ![Risultati](docs/screenshots/risultati.png) | ![Timer 20-20-20](docs/screenshots/timer.png) |
 
 ## Stack
 
