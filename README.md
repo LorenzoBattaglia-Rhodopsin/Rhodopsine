@@ -1,127 +1,126 @@
-# Rhodopsine — “La tua vista a portata di mano”
+# Rhodopsine
 
-Sito educativo sul **benessere visivo** con uno strumento di
-**autovalutazione dell'affaticamento visivo** (Digital Eye Strain / Computer
-Vision Syndrome).
+Sito educativo sull'affaticamento visivo da schermi (Digital Eye Strain). Contiene un
+questionario di autovalutazione a 18 domande, un timer per la regola 20-20-20 e alcune
+pagine di approfondimento con le fonti citate.
 
-> **Importante:** lo strumento è **educativo e preventivo**. Non fornisce
-> diagnosi e non sostituisce il parere di un professionista della visione.
+Il questionario ha scopo solo informativo: non fa diagnosi e non sostituisce una visita
+da un oculista o un controllo da un ottico/optometrista.
 
-Costruito con **Next.js 15 (App Router)**, **TypeScript**, **TailwindCSS** e
-componenti in stile **shadcn/ui** su **Radix**. Mobile-first, accessibile
-(WCAG 2.2), con SEO e dati strutturati Schema.org.
+[Inserire screenshot qui]
 
----
+Demo: [Link demo]
 
-## Requisiti
-- **Node.js ≥ 18.18** (consigliato 20+)
-- npm (o pnpm/yarn)
+## Stack
 
-## Avvio rapido
+- Next.js 16 (App Router), React 19, TypeScript 5.7 in modalità strict
+- Tailwind CSS 3.4 con variabili CSS HSL per i colori del tema
+- Componenti in stile shadcn/ui costruiti su Radix UI (`slot`, `radio-group`, `progress`, `label`)
+- `class-variance-authority`, `clsx`, `tailwind-merge` per le varianti dei componenti
+- Icone `lucide-react`, font Geist (pacchetto npm `geist`, self-hosted)
+- ESLint 9 (flat config) con `eslint-config-next`
+
+Non ci sono database, API o backend: tutto il sito è generato da Next.js e la logica
+del test gira nel browser.
+
+## Funzionalità
+
+- **Questionario** su scala Likert 1–5, una domanda per schermata, divise in sei aree
+  (esposizione, pause, ergonomia, ambiente, sintomi, sonno).
+- **Punteggio** normalizzato 0–100 con tre livelli (basso, moderato, elevato) e
+  individuazione dell'area più critica.
+- **Pagina risultati** con consigli pratici filtrati per livello e ordinati in base
+  all'area critica. Per il livello elevato rimanda a un professionista.
+- **Timer 20-20-20**: stato condiviso tra header e pagina `/timer`, persistito in
+  `localStorage` (sopravvive al refresh e si sincronizza tra schede), notifiche di
+  sistema opzionali, segnale sonoro e controlli dalla schermata di blocco tramite
+  Media Session API (con alcuni accorgimenti specifici per iOS).
+- **Articoli** (`/articoli`) generati staticamente da `src/data/articles.ts`.
+  Al momento sono tre testi di partenza.
+- **Fonti** (`/fonti`): elenco dei riferimenti scientifici usati nei contenuti.
+- **SEO**: metadata per pagina, JSON-LD (`Organization`, `WebSite`, `MedicalWebPage`),
+  sitemap, robots, manifest e immagine Open Graph generata in build.
+- **Statistiche opzionali** con Plausible (cookieless). Se la variabile d'ambiente non
+  è impostata, non viene caricato nessuno script. Il sito non usa cookie.
+
+## Avvio in locale
+
+Requisiti: **Node.js 20.9 o superiore** (richiesto da Next.js 16) e npm.
+
 ```bash
+git clone https://github.com/Pollozzz/Rhodopsine.git
+cd Rhodopsine
 npm install
-npm run dev        # http://localhost:3000
+cp .env.example .env.local
+npm run dev
 ```
 
-## Build di produzione
-```bash
-npm run build
-npm run start      # avvia il server di produzione
-```
+Il sito è su http://localhost:3000. Non servono migrazioni né seed.
 
-## Script disponibili
-| Script | Azione |
-|--------|--------|
+### Variabili d'ambiente
+
+Sono tutte opzionali in sviluppo.
+
+| Variabile | Uso |
+|---|---|
+| `NEXT_PUBLIC_SITE_URL` | URL pubblico, usato per canonical, Open Graph e sitemap. In locale si può mettere `http://localhost:3000`. Se manca, si usa il dominio di produzione. |
+| `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | Token di Google Search Console (solo il valore del `content`). Se vuoto, il meta tag non viene emesso. |
+| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Dominio registrato su Plausible. Se vuoto, nessun analytics. |
+
+### Script
+
+| Comando | Cosa fa |
+|---|---|
 | `npm run dev` | Server di sviluppo |
 | `npm run build` | Build di produzione |
-| `npm run start` | Avvia la build |
+| `npm run start` | Avvia la build di produzione |
 | `npm run lint` | ESLint |
-| `npm run typecheck` | Controllo dei tipi TypeScript |
+| `npm run typecheck` | `tsc --noEmit` |
 
-## Variabili d'ambiente
-Copia `.env.example` in `.env.local` e imposta l'URL pubblico (usato per
-canonical, Open Graph, sitemap):
-```
-NEXT_PUBLIC_SITE_URL=https://www.esempio.it
-```
-In assenza, viene usato `http://localhost:3000`.
+Prima di un deploy conviene lanciare `npm run typecheck && npm run build`.
 
----
+## Struttura
 
-## Struttura del progetto
 ```
-rhodopsine/
-├─ src/
-│  ├─ app/                  # Routing (App Router)
-│  │  ├─ layout.tsx         # Layout radice: lang, metadata, header/footer, JSON-LD
-│  │  ├─ page.tsx           # Landing
-│  │  ├─ globals.css        # Token di tema (HSL) + base + reduced-motion
-│  │  ├─ test/page.tsx      # Pagina del test
-│  │  ├─ risultati/page.tsx # Risultati (async searchParams, noindex)
-│  │  ├─ sitemap.ts · robots.ts · manifest.ts
-│  ├─ components/
-│  │  ├─ ui/                # button, card, badge, progress, radio-group, label
-│  │  ├─ shared/            # logo, section, eye-illustration, json-ld
-│  │  ├─ layout/            # site-header, site-footer (disclaimer)
-│  │  ├─ landing/           # hero, problem, benefits, how-it-works, disclaimer-section
-│  │  ├─ assessment/        # likert-scale, question-step, assessment-wizard
-│  │  └─ results/           # score-gauge, recommendation-list
-│  ├─ data/                 # site.ts, questions.ts (18 domande), recommendations.ts
-│  ├─ features/assessment/  # scoring.ts (algoritmo), results-content.ts
-│  ├─ hooks/                # use-assessment.ts
-│  ├─ lib/                  # utils.ts (cn), seo.ts (metadata + JSON-LD)
-│  └─ types/                # assessment.ts (tipi del dominio)
-├─ public/                  # og-image.svg, icon.svg
-├─ docs/                    # ARCHITETTURA, DESIGN-SYSTEM, WIREFRAME, DATABASE, ROADMAP
-├─ tailwind.config.ts · next.config.mjs · tsconfig.json · components.json
-└─ package.json
+src/
+├─ app/                  rotte (home, test, risultati, timer, articoli, fonti) + sitemap/robots/manifest/OG
+├─ components/           ui/ (primitive), layout/, landing/, assessment/, results/, timer/, articles/, shared/
+├─ data/                 contenuti tipizzati: domande, consigli, articoli, fonti, configurazione sito
+├─ features/assessment/  scoring e testi degli esiti
+├─ hooks/                stato del wizard, macchina a stati del timer, notifiche, suono, Media Session
+├─ lib/                  utility e helper SEO
+└─ types/                tipi condivisi del dominio
 ```
 
-## Documentazione
-- [`docs/ARCHITETTURA.md`](./docs/ARCHITETTURA.md) — scelte tecniche e struttura
-- [`docs/DESIGN-SYSTEM.md`](./docs/DESIGN-SYSTEM.md) — palette, hex, contrasti, tipografia
-- [`docs/WIREFRAME.md`](./docs/WIREFRAME.md) — wireframe ASCII delle pagine
-- [`docs/DATABASE.md`](./docs/DATABASE.md) — schema logico per l'espansione
-- [`docs/ROADMAP.md`](./docs/ROADMAP.md) — evoluzione del prodotto
-
----
-
-## Funzionalità (MVP)
-- **Landing** con narrazione tesi → problema → benefici → come funziona → avvertenza.
-- **Test** a 18 domande su scala Likert 1–5, una per schermata (wizard).
-- **Scoring** 0–100 con livelli (basso/moderato/elevato) e punteggi per dominio;
-  consigli pratici ordinati per pertinenza. **Nessuna diagnosi.**
-- **Disclaimer medico-legale** sempre presente.
-
-### Privacy
-Le risposte del test restano **nel browser**: non vengono inviate ad alcun
-server né memorizzate.
-
-## Accessibilità (WCAG 2.2)
-Contrasti AA+ verificati, focus visibile, target ≥44px, skip-link, landmark,
-`fieldset/legend` e `aria-live` nel wizard, `prefers-reduced-motion` rispettato.
-
-## Performance & SEO
-- Server Components + font di sistema → JS iniziale ridotto.
-- Illustrazioni in SVG inline (zero download di immagini).
-- Metadata API, JSON-LD (`WebSite`, `MedicalWebPage`), `sitemap.xml`,
-  `robots.txt`, `manifest.webmanifest`.
-
-### Target Lighthouse
-Obiettivo **≥ 95** su Performance, Accessibilità, Best Practices e SEO.
-Verificare con:
-```bash
-npm run build && npm run start
-# poi Lighthouse (Chrome DevTools) su http://localhost:3000
-```
-
----
+I testi stanno in `src/data/` e in `src/features/assessment/results-content.ts`, non nei
+componenti: per cambiare una domanda o un consiglio di solito basta toccare un file lì.
 
 ## Note tecniche
-- **Next.js 15**: in `/risultati`, `searchParams` è una `Promise` e viene atteso
-  (`await`) in un Server Component asincrono.
-- **Font**: stack di sistema per LCP ottimale; sostituibile in `tailwind.config.ts`.
-- **Tema**: tutti i colori sono variabili CSS in `globals.css`; cambiarli aggiorna
-  l'intero sito senza toccare i componenti.
-- In build ESLint è ignorato per non bloccare la pipeline; gli errori di tipo,
-  invece, fanno fallire la build.
+
+- **Nessun dato inviato a server.** Al termine del test il browser calcola il punteggio e
+  passa alla pagina risultati solo il valore finale e l'area critica in query string
+  (`/risultati?s=72&d=symptoms`). Le singole risposte non lasciano il dispositivo.
+- **`/risultati` è l'unica pagina dinamica.** Legge `searchParams` (che in Next.js 15+ è
+  una `Promise`), è marcata `noindex`, esclusa dalla sitemap e in `disallow` su
+  `robots.txt`. Tutte le altre pagine sono statiche.
+- **Scoring.** Le domande sono `symptom` (valore alto = peggio) o `protective` (invertite
+  con `6 - valore`). La somma viene normalizzata su 0–100; le soglie dei livelli sono in
+  `SCORE_THRESHOLDS` (`src/features/assessment/scoring.ts`).
+- **Timer.** Un unico `TimerProvider` nel layout radice contiene la macchina a stati,
+  così header e pagina `/timer` non creano due timer separati. Il tempo rimanente si
+  ricalcola da un timestamp di scadenza, non contando i tick, per restare corretto
+  quando la scheda è in background.
+- **Tema.** Tutti i colori sono variabili HSL in `src/app/globals.css`, mappate in
+  `tailwind.config.ts`. Il colore di base sta su `<html>` e il `<body>` è trasparente
+  per lasciare visibili i due livelli decorativi di sfondo (`body::before`/`::after`).
+- **Accessibilità.** Focus visibile, target da almeno 44px, skip-link, `aria-live` e
+  gestione del focus nel wizard, rispetto di `prefers-reduced-motion` e
+  `prefers-contrast`.
+- **Build.** ESLint non blocca `next build` (va lanciato a parte); gli errori TypeScript sì.
+
+Documentazione più dettagliata in [`docs/`](./docs): architettura, design system,
+wireframe, schema dati per eventuali sviluppi futuri e roadmap.
+
+## Licenza
+
+[Specificare la licenza]
