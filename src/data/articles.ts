@@ -8,9 +8,9 @@
  * Vincolo del progetto: contenuti educativi e preventivi, MAI diagnostici.
  * Niente promesse mediche, niente allarmismo (vedi CLAUDE.md §6).
  *
- * Per ora gli articoli sono segnaposto pronti all'espansione: aggiungere un
- * oggetto all'array `articles` crea automaticamente la card in /articoli e la
- * pagina statica /articoli/<slug> (vedi `generateStaticParams`).
+ * Aggiungere un oggetto all'array `articles` crea automaticamente la card in
+ * /articoli e la pagina statica /articoli/<slug> (vedi `generateStaticParams`).
+ * Le fonti citate si indicano con gli id di `@/data/sources`.
  */
 
 export type Article = {
@@ -25,8 +25,10 @@ export type Article = {
   publishedAt: string;
   /** Tempo di lettura stimato, già formattato (es. "4 min"). */
   readingTime: string;
-  /** Corpo dell'articolo come elenco di paragrafi (segnaposto, espandibile). */
+  /** Corpo dell'articolo come elenco di paragrafi. */
   content: string[];
+  /** Id delle fonti citate (vedi `@/data/sources`), mostrate in fondo all'articolo. */
+  sources: string[];
 };
 
 export const articles: Article[] = [
@@ -34,46 +36,68 @@ export const articles: Article[] = [
     slug: "regola-20-20-20-funziona-davvero",
     title: "Regola 20-20-20: funziona davvero?",
     description:
-      "Cosa dice la pratica clinica sulla regola del 20-20-20 e perché fare pause regolari aiuta a ridurre l'affaticamento visivo da schermo.",
+      "Da dove viene la regola del 20-20-20, cosa dicono gli studi più recenti e perché le pause contano più dei numeri esatti.",
     category: "Metodo",
-    publishedAt: "2026-05-28",
+    publishedAt: "2026-11-19",
     readingTime: "4 min",
     content: [
-      "La regola 20-20-20 è un promemoria semplice: ogni 20 minuti, sposta lo sguardo su un punto distante almeno 6 metri (circa 20 piedi) per 20 secondi. L'idea è dare ai muscoli che mettono a fuoco da vicino una breve, regolare occasione di rilassarsi.",
-      "Fissare uno schermo a distanza ravvicinata per lungo tempo tende anche a ridurre la frequenza con cui ammicchiamo. Le micro-pause aiutano a ripristinare un ammiccamento più naturale e a percepire meno secchezza e tensione a fine giornata.",
-      "Non è una cura né una diagnosi: è un'abitudine preventiva, facile da adottare e senza controindicazioni. Vale la pena provarla per qualche giorno e osservare come si sentono i tuoi occhi.",
-      "Se i disturbi visivi sono frequenti, intensi o persistenti, la regola 20-20-20 non basta: rivolgiti a un oculista per una valutazione professionale.",
+      "La regola 20-20-20 dice questo: ogni 20 minuti passati davanti a uno schermo, guarda per 20 secondi qualcosa che si trova ad almeno 20 piedi di distanza, cioè circa 6 metri. È uno dei consigli più citati contro l'affaticamento visivo digitale, ed è raccomandata anche dall'American Academy of Ophthalmology e dall'American Optometric Association.",
+      "Il ragionamento dietro è semplice. Quando guardiamo da vicino, il sistema visivo lavora per mettere a fuoco e far convergere gli occhi sullo stesso punto. Guardare lontano allenta per qualche secondo questo sforzo. In più, davanti allo schermo tendiamo ad ammiccare meno spesso e in modo meno completo, e una pausa aiuta a tornare a un ammiccamento più naturale.",
+      "Sugli effetti, però, gli studi non sono tutti d'accordo. Nel 2023 un gruppo di ricerca spagnolo e britannico ha fornito a 29 persone con sintomi un software che ricordava le pause secondo la regola. Dopo due settimane i sintomi di affaticamento e di secchezza oculare erano diminuiti, ma il miglioramento non si manteneva una settimana dopo aver smesso di usare i promemoria. I segni misurabili, come la stabilità del film lacrimale, erano cambiati poco.",
+      "Nello stesso anno un altro studio, condotto da Johnson e Rosenfield, ha messo alla prova le pause di 20 secondi durante la lettura e non ha trovato differenze nei sintomi. Gli autori hanno fatto notare che i numeri della regola non derivano da una misura sperimentale: sono stati scelti perché facili da ricordare. Hanno anche precisato che il loro risultato non significa che fare pause sia inutile.",
+      "In pratica: la regola 20-20-20 è un buon promemoria, non una soglia magica. Quello che le ricerche sostengono in modo più costante è l'abitudine di interrompere spesso il lavoro da vicino. Se 20 secondi ti sembrano pochi, una pausa più lunga, in cui ti alzi e distogli lo sguardo dallo schermo, non fa male. L'importante è che le pause siano regolari: un promemoria, come il timer di questo sito, aiuta a non dimenticarle quando si è concentrati.",
+      "Le pause non risolvono tutto. Se gli occhi restano stanchi nonostante le abitudini corrette, la causa può essere un difetto visivo non corretto o occhiali non adatti alla distanza dello schermo: in questo caso un controllo della vista da un ottico-optometrista è un buon punto di partenza. Se invece compaiono dolore, arrossamento che non passa o disturbi persistenti, la figura giusta è l'oculista.",
+    ],
+    sources: [
+      "talens-estarelles-2023",
+      "johnson-rosenfield-2023",
+      "aao-computer-usage",
+      "aoa-computer-vision-syndrome",
     ],
   },
   {
     slug: "affaticamento-visivo-sintomi-prevenzione",
     title: "Affaticamento visivo da schermo: sintomi e prevenzione",
     description:
-      "Quali sono i segnali più comuni dell'affaticamento visivo digitale e quali abitudini, ergonomia e ambiente possono aiutarti a prevenirlo.",
+      "I disturbi più comuni dell'affaticamento visivo digitale, perché compaiono e quali accorgimenti su pause, postazione e ambiente aiutano a ridurli.",
     category: "Prevenzione",
-    publishedAt: "2026-05-14",
+    publishedAt: "2026-11-19",
     readingTime: "5 min",
     content: [
-      "L'affaticamento visivo digitale (o computer vision syndrome) raccoglie un insieme di disturbi temporanei legati all'uso prolungato di schermi: occhi stanchi o secchi, visione momentaneamente offuscata, fastidio alla luce, talvolta mal di testa o tensione al collo.",
-      "Sono segnali di sovraccarico, non di malattia: di solito migliorano con pause, idratazione e una postazione più confortevole. Conoscerli aiuta ad ascoltare i propri occhi prima che la giornata diventi pesante.",
-      "Sul fronte della prevenzione contano soprattutto le pause regolari (come la regola 20-20-20), una distanza adeguata dallo schermo, un'illuminazione senza riflessi e un'umidità dell'aria non troppo bassa.",
-      "Questo contenuto è informativo e non sostituisce il parere di un professionista. Se i sintomi sono persistenti o ti preoccupano, parlane con un oculista o un optometrista.",
+      "Con affaticamento visivo digitale (in inglese digital eye strain, o computer vision syndrome) si indica un insieme di disturbi legati all'uso prolungato di computer, tablet e smartphone. È molto diffuso: secondo una revisione della letteratura pubblicata nel 2018, riguarda circa metà degli utenti abituali di dispositivi digitali, o anche di più a seconda degli studi.",
+      "I sintomi più frequenti sono occhi stanchi, secchi o che bruciano, visione momentaneamente offuscata, difficoltà a rimettere a fuoco quando si distoglie lo sguardo, fastidio alla luce e mal di testa. Spesso si accompagnano a tensione al collo e alle spalle, dovuta alla postura. Nella maggior parte dei casi sono disturbi temporanei, che migliorano dopo una pausa o a fine giornata.",
+      "Le cause sono diverse e spesso si sommano. Davanti allo schermo ammicchiamo meno e in modo meno completo, e la superficie dell'occhio si asciuga più in fretta. Il lavoro da vicino impegna a lungo la messa a fuoco e la convergenza. Pesano poi riflessi e contrasti sbagliati, una postazione scomoda e, molto spesso, piccoli difetti visivi non corretti o occhiali pensati per altre distanze.",
+      "Le pause sono la prima cosa da sistemare: interrompere regolarmente il lavoro da vicino, guardando lontano per qualche secondo o alzandosi ogni tanto. Durante la pausa vale la pena ammiccare con calma qualche volta, in modo completo.",
+      "Anche la postazione conta. L'American Optometric Association indica come riferimento uno schermo a circa 50-70 cm dagli occhi, con il centro leggermente più in basso dell'altezza degli occhi, così che lo sguardo sia rivolto un po' verso il basso. Lo smartphone, che di solito si tiene più vicino, è più impegnativo: aumentare la dimensione del testo aiuta a non avvicinarlo troppo.",
+      "Poi c'è l'ambiente. Meglio evitare finestre o lampade che si riflettono sullo schermo e regolare la luminosità del monitor su quella della stanza: uno schermo molto più luminoso o molto più scuro di ciò che lo circonda affatica di più. L'aria molto secca o un getto d'aria diretto sul viso, per esempio da un condizionatore o da un ventilatore, possono peggiorare la secchezza.",
+      "Infine, la vista va controllata. Un difetto anche lieve, o una presbiopia agli inizi, può bastare a rendere faticose le ore al computer. Un controllo dall'ottico-optometrista permette di capire se servono occhiali, o occhiali diversi, per la distanza a cui si lavora.",
+      "Se i disturbi non migliorano nonostante questi accorgimenti, o se compaiono dolore oculare, arrossamento persistente, visione doppia o un calo della vista, è il momento di rivolgersi a un oculista. Un calo improvviso della vista richiede invece un controllo medico immediato.",
+    ],
+    sources: [
+      "sheppard-wolffsohn-2018",
+      "rosenfield-2011",
+      "coles-brennan-2019",
+      "aoa-computer-vision-syndrome",
+      "aao-computer-usage",
     ],
   },
   {
     slug: "luce-blu-miti-e-realta",
     title: "Luce blu: miti e realtà",
     description:
-      "Cosa sappiamo davvero sulla luce blu degli schermi, tra timori diffusi ed evidenze: dall'affaticamento visivo al ritmo sonno-veglia.",
+      "La luce blu degli schermi danneggia gli occhi? Servono gli occhiali con filtro? Cosa dicono le evidenze su affaticamento visivo, retina e sonno.",
     category: "Approfondimenti",
-    publishedAt: "2026-04-30",
-    readingTime: "6 min",
+    publishedAt: "2026-11-19",
+    readingTime: "4 min",
     content: [
-      "La luce blu è una componente naturale della luce visibile: la riceviamo in grande quantità dal sole, e in misura molto minore da schermi e illuminazione a LED. Attorno ad essa sono cresciuti diversi miti, non tutti supportati dalle evidenze.",
-      "Il timore più diffuso è che la luce blu degli schermi danneggi la retina nell'uso quotidiano: le quantità in gioco sono molto inferiori a quelle dell'esposizione solare. L'affaticamento davanti allo schermo dipende più dalle ore di utilizzo, dalla distanza e dalle poche pause che dalla sola luce blu.",
-      "Un effetto più documentato riguarda invece il ritmo sonno-veglia: luce intensa nelle ore serali può ostacolare l'addormentamento. Ridurre la luminosità e limitare gli schermi prima di dormire è un'abitudine ragionevole.",
-      "In sintesi: niente allarmismi, ma buon senso. Per dubbi su filtri, occhiali o lenti dedicate, chiedi a un professionista della visione; per un controllo della vista o degli occhiali, l'ottico-optometrista è la figura di riferimento.",
+      "La luce blu è la parte dello spettro visibile con lunghezza d'onda più corta. La fonte principale è il sole: la quantità che arriva agli occhi da schermi e lampade a LED è molto più bassa di quella che riceviamo all'aperto in una giornata qualsiasi. Negli ultimi anni però è diventata il principale indiziato per la stanchezza degli occhi, e sono nati molti prodotti per filtrarla.",
+      "Il primo timore è che la luce blu degli schermi danneggi la retina. Secondo l'American Academy of Ophthalmology non ci sono prove scientifiche che la luce blu dei dispositivi digitali danneggi gli occhi, e l'Accademia non raccomanda occhiali speciali con filtro per l'uso del computer.",
+      "Il secondo è che i filtri riducano l'affaticamento visivo. Nel 2023 una revisione sistematica Cochrane ha analizzato 17 studi controllati sugli occhiali con filtro per la luce blu. Le conclusioni: rispetto a lenti normali, probabilmente non riducono l'affaticamento visivo legato al lavoro al computer, almeno nel breve periodo. Gli autori non ne raccomandano la prescrizione alla popolazione generale.",
+      "C'è un motivo per cui i filtri non risolvono il problema: l'affaticamento visivo digitale dipende soprattutto da come usiamo gli schermi. Pesano le ore passate a guardare da vicino, le poche pause, l'ammiccamento ridotto, la postazione e la luce dell'ambiente. Sono questi i fattori su cui conviene intervenire.",
+      "Dove la luce degli schermi ha un effetto documentato è il sonno. In uno studio del 2015 pubblicato su PNAS, leggere la sera su un tablet invece che su un libro stampato ha ritardato la produzione di melatonina, allungato i tempi per addormentarsi e reso più difficile il risveglio il giorno dopo. Lo studio era piccolo, 12 persone, ma il meccanismo è coerente con quello che si sa sul ruolo della luce nel ritmo sonno-veglia.",
+      "In pratica: non serve preoccuparsi della luce blu per la salute degli occhi, ma ha senso ridurre gli schermi nell'ora prima di dormire o, se non è possibile, abbassarne la luminosità e attivare la modalità notturna. Per la stanchezza degli occhi durante il giorno sono più utili le pause e una postazione comoda. Se hai dubbi sugli occhiali più adatti a te, chiedi a un ottico-optometrista; per disturbi persistenti rivolgiti a un oculista.",
     ],
+    sources: ["aao-blue-light", "singh-cochrane-2023", "chang-2015"],
   },
 ];
 

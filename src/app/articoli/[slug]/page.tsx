@@ -15,6 +15,7 @@ import {
   formatArticleDate,
   getArticleBySlug,
 } from "@/data/articles";
+import { getSourcesByIds } from "@/data/sources";
 
 /**
  * PAGINA DETTAGLIO ARTICOLO (Server Component, generata staticamente)
@@ -26,7 +27,7 @@ import {
  * - `params` è una Promise in Next 15/16: va atteso (vedi CLAUDE.md §6/punto 4).
  *
  * Il contenuto arriva da `@/data/articles`: nessun testo hard-coded qui.
- * Per ora il corpo è segnaposto, pronto a essere arricchito.
+ * Le fonti citate (id in `article.sources`) sono risolte da `@/data/sources`.
  */
 
 type ArticlePageProps = {
@@ -64,6 +65,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
+  const articleSources = getSourcesByIds(article.sources);
+
   return (
     <article className="py-12 sm:py-16">
       <div className="container">
@@ -97,6 +100,34 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <p key={index}>{paragraph}</p>
             ))}
           </div>
+
+          {articleSources.length > 0 && (
+            <section aria-labelledby="fonti-articolo" className="mt-10">
+              <h2
+                id="fonti-articolo"
+                className="text-eyebrow font-medium uppercase text-muted-foreground"
+              >
+                Fonti
+              </h2>
+              <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
+                {articleSources.map((source) => (
+                  <li key={source.id}>
+                    <a
+                      href={source.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-primary hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    >
+                      {source.title}
+                      <span className="sr-only"> (si apre in una nuova scheda)</span>
+                    </a>
+                    {" — "}
+                    {source.authors}, {source.publication}, {source.year}
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )}
 
           {/* Nota educativa coerente col vincolo non-diagnostico del progetto.
               role="note": i crawler (anche AI) la associano al contenuto come
