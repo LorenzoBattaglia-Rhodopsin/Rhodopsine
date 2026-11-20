@@ -31,6 +31,12 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "public", "data", "professionisti-it.json");
+/**
+ * Schede di dettaglio (orari, telefono, sito, specializzazioni): lette SOLO
+ * lato server per generare le pagine /trova-ottici-oculisti/[id]. Non stanno
+ * in public/: il browser scarica solo l'elenco leggero qui sopra.
+ */
+const OUT_DETAILS = path.join(ROOT, "src", "data", "generated", "professionisti-dettagli.json");
 
 const ENDPOINTS = [
   "https://overpass-api.de/api/interpreter",
@@ -117,21 +123,145 @@ async function queryTile(tile) {
   throw new Error(`riquadro ${tile.join(",")} fallito:\n  ${errors.join("\n  ")}`);
 }
 
+/* ---------------------------------------------------------------------- */
+/* VALIDAZIONE DEI CAMPI                                                    */
+/* I dati OSM li inserisce chiunque: ogni campo è ripulito e validato. Ciò  */
+/* che non supera la validazione viene SCARTATO, mai "corretto" o dedotto.  */
+/* ---------------------------------------------------------------------- */
+
+/** Testo libero: niente caratteri di controllo o di direzione, spazi normalizzati. */
+function cleanText(value, max = 200) {
+  if (typeof value !== "string") return "";
+  const text = value
+    .replace(/[\u0000-\u001f\u007f-\u009f​-‏‪-‮⁦-⁩]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return text.length > max ? "" : text;
+}
+
+/**
+ * Sito web: solo http(s), host con dominio valido, niente credenziali.
+ * Un dominio senza schema ("www.ottica.it", comune in OSM) riceve
+ * "https://": è la stessa interpretazione che ne darebbe il browser.
+ */
+function cleanWebsite(value) {
+  const raw = cleanText(value, 300).split(";")[0].trim();
+  if (!raw) return undefined;
+  const withScheme = /^https?:\/\//i.test(raw)
+    ? raw
+    : /^[a-z0-9-]+(\.[a-z0-9-]+)+(\/\S*)?$/i.test(raw)
+      ? `https://${raw}`
+      : null;
+  if (!withScheme) return undefined;
+  try {
+    const url = new URL(withScheme);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return undefined;
+    if (url.username || url.password) return undefined;
+    if (!/^[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(url.hostname)) return undefined;
+    return url.toString();
+  } catch {
+    return undefined;
+  }
+}
+
+/** Telefoni: solo cifre, "+", spazi e separatori comuni; da 6 a 15 cifre. */
+function cleanPhones(...values) {
+  const out = [];
+  for (const value of values) {
+    for (const part of cleanText(value, 200).split(/[;,]/)) {
+      const phone = part.trim();
+      if (!/^\+?[0-9 ()./-]+$/.test(phone)) continue;
+      const digits = phone.replace(/\D/g, "").length;
+      if (digits < 6 || digits > 15) continue;
+      if (!out.includes(phone)) out.push(phone);
+    }
+  }
+  return out.slice(0, 3);
+}
+
+/** Valori multipli separati da ";" (convenzione OSM). */
+const splitValues = (value) =>
+  cleanText(value, 300)
+    .split(";")
+    .map((v) => v.trim().toLowerCase())
+    .filter(Boolean);
+
+/**
+ * Tag che POTREBBERO indicare specializzazioni: servono solo al report
+ * stampato a fine script, per decidere la whitelist in modo informato.
+ */
+const SPECIALITY_TAG_HINT =
+  /speciality|optometr|optician|contact|lens|ortho|paediatric|pediatric|low_vision|vision/i;
+const tagReport = new Map();
+function reportTags(tags) {
+  for (const [key, value] of Object.entries(tags)) {
+    if (!SPECIALITY_TAG_HINT.test(key) || key.startsWith("contact:")) continue;
+    for (const v of splitValues(value)) {
+      const k = `${key}=${v}`;
+      tagReport.set(k, (tagReport.get(k) ?? 0) + 1);
+    }
+  }
+}
+
+/**
+ * WHITELIST delle specializzazioni: SOLO valori espliciti di tag OSM, mai
+ * dedotti dal nome dell'attività. Valori non in elenco → ignorati.
+ * Per aggiungerne una: controlla il report dei tag e aggiungila qui.
+ */
+const SPECIALITY_TAGS = {
+  "healthcare:speciality": {
+    paediatric_ophthalmology: "Oftalmologia pediatrica",
+    orthoptics: "Ortottica",
+    contact_lenses: "Lenti a contatto",
+    orthokeratology: "Ortocheratologia",
+    low_vision: "Ipovisione",
+  },
+};
+
+function specialities(tags) {
+  const out = [];
+  for (const [key, map] of Object.entries(SPECIALITY_TAGS)) {
+    for (const v of splitValues(tags[key])) {
+      const label = map[v];
+      if (label && !out.includes(label)) out.push(label);
+    }
+  }
+  return out;
+}
+
+/** Scheda di dettaglio: solo i campi presenti e validi (chiavi brevi = file leggero). */
+function toDetail(tags) {
+  const detail = {};
+  const hours = cleanText(tags.opening_hours, 300);
+  if (hours) detail.h = hours;
+  const phones = cleanPhones(tags.phone, tags["contact:phone"]);
+  if (phones.length) detail.p = phones;
+  const website = cleanWebsite(tags.website ?? tags["contact:website"]);
+  if (website) detail.w = website;
+  const spec = specialities(tags);
+  if (spec.length) detail.s = spec;
+  return detail;
+}
+
 function toRecord(el) {
   const lat = el.lat ?? el.center?.lat;
   const lon = el.lon ?? el.center?.lon;
   if (lat === undefined || lon === undefined) return null;
   const t = el.tags ?? {};
   const kind = OPHTHALMOLOGY.test(t["healthcare:speciality"] ?? "") ? 1 : 0;
-  const street = [t["addr:street"], t["addr:housenumber"]].filter(Boolean).join(" ");
-  const city = [t["addr:postcode"], t["addr:city"]].filter(Boolean).join(" ");
+  const street = [cleanText(t["addr:street"], 120), cleanText(t["addr:housenumber"], 20)]
+    .filter(Boolean)
+    .join(" ");
+  const city = [cleanText(t["addr:postcode"], 10), cleanText(t["addr:city"], 80)]
+    .filter(Boolean)
+    .join(" ");
   const address = [street, city].filter(Boolean).join(", ");
   return [
     `${el.type[0]}${el.id}`, // id stabile: n123 / w456 / r789
     Math.round(lat * 1e5) / 1e5, // 5 decimali ≈ 1 m
     Math.round(lon * 1e5) / 1e5,
     kind, // 1 = oculista, 0 = ottico/optometrista
-    (t.name ?? "").trim(),
+    cleanText(t.name, 120),
     address,
   ];
 }
@@ -145,13 +275,17 @@ async function main() {
   }
 
   const byId = new Map();
+  const details = new Map();
   const used = new Set();
   for (const [i, tile] of tiles.entries()) {
     const { elements, endpoint } = await queryTile(tile);
     used.add(new URL(endpoint).host);
     for (const el of elements) {
       const rec = toRecord(el);
-      if (rec) byId.set(rec[0], rec); // i riquadri si toccano: niente doppioni
+      if (!rec) continue;
+      byId.set(rec[0], rec); // i riquadri si toccano: niente doppioni
+      details.set(rec[0], toDetail(el.tags ?? {}));
+      reportTags(el.tags ?? {});
     }
     console.log(
       `[${String(i + 1).padStart(2)}/${tiles.length}] ${tile.join(",")} → ${elements.length} (tot ${byId.size}) via ${new URL(endpoint).host}`,
@@ -185,6 +319,33 @@ async function main() {
   const tmp = `${OUT}.tmp`;
   await writeFile(tmp, JSON.stringify(dataset));
   await rename(tmp, OUT);
+
+  // Schede: solo gli id con almeno un campo in più (gli altri non servono).
+  const detailItems = {};
+  for (const [id] of items) {
+    const d = details.get(id);
+    if (d && Object.keys(d).length) detailItems[id] = d;
+  }
+  const detailDataset = {
+    generatedAt: dataset.generatedAt,
+    attribution: dataset.attribution,
+    license: dataset.license,
+    fields: { h: "opening_hours", p: "telefoni", w: "sito web", s: "specializzazioni (whitelist)" },
+    items: detailItems,
+  };
+  await mkdir(path.dirname(OUT_DETAILS), { recursive: true });
+  const tmpDetails = `${OUT_DETAILS}.tmp`;
+  await writeFile(tmpDetails, JSON.stringify(detailDataset));
+  await rename(tmpDetails, OUT_DETAILS);
+
+  const count = (key) => Object.values(detailItems).filter((d) => d[key]).length;
+  console.log(
+    `\nSchede: orari ${count("h")}, telefono ${count("p")}, sito ${count("w")}, specializzazioni ${count("s")}`,
+  );
+  console.log("\nReport tag candidati a specializzazione (tag=valore → occorrenze):");
+  for (const [k, n] of [...tagReport].sort((a, b) => b[1] - a[1]).slice(0, 60)) {
+    console.log(`  ${String(n).padStart(5)}  ${k}`);
+  }
 
   console.log(
     `\nOK: ${items.length} attività (${ophthalmologists} oculisti, ${items.length - ophthalmologists} ottici)` +
