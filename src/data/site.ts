@@ -19,7 +19,7 @@ export const SITE_URL = (
 export const siteConfig = {
   name: "Rhodopsine",
   shortName: "Rhodopsine",
-  mission: "La tua vista conta",
+  mission: "Il benessere visivo a portata di mano",
   description:
     "Educazione al benessere visivo: contenuti scientificamente corretti e uno strumento pratico di autovalutazione dell'affaticamento visivo digitale.",
   url: SITE_URL,
