@@ -6,6 +6,7 @@ import L from "leaflet";
 import { Circle, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import type { Coordinates, Professional } from "@/types/nearby";
 import { markerIcon } from "@/components/nearby/map-markers";
+import { TILE_ATTRIBUTION, TILE_MAX_ZOOM, TILE_URL } from "@/components/nearby/map-tiles";
 import { formatDistance } from "@/features/nearby/geo";
 import { osmDirectionsUrl } from "@/features/nearby/directions";
 import { nearbyCopy, professionalKinds } from "@/data/nearby";
@@ -33,9 +34,6 @@ const AREA_RADIUS_M = 1000;
 /** Per l'inquadratura iniziale bastano i più vicini (evita zoom troppo larghi). */
 const FIT_NEAREST = 12;
 
-const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
-const ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
 function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -65,7 +63,7 @@ export default function NearbyMap({ center, professionals }: NearbyMapProps) {
       className="nearby-map size-full"
       aria-label={nearbyCopy.mapLabel}
     >
-      <TileLayer url={TILE_URL} attribution={ATTRIBUTION} maxZoom={19} />
+      <TileLayer url={TILE_URL} attribution={TILE_ATTRIBUTION} maxZoom={TILE_MAX_ZOOM} />
 
       <Circle
         center={[center.lat, center.lon]}

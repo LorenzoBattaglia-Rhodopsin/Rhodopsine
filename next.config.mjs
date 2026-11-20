@@ -13,6 +13,15 @@
 const nextConfig = {
   reactStrictMode: true,
 
+  // Le schede /trova-ottici-oculisti/[id] leggono gli estratti OSM con fs
+  // lato server: questi file devono finire nel bundle della funzione.
+  outputFileTracingIncludes: {
+    "/trova-ottici-oculisti/[id]": [
+      "./public/data/professionisti-it.json",
+      "./src/data/generated/professionisti-dettagli.json",
+    ],
+  },
+
 
   // Header di sicurezza applicati a tutte le rotte.
   async headers() {
@@ -37,7 +46,8 @@ const nextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           // geolocation=(self): solo il nostro sito (mai iframe di terzi) può
           // chiedere la posizione, e solo su click esplicito nella ricerca
-          // professionisti di /risultati. La posizione resta nel browser.
+          // professionisti (/risultati e /trova-ottici-oculisti). La
+          // posizione resta nel browser.
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=(self)",

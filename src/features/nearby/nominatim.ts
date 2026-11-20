@@ -1,5 +1,6 @@
 import type { Coordinates } from "@/types/nearby";
 import { roundCoords } from "@/features/nearby/geo";
+import { timeoutSignal } from "@/features/nearby/timeout";
 
 /**
  * GEOCODIFICA — Nominatim (OpenStreetMap Foundation)
@@ -14,6 +15,8 @@ import { roundCoords } from "@/features/nearby/geo";
  */
 const NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
 const MIN_INTERVAL_MS = 1000;
+/** Oltre questo tempo la richiesta si annulla e l'utente vede l'errore di rete. */
+const TIMEOUT_MS = 10_000;
 
 /** Momento dell'ultima richiesta (memoria di modulo, mai persistita). */
 let lastRequestAt = 0;
@@ -54,15 +57,16 @@ export async function geocodeQuery(
   });
 
   const res = await fetch(`${NOMINATIM_URL}?${params}`, {
-    signal,
+    signal: timeoutSignal(TIMEOUT_MS, signal),
     headers: { Accept: "application/json" },
     // Nessun cookie/credenziale verso servizi terzi.
     credentials: "omit",
   });
   if (!res.ok) throw new Error(`Nominatim ${res.status}`);
 
-  const hits = (await res.json()) as NominatimHit[];
-  const first = hits[0];
+  // Risposta di un servizio esterno: non fidata, si valida la forma.
+  const hits: unknown = await res.json();
+  const first = Array.isArray(hits) ? (hits[0] as NominatimHit | undefined) : undefined;
   if (!first) return null;
 
   const lat = Number(first.lat);

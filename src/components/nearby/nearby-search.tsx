@@ -3,36 +3,23 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import {
-  Glasses,
-  Info,
-  Loader2,
-  LocateFixed,
-  Lock,
-  Search,
-  Stethoscope,
-  X,
-} from "lucide-react";
+import { Info, Loader2, LocateFixed, Lock, Search, X } from "lucide-react";
 import type { ProfessionalKind } from "@/types/nearby";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { IconBadge } from "@/components/shared/icon-badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useNearbySearch } from "@/features/nearby/use-nearby-search";
-import {
-  nearbyCopy,
-  nearbyErrors,
-  nearbySummary,
-  professionalKinds,
-} from "@/data/nearby";
+import { nearbyCopy, nearbyErrors, nearbySummary } from "@/data/nearby";
 import { ProfessionalList } from "@/components/nearby/professional-list";
 import { legendSwatchClass, markerBaseClass } from "@/components/nearby/marker-style";
 
 /**
- * RICERCA PROFESSIONISTI NELLE VICINANZE (/risultati)
+ * RICERCA PROFESSIONISTI NELLE VICINANZE — pannello di ricerca + risultati
  * --------------------------------------------------------------------------
+ * UNICO componente di ricerca, montato sia in /risultati (dentro
+ * <NearbyProfessionals />) sia nella pagina dedicata /trova-ottici-oculisti.
+ *
  * PRIVACY BY DESIGN — vincoli rispettati qui:
  * - Il componente NON riceve props: non conosce punteggio né risposte.
  * - Nessuna richiesta esterna finché l'utente non clicca/invia.
@@ -41,7 +28,7 @@ import { legendSwatchClass, markerBaseClass } from "@/components/nearby/marker-s
  *
  * Accessibilità: stato annunciato via aria-live, errori con role="alert",
  * focus spostato sul riepilogo a ricerca completata, sul campo CAP se la
- * posizione viene negata, e sul titolo dopo "Cancella ricerca".
+ * posizione viene negata o dopo "Cancella ricerca".
  */
 const NearbyMap = dynamic(() => import("@/components/nearby/nearby-map"), {
   ssr: false,
@@ -52,22 +39,19 @@ const NearbyMap = dynamic(() => import("@/components/nearby/nearby-map"), {
   ),
 });
 
-const KIND_ICON: Record<ProfessionalKind, typeof Glasses> = {
-  ophthalmologist: Stethoscope,
-  optician: Glasses,
-};
-
 type Filter = "all" | ProfessionalKind;
 type Action = "geo" | "query";
 
-export function NearbyProfessionals() {
+/** Lunghezza massima del campo città/CAP (un indirizzo italiano sta ampiamente qui). */
+const QUERY_MAX_LENGTH = 100;
+
+export function NearbySearch() {
   const { state, isLoading, searchByLocation, searchByQuery, clear } =
     useNearbySearch();
   const [query, setQuery] = useState("");
   const [action, setAction] = useState<Action | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
 
-  const headingRef = useRef<HTMLHeadingElement>(null);
   const summaryRef = useRef<HTMLHeadingElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const inputId = useId();
@@ -134,61 +118,15 @@ export function NearbyProfessionals() {
     setQuery("");
     setAction(null);
     setFilter("all");
-    headingRef.current?.focus();
+    inputRef.current?.focus();
   }
 
   const spinner = <Loader2 className="animate-spin" aria-hidden="true" />;
 
   return (
-    <section
-      aria-labelledby="nearby-title"
-      className="mt-16 border-t border-border pt-16 sm:mt-24 sm:pt-24"
-    >
-      {/* Intestazione */}
-      <header className="max-w-prose">
-        <p className="mb-3 text-eyebrow font-medium uppercase text-primary">
-          {nearbyCopy.eyebrow}
-        </p>
-        <h2
-          id="nearby-title"
-          ref={headingRef}
-          tabIndex={-1}
-          className="text-title text-balance font-semibold text-foreground focus:outline-none"
-        >
-          {nearbyCopy.title}
-        </h2>
-        <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-          {nearbyCopy.description}
-        </p>
-      </header>
-
-      {/* Oculista vs ottico-optometrista: card statiche, nessun hover. */}
-      <ul role="list" className="mt-10 grid gap-6 sm:grid-cols-2">
-        {(Object.keys(professionalKinds) as ProfessionalKind[]).map((kind) => {
-          const Icon = KIND_ICON[kind];
-          const k = professionalKinds[kind];
-          return (
-            <li key={kind}>
-              <Card tone="tinted" className="h-full">
-                <CardContent className="flex items-start gap-4 p-6">
-                  <IconBadge icon={Icon} />
-                  <div>
-                    <h3 className="text-lg font-semibold tracking-tight text-foreground">
-                      {k.title}
-                    </h3>
-                    <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted-foreground">
-                      {k.body}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </li>
-          );
-        })}
-      </ul>
-
+    <div>
       {/* Pannello di ricerca */}
-      <div className="mt-10 rounded-lg border border-border bg-card p-6 sm:p-8">
+      <div className="rounded-lg border border-border bg-card p-6 sm:p-8">
         {/* Informativa: sempre visibile PRIMA di qualsiasi ricerca. */}
         <p
           id={noteId}
@@ -245,6 +183,7 @@ export function NearbyProfessionals() {
                 name="localita"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                maxLength={QUERY_MAX_LENGTH}
                 placeholder={nearbyCopy.queryPlaceholder}
                 // Niente cronologia dei moduli: il CAP non resta nel browser.
                 autoComplete="off"
@@ -382,9 +321,20 @@ export function NearbyProfessionals() {
               </a>
               .
             </p>
+            <p>
+              <a
+                href={nearbyCopy.correctionsHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded underline underline-offset-4 hover:text-foreground"
+              >
+                {nearbyCopy.correctionsLabel}
+                <span className="sr-only"> (si apre in una nuova scheda)</span>
+              </a>
+            </p>
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 }

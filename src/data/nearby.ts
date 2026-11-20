@@ -2,7 +2,7 @@ import { routes } from "@/data/site";
 import type { NearbyErrorCode, ProfessionalKind } from "@/types/nearby";
 
 /**
- * TESTI — Ricerca professionisti nelle vicinanze (/risultati)
+ * TESTI — Ricerca professionisti nelle vicinanze (/risultati e /trova-ottici-oculisti)
  * --------------------------------------------------------------------------
  * Tono informativo e sobrio (CLAUDE.md §6.1–6.2): nessuna diagnosi, nessuna
  * raccomandazione né promozione delle attività mostrate.
@@ -38,7 +38,12 @@ export const nearbyCopy = {
   mapLabel: "Mappa dei professionisti trovati",
 
   disclaimer:
-    "Elenco basato sui dati pubblici di OpenStreetMap, potrebbe essere incompleto. Rhodopsine non raccomanda né sponsorizza nessuna delle attività mostrate.",
+    "Le informazioni provengono da fonti pubbliche (OpenStreetMap): possono essere incomplete o non aggiornate, verificale sempre con il centro. L'elenco è ordinato solo per distanza. Rhodopsine non fornisce diagnosi e non raccomanda né sponsorizza nessuna struttura.",
+  /** Link per segnalare dati errati: le correzioni vanno alla fonte (OSM). */
+  correctionsLabel: "Segnala una correzione su OpenStreetMap",
+  correctionsHref: "https://www.openstreetmap.org/fixthemap",
+  /** Etichetta del link alla scheda (solo per screen reader). */
+  detailsSr: "apri la scheda",
   approxDistances:
     "Le distanze sono in linea d'aria e approssimate: per proteggere la tua privacy la ricerca usa una posizione arrotondata (circa 1 km).",
   /** Attribuzione ODbL dell'estratto + data di aggiornamento. */
@@ -83,3 +88,55 @@ export const professionalKinds: Record<
     body: "Si occupa della misurazione della vista e di occhiali e lenti a contatto. Non fa diagnosi: se nota qualcosa di anomalo, ti indirizza dall'oculista.",
   },
 };
+
+/** Riga neutra sulla differenza tra le due figure (pagina dedicata). */
+export const kindsSummary =
+  "L'oculista è un medico e può fare diagnosi; l'ottico-optometrista non è un medico e si occupa di vista, occhiali e lenti a contatto.";
+
+/**
+ * TESTI — Pagina dedicata /trova-ottici-oculisti
+ * Raggiungibile senza fare il test. Tono informativo, nessuna promozione.
+ */
+export const findPageCopy = {
+  metaTitle: "Trova ottici e oculisti vicino a te",
+  metaDescription:
+    "Cerca ottici e oculisti vicino a te con i dati pubblici di OpenStreetMap. Elenco ordinato solo per distanza, senza classifiche. La tua posizione resta nel browser.",
+  eyebrow: "Professionisti della visione",
+  title: "Trova ottici e oculisti vicino a te",
+  description:
+    "Cerca per città o CAP, oppure usa la tua posizione. L'elenco è ordinato solo per distanza: nessuna classifica, nessun centro consigliato.",
+  kindsTitle: "Oculista o ottico: qual è la differenza?",
+  searchTitle: "Cerca vicino a te",
+} as const;
+
+/** TESTI — Invito nella home. */
+export const findCtaCopy = {
+  eyebrow: "Professionisti",
+  title: "Cerchi un ottico o un oculista?",
+  description:
+    "Trova i professionisti della visione più vicini a te, anche senza fare il test. La tua posizione resta nel tuo browser.",
+  cta: "Trova ottici e oculisti",
+} as const;
+
+/** TESTI — Scheda di dettaglio /trova-ottici-oculisti/[id]. */
+export const detailCopy = {
+  back: "Torna alla ricerca",
+  notAvailable: "Informazione non disponibile",
+  address: "Indirizzo",
+  hours: "Orari di apertura",
+  hoursNote: "Orari come riportati nella fonte: verificali con il centro prima di andare.",
+  phone: "Telefono",
+  website: "Sito web",
+  specialities: "Specializzazioni indicate nella fonte",
+  position: "Posizione",
+  showMap: "Mostra sulla mappa",
+  mapNote: "La mappa si carica dai server di OpenStreetMap solo se la apri.",
+  viewOnOsm: "Vedi questa scheda su OpenStreetMap",
+  correction: "Segnala una correzione",
+  correctionNote:
+    "I dati vengono da OpenStreetMap, una mappa aperta e collaborativa: le correzioni si fanno lì e arrivano qui con l'aggiornamento mensile.",
+  source: (isoDate: string) =>
+    `Fonte: OpenStreetMap — © OpenStreetMap contributors, licenza ODbL. Dati aggiornati al ${new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(isoDate))}.`,
+  disclaimer:
+    "Le informazioni provengono da fonti pubbliche e possono non essere aggiornate: verificale sempre con il centro. Rhodopsine non fornisce diagnosi e non raccomanda né sponsorizza nessuna struttura.",
+} as const;

@@ -1,5 +1,6 @@
 import type { Coordinates, Professional, ProfessionalKind } from "@/types/nearby";
 import { haversineKm } from "@/features/nearby/geo";
+import { timeoutSignal } from "@/features/nearby/timeout";
 
 /**
  * RICERCA PROFESSIONISTI — estratto statico di OpenStreetMap
@@ -41,7 +42,8 @@ let cache: Promise<Dataset> | null = null;
 
 export function loadDataset(): Promise<Dataset> {
   if (!cache) {
-    cache = fetch(DATASET_URL, { credentials: "omit" })
+    // Timeout ampio: il file è di qualche centinaio di KB (connessioni lente).
+    cache = fetch(DATASET_URL, { credentials: "omit", signal: timeoutSignal(30_000) })
       .then(async (res) => {
         if (!res.ok) throw new Error(`Estratto ${res.status}`);
         const data = (await res.json()) as Dataset;

@@ -7,7 +7,8 @@ import { legalDocuments, legalLastUpdated } from "@/data/legal";
  * SITEMAP
  * --------------------------------------------------------------------------
  * Includiamo solo le pagine pubbliche indicizzabili. La pagina /risultati è
- * esclusa di proposito (è personale e marcata noindex).
+ * esclusa di proposito (è personale e marcata noindex), come le schede
+ * /trova-ottici-oculisti/[id] (noindex: dati di terzi non verificati).
  *
  * `lastModified` è una data STABILE dell'ultima modifica significativa del
  * contenuto, non la data della build: Google ignora `lastmod` quando cambia a
@@ -20,6 +21,7 @@ const PAGES_UPDATED_AT = {
   home: "2026-11-19",
   test: "2026-11-19",
   timer: "2026-11-19",
+  professionals: "2026-11-20",
   sources: "2026-11-19",
 } as const;
 
@@ -67,6 +69,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: toDate(PAGES_UPDATED_AT.timer),
       changeFrequency: "monthly",
       priority: 0.7,
+    },
+    {
+      url: absolute(routes.professionals),
+      lastModified: toDate(PAGES_UPDATED_AT.professionals),
+      changeFrequency: "monthly",
+      priority: 0.6,
     },
     {
       url: absolute(routes.articles),

@@ -67,3 +67,27 @@ export type NearbySearchState =
   | { status: "searching" }
   | { status: "done"; result: NearbyResult }
   | { status: "error"; code: NearbyErrorCode };
+
+/**
+ * Scheda di dettaglio (pagina /trova-ottici-oculisti/[id]).
+ * SOLO campi presenti e validi nella fonte (OSM): un campo assente resta
+ * `undefined` e l'interfaccia mostra "Informazione non disponibile".
+ * Nessun campo viene dedotto o generato.
+ */
+export interface ProfessionalDetail {
+  id: string;
+  /** Nome come da fonte; vuoto se la fonte non lo riporta. */
+  name: string;
+  kind: ProfessionalKind;
+  address?: string;
+  position: Coordinates;
+  /** Valore grezzo del tag OSM `opening_hours`. */
+  openingHours?: string;
+  phones?: string[];
+  /** Solo URL http(s) validati dallo script dei dati. */
+  website?: string;
+  /** Etichette da una whitelist di tag OSM espliciti (mai dal nome). */
+  specialities?: string[];
+  /** Data (ISO) dell'estratto. */
+  dataDate: string;
+}

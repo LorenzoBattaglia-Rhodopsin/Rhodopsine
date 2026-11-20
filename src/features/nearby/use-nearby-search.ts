@@ -101,7 +101,14 @@ export function useNearbySearch() {
 
   const searchByQuery = useCallback(
     async (rawQuery: string) => {
-      const query = rawQuery.trim();
+      // Validazione difensiva (il campo ha già maxLength): niente caratteri di
+      // controllo, spazi normalizzati, lunghezza limitata. Il testo viaggia
+      // solo verso Nominatim, codificato da URLSearchParams.
+      const query = rawQuery
+        .replace(/[\u0000-\u001f\u007f]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 100);
       if (!query) return;
       const signal = restart();
       setState({ status: "geocoding" });
