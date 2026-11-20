@@ -37,25 +37,24 @@ export function Benefits() {
       eyebrow="Benefici"
       title="Cosa puoi ottenere"
       description="Uno strumento semplice per trasformare la consapevolezza in abitudini migliori."
-      className="bg-card/30"
     >
       {/* Elenco vero (ul/li): i benefici sono voci enumerabili e i crawler
           (anche AI) li estraggono meglio da una lista semantica che da una
           griglia di div. role="list" ripristina la semantica dove il reset
           Tailwind rimuove lo stile lista. */}
-      <ul role="list" className="grid gap-5 sm:grid-cols-2">
+      <ul role="list" className="grid gap-6 sm:grid-cols-2">
         {benefits.map(({ icon: Icon, title, body }) => (
           <li key={title}>
             <Card className="h-full">
               <CardContent className="flex items-start gap-4 p-6">
-                <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-md bg-primary/12 text-primary">
+                <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-muted text-foreground">
                   <Icon className="size-5" aria-hidden="true" />
                 </span>
                 <div>
-                  <h3 className="text-heading font-semibold text-foreground">
+                  <h3 className="text-lg font-semibold tracking-tight text-foreground">
                     {title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted-foreground">
                     {body}
                   </p>
                 </div>

@@ -37,13 +37,13 @@ export function HowItWorks() {
         {steps.map((step) => (
           <li key={step.n} className="relative">
             <div className="flex h-full flex-col rounded-lg border border-border bg-card p-6">
-              <span className="font-mono text-sm font-medium text-primary">
+              <span className="font-mono text-sm font-medium text-muted-foreground">
                 {step.n}
               </span>
-              <h3 className="mt-3 text-heading font-semibold text-foreground">
+              <h3 className="mt-3 text-lg font-semibold tracking-tight text-foreground">
                 {step.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted-foreground">
                 {step.body}
               </p>
             </div>

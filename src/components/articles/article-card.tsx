@@ -20,7 +20,7 @@ export function ArticleCard({ article }: { article: Article }) {
         aria-label={`Leggi l'articolo: ${article.title}`}
         className="group block h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
-        <Card className="flex h-full flex-col p-6">
+        <Card className="flex h-full flex-col p-6 transition duration-200 group-hover:-translate-y-0.5 group-hover:border-primary/45 group-hover:shadow-[0_14px_32px_-20px_hsl(var(--primary)/0.55)]">
           <div className="flex items-center justify-between gap-3">
             <Badge variant="primary" className="tracking-wide">
               {article.category}

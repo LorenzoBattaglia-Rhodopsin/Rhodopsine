@@ -46,7 +46,7 @@ export function DesktopNav({ className }: { className?: string }) {
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   navLinkBase,
-                  "relative inline-flex h-9 items-center px-3 text-sm font-medium",
+                  "relative inline-flex h-11 items-center px-3 text-sm font-medium",
                   active
                     ? "text-foreground"
                     : "text-muted-foreground hover:text-foreground",
@@ -56,7 +56,7 @@ export function DesktopNav({ className }: { className?: string }) {
                 {active && (
                   <span
                     aria-hidden="true"
-                    className="absolute inset-x-3 -bottom-px h-px bg-primary"
+                    className="absolute inset-x-3 bottom-1.5 h-px bg-primary"
                   />
                 )}
               </Link>
@@ -85,6 +85,13 @@ export function MobileNav({ className }: { className?: string }) {
   const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  // Il pannello resta montato durante l'animazione di uscita, così esce
+  // lungo lo stesso percorso da cui è entrato (coerenza spaziale). Si smonta
+  // a fine animazione (onAnimationEnd). Pattern "aggiorna lo stato durante il
+  // render": nessun effetto, nessun frame vuoto all'apertura.
+  const [mounted, setMounted] = useState(open);
+  if (open && !mounted) setMounted(true);
+  const state = open ? "open" : "closed";
 
   // Chiudi quando cambia la rotta (es. dopo aver cliccato una voce).
   useEffect(() => {
@@ -175,12 +182,16 @@ export function MobileNav({ className }: { className?: string }) {
         )}
       </Button>
 
-      {open && (
+      {mounted && (
         <>
-          {/* Overlay: chiude al tap. Parte sotto l'header (top-16). */}
+          {/* Overlay: chiude al tap. Parte sotto l'header (top-16).
+              Le animazioni NON sono dietro `motion-safe:`: con "riduci
+              animazioni" la regola globale le porta a ~0ms, ma l'evento
+              animationend scatta comunque e il pannello si smonta. */}
           <div
             aria-hidden="true"
-            className="fixed inset-x-0 bottom-0 top-16 z-40 bg-background/60 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in"
+            data-state={state}
+            className="fixed inset-x-0 bottom-0 top-16 z-40 bg-background/60 backdrop-blur-sm duration-200 data-[state=closed]:pointer-events-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in data-[state=closed]:fade-out data-[state=closed]:fill-mode-forwards"
             onClick={() => setOpen(false)}
           />
 
@@ -190,7 +201,12 @@ export function MobileNav({ className }: { className?: string }) {
             role="dialog"
             aria-modal="true"
             aria-label="Menu di navigazione"
-            className="fixed inset-x-0 top-16 z-50 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-border bg-card/95 shadow-xl backdrop-blur-xl motion-safe:animate-in motion-safe:slide-in-from-top-2"
+            data-state={state}
+            inert={!open}
+            onAnimationEnd={(e) => {
+              if (e.target === e.currentTarget && !open) setMounted(false);
+            }}
+            className="fixed inset-x-0 top-16 z-50 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-border bg-card/95 shadow-xl backdrop-blur-xl duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in data-[state=closed]:fade-out data-[state=open]:slide-in-from-top-2 data-[state=closed]:slide-out-to-top-2 data-[state=closed]:fill-mode-forwards"
           >
             <nav
               aria-label="Navigazione principale"

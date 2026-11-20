@@ -105,7 +105,7 @@ const config: Config = {
         "display": ["clamp(2.5rem, 7vw, 4.25rem)", { lineHeight: "1.04", letterSpacing: "-0.03em" }],
         "title": ["clamp(1.75rem, 4vw, 2.5rem)", { lineHeight: "1.12", letterSpacing: "-0.02em" }],
         "heading": ["clamp(1.35rem, 3vw, 1.75rem)", { lineHeight: "1.2", letterSpacing: "-0.01em" }],
-        "eyebrow": ["0.78rem", { lineHeight: "1", letterSpacing: "0.18em" }],
+        "eyebrow": ["0.75rem", { lineHeight: "1", letterSpacing: "0.08em" }],
       },
       maxWidth: {
         prose: "68ch",
@@ -116,15 +116,9 @@ const config: Config = {
           from: { opacity: "0", transform: "translateY(12px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
-        // Pulsazione lentissima per l'alone "soft focus" dell'hero.
-        "soft-pulse": {
-          "0%, 100%": { opacity: "0.55", transform: "scale(1)" },
-          "50%": { opacity: "0.8", transform: "scale(1.04)" },
-        },
       },
       animation: {
         "fade-in-up": "fade-in-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both",
-        "soft-pulse": "soft-pulse 9s ease-in-out infinite",
         // Timer 20-20-20
         "island-in": "island-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both",
         "check-draw": "check-draw 0.5s ease-out 0.1s both",

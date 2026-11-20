@@ -7,9 +7,11 @@ import { cn } from "@/lib/utils";
  * Bottone (stile shadcn/ui).
  * Tutti i target rispettano l'altezza minima ~44px (tap target mobile).
  * Lo stato :focus-visible mostra un anello visibile (accessibilità).
+ * Feedback alla pressione (pointer-down): lieve scale a 0.97 in 100ms.
+ * Forma a pillola, coerente con chip e badge.
  */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-[color,background-color,border-color,transform] duration-100 ease-out [-webkit-tap-highlight-color:transparent] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {

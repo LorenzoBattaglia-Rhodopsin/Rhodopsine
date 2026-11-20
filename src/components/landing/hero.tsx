@@ -20,9 +20,11 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden">
       <div className="container py-16 sm:py-24 lg:py-28">
-        <div className="flex flex-col items-center text-center animate-fade-in-up lg:grid lg:grid-cols-2 lg:items-center lg:gap-12 lg:text-left">
-          {/* Elemento-firma: l'iride — su desktop passa nella colonna destra */}
-          <div className="lg:order-2 lg:flex lg:justify-end">
+        <div className="flex flex-col items-center text-center lg:grid lg:grid-cols-2 lg:items-center lg:gap-12 lg:text-left">
+          {/* Elemento-firma: l'iride — su desktop passa nella colonna destra.
+              È l'unico elemento con l'entrata animata: il testo (H1 = LCP)
+              compare subito, senza partire da opacità 0. */}
+          <div className="animate-fade-in-up lg:order-2 lg:flex lg:justify-end">
             <EyeIllustration className="mb-8 h-auto w-32 sm:w-40 lg:mb-0 lg:w-full lg:max-w-sm" />
           </div>
 
@@ -46,12 +48,6 @@ export function Hero() {
               preventivo &mdash; mai diagnostico.
             </p>
 
-            <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground">
-              <span className="font-medium text-foreground">La nostra missione:</span>{" "}
-              rendere la cura della vista semplice, quotidiana e accessibile a
-              tutti, senza allarmismi.
-            </p>
-
             <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
               <Button asChild size="lg">
                 <Link href={routes.test}>Fai ora il test gratuito</Link>
@@ -61,21 +57,14 @@ export function Hero() {
               </Button>
             </div>
 
-            {/* Origine del nome: tocco educativo coerente col marchio */}
-            <p className="mt-6 max-w-prose text-sm text-muted-foreground">
-              Il nome viene dalla <span className="text-foreground">rodopsina</span>,
-              il pigmento della retina che rende possibile la visione: un piccolo
-              promemoria di quanto sia preziosa.
-            </p>
-
             {/* Indicatori di affidabilità */}
             <ul className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-muted-foreground lg:justify-start">
               <li className="inline-flex items-center gap-2">
-                <FlaskConical className="size-4 text-primary" aria-hidden="true" />
+                <FlaskConical className="size-4" aria-hidden="true" />
                 Basato sulla letteratura su DES/CVS
               </li>
               <li className="inline-flex items-center gap-2">
-                <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
+                <ShieldCheck className="size-4" aria-hidden="true" />
                 Nessuna diagnosi, solo prevenzione
               </li>
             </ul>

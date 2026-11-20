@@ -3,8 +3,8 @@
  * È puramente decorativa (aria-hidden) ed è realizzata in SVG inline:
  * nessuna immagine da scaricare, nitida a ogni risoluzione, leggerissima.
  *
- * L'animazione dell'alone è gestita via Tailwind (`animate-soft-pulse`) e
- * viene disattivata automaticamente con prefers-reduced-motion (globals.css).
+ * L'alone è statico di proposito: un'oscillazione lenta e infinita attira lo
+ * sguardo in periferia, l'opposto di ciò che un sito sul riposo visivo vuole.
  */
 export function EyeIllustration({ className }: { className?: string }) {
   return (
@@ -26,14 +26,8 @@ export function EyeIllustration({ className }: { className?: string }) {
         </radialGradient>
       </defs>
 
-      {/* Alone soft-focus che pulsa lentamente */}
-      <circle
-        cx="200"
-        cy="200"
-        r="190"
-        fill="url(#wbe-glow)"
-        className="origin-center animate-soft-pulse"
-      />
+      {/* Alone soft-focus (statico) */}
+      <circle cx="200" cy="200" r="190" fill="url(#wbe-glow)" opacity="0.65" />
 
       {/* Anelli concentrici dell'iride */}
       {[150, 118, 86].map((r, i) => (

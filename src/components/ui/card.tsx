@@ -3,10 +3,9 @@ import { cn } from "@/lib/utils";
 
 /**
  * Contenitore "card" con bordo morbido e sfondo leggermente rialzato.
- * Hover uniforme (desktop): lieve sollevamento sull'asse Y + glow tenue sul
- * bordo, usando solo token di tema. La durata della transizione viene azzerata
- * automaticamente da `prefers-reduced-motion: reduce` (regola globale in
- * globals.css), quindi l'effetto rispetta l'accessibilità del movimento.
+ * Volutamente SENZA stato hover: una card statica che si solleva promette
+ * un'azione che non esiste (affordance falsa). Le card cliccabili (es.
+ * ArticleCard) aggiungono il proprio hover tramite `group-hover` sul link.
  */
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -16,7 +15,6 @@ const Card = React.forwardRef<
     ref={ref}
     className={cn(
       "rounded-lg border border-border bg-card text-card-foreground",
-      "transition duration-200 hover:-translate-y-0.5 hover:border-primary/45 hover:shadow-[0_14px_32px_-20px_hsl(var(--primary)/0.55)]",
       className,
     )}
     {...props}

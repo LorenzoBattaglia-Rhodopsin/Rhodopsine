@@ -35,18 +35,18 @@ export function Problem() {
       description="L'uso prolungato dei dispositivi mette alla prova il sistema visivo. Conoscere i meccanismi è il primo passo per prendersene cura."
     >
       {/* Elenco vero (ul/li) per l'estrazione semantica: vedi Benefits. */}
-      <ul role="list" className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <ul role="list" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {points.map(({ icon: Icon, title, body }) => (
           <li key={title}>
             <Card className="h-full">
               <CardContent className="flex h-full flex-col gap-4 p-6">
-                <span className="inline-flex size-11 items-center justify-center rounded-md bg-primary/12 text-primary">
+                <span className="inline-flex size-11 items-center justify-center rounded-full bg-muted text-foreground">
                   <Icon className="size-5" aria-hidden="true" />
                 </span>
-                <h3 className="text-heading font-semibold text-foreground">
+                <h3 className="text-lg font-semibold tracking-tight text-foreground">
                   {title}
                 </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
+                <p className="text-[0.9375rem] leading-relaxed text-muted-foreground">
                   {body}
                 </p>
               </CardContent>

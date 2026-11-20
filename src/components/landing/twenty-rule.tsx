@@ -37,16 +37,16 @@ export function TwentyRule() {
       description="Un'abitudine semplice per dare sollievo agli occhi durante le lunghe sessioni davanti allo schermo."
       centered
     >
-      <ul className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-3">
+      <ul className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-3">
         {steps.map(({ icon: Icon, title, text }) => (
           <li key={title}>
             <Card className="h-full">
               <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
-                <span className="inline-flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <Icon className="size-6" aria-hidden="true" />
+                <span className="inline-flex size-11 items-center justify-center rounded-full bg-muted text-foreground">
+                  <Icon className="size-5" aria-hidden="true" />
                 </span>
-                <h3 className="text-lg font-semibold text-foreground">{title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
+                <h3 className="text-lg font-semibold tracking-tight text-foreground">{title}</h3>
+                <p className="text-[0.9375rem] leading-relaxed text-muted-foreground">
                   {text}
                 </p>
               </CardContent>
@@ -56,7 +56,7 @@ export function TwentyRule() {
       </ul>
 
       <div className="mt-10 flex flex-col items-center gap-3 text-center">
-        <Button asChild size="lg">
+        <Button asChild size="lg" variant="secondary">
           <Link href={routes.timer}>Apri il timer guidato</Link>
         </Button>
         <p className="max-w-prose text-sm text-muted-foreground">
