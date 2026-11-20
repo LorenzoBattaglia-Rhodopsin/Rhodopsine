@@ -7,9 +7,9 @@ import { routes, siteConfig } from "@/data/site";
  * in `src/app/<rotta>/page.tsx` si limitano a passare il documento a
  * `<LegalPage>`.
  *
- * ⚠️ I valori tra parentesi quadre (es. [NOME_TITOLARE]) sono SEGNAPOSTO da
- * compilare prima della pubblicazione: non vanno inventati. Si trovano tutti
- * in `legalEntity` qui sotto, più eventuali durate di conservazione nei testi.
+ * Il titolare è indicato come "Redazione di Rhodopsine", contattabile via
+ * email: il sito è un progetto editoriale senza partita IVA. I dati del
+ * titolare stanno tutti in `legalEntity` qui sotto.
  *
  * Quando si modifica un testo, aggiornare `legalLastUpdated`.
  * Testi informativi, non consulenza legale: prevedere una revisione legale.
@@ -20,9 +20,7 @@ export const legalLastUpdated = "2026-11-20";
 
 /** Dati del titolare del trattamento / gestore del sito. */
 export const legalEntity = {
-  name: "[NOME_TITOLARE]",
-  taxId: "[CODICE_FISCALE_O_PARTITA_IVA]",
-  address: "[INDIRIZZO_COMPLETO]",
+  name: `Redazione di ${siteConfig.name}`,
   email: siteConfig.contact.email,
 } as const;
 
@@ -52,7 +50,7 @@ export interface LegalDocument {
 const p = (text: string): LegalBlock => ({ type: "p", text });
 const ul = (...items: string[]): LegalBlock => ({ type: "ul", items });
 
-const titolareText = `${legalEntity.name}, ${legalEntity.address}, codice fiscale/P.IVA ${legalEntity.taxId}. Email: ${legalEntity.email}.`;
+const titolareText = `${legalEntity.name}, contattabile all'indirizzo email ${legalEntity.email}. ${siteConfig.name} è un progetto editoriale indipendente, senza finalità commerciali.`;
 
 /* ------------------------------------------------------------------------ */
 /* PRIVACY POLICY                                                            */
@@ -163,7 +161,7 @@ export const privacyPolicy: LegalDocument = {
         ul(
           "Dati di navigazione: per il periodo previsto dai fornitori di CDN e hosting per finalità tecniche e di sicurezza, secondo le rispettive informative.",
           "Statistiche: solo in forma aggregata, che non permette di identificarti.",
-          "Email: per il tempo necessario a gestire la tua richiesta e comunque non oltre [DURATA_CONSERVAZIONE_EMAIL], salvo obblighi di legge.",
+          "Email: per il tempo necessario a gestire la tua richiesta e comunque non oltre 12 mesi dall'ultimo scambio, salvo obblighi di legge.",
           "Dati del timer nel browser: finché non li cancelli tu, svuotando i dati del sito dal browser.",
           "Ricerca professionisti: nessuna conservazione da parte nostra. I servizi OpenStreetMap conservano i propri log tecnici secondo le rispettive policy.",
         ),
