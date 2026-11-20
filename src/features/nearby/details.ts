@@ -2,6 +2,9 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ProfessionalDetail } from "@/types/nearby";
 import { isProfessionalId } from "@/features/nearby/ids";
+// Import statico (non fs): il file entra sempre nel bundle server, in ogni
+// ambiente di deploy. È generato e committato da `npm run data:professionisti`.
+import detailsDataset from "@/data/generated/professionisti-dettagli.json";
 
 /**
  * SCHEDE DI DETTAGLIO — SOLO LATO SERVER
@@ -12,17 +15,10 @@ import { isProfessionalId } from "@/features/nearby/ids";
  *   specializzazioni — già validati dallo script).
  *
  * Nessun dato degli utenti passa di qui: solo dati pubblici OSM.
- * I file sono inclusi nel bundle server via `outputFileTracingIncludes`
- * (next.config.mjs).
+ * L'elenco si legge con fs (incluso via `outputFileTracingIncludes` in
+ * next.config.mjs); le schede con un import statico.
  */
 const LIST_FILE = path.join(process.cwd(), "public", "data", "professionisti-it.json");
-const DETAILS_FILE = path.join(
-  process.cwd(),
-  "src",
-  "data",
-  "generated",
-  "professionisti-dettagli.json",
-);
 
 type ListRecord = [string, number, number, 0 | 1, string, string];
 
@@ -51,16 +47,11 @@ function safeWebsite(v: unknown): string | undefined {
 let cache: Promise<Map<string, ProfessionalDetail>> | null = null;
 
 async function loadAll(): Promise<Map<string, ProfessionalDetail>> {
-  const [listRaw, detailsRaw] = await Promise.all([
-    readFile(LIST_FILE, "utf8"),
-    // Il file dei dettagli può mancare (estratto vecchio): le schede
-    // mostrano allora solo i campi base.
-    readFile(DETAILS_FILE, "utf8").catch(() => null),
-  ]);
-  const list = JSON.parse(listRaw) as { generatedAt: string; items: ListRecord[] };
-  const details = detailsRaw
-    ? (JSON.parse(detailsRaw) as { items: Record<string, RawDetail> }).items
-    : {};
+  const list = JSON.parse(await readFile(LIST_FILE, "utf8")) as {
+    generatedAt: string;
+    items: ListRecord[];
+  };
+  const details = (detailsDataset as { items: Record<string, RawDetail> }).items;
 
   const map = new Map<string, ProfessionalDetail>();
   for (const [id, lat, lon, k, name, address] of list.items) {

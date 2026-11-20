@@ -13,13 +13,10 @@
 const nextConfig = {
   reactStrictMode: true,
 
-  // Le schede /trova-ottici-oculisti/[id] leggono gli estratti OSM con fs
-  // lato server: questi file devono finire nel bundle della funzione.
+  // Le schede /trova-ottici-oculisti/[id] leggono l'elenco OSM con fs lato
+  // server: il file deve finire nel bundle della funzione.
   outputFileTracingIncludes: {
-    "/trova-ottici-oculisti/[id]": [
-      "./public/data/professionisti-it.json",
-      "./src/data/generated/professionisti-dettagli.json",
-    ],
+    "/trova-ottici-oculisti/[id]": ["./public/data/professionisti-it.json"],
   },
 
 
