@@ -1,24 +1,31 @@
 import Link from "next/link";
-import { ShieldCheck, FlaskConical, Eye } from "lucide-react";
+import { Monitor, Eye, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EyeIllustration } from "@/components/shared/eye-illustration";
-import { routes, siteConfig } from "@/data/site";
+import { routes } from "@/data/site";
 
 /**
- * HERO — Chi siamo / Mission.
- * Sezione che apre la pagina presentando il progetto e la sua missione.
- * L'iride resta l'elemento-firma del marchio. Il disclaimer medico-legale è
- * mantenuto a fondo pagina (vedi DisclaimerSection).
+ * HERO — Il problema.
+ * Apre la pagina con il problema che il sito aiuta ad affrontare
+ * (affaticamento visivo digitale) e una sola CTA primaria: il test.
+ * I tre fatti chiave sono affermazioni prudenti, sostenute dalla letteratura
+ * su DES/CVS (nessuna percentuale non verificabile). L'iride resta
+ * l'elemento-firma del marchio. La presentazione del progetto ("Chi siamo")
+ * vive nel footer (#chi-siamo); l'avvertenza in fondo alla home.
  *
  * Layout:
  * - Mobile (base): colonna unica centrata, iride in alto e testo sotto.
- * - Desktop (lg+): griglia a due colonne affiancate — testo a sinistra,
- *   iride (ingrandita) a destra. Nessuna classe base viene modificata: il
- *   comportamento mobile resta identico.
+ * - Desktop (lg+): due colonne — testo a sinistra, iride a destra.
  */
+const facts = [
+  { icon: Monitor, text: "Passiamo gran parte della giornata davanti agli schermi." },
+  { icon: Eye, text: "Davanti a uno schermo ammicchiamo molto meno: gli occhi si seccano." },
+  { icon: Clock, text: "Stanchezza oculare, vista offuscata e mal di testa si accumulano." },
+] as const;
+
 export function Hero() {
   return (
-    <section className="relative overflow-hidden">
+    <section aria-labelledby="hero-title" className="relative overflow-hidden">
       <div className="container py-16 sm:py-24 lg:py-28">
         <div className="flex flex-col items-center text-center lg:grid lg:grid-cols-2 lg:items-center lg:gap-12 lg:text-left">
           {/* Elemento-firma: l'iride — su desktop passa nella colonna destra.
@@ -28,46 +35,34 @@ export function Hero() {
             <EyeIllustration className="mb-8 h-auto w-32 sm:w-40 lg:mb-0 lg:w-full lg:max-w-sm" />
           </div>
 
-          {/* Blocco testuale — su desktop nella colonna sinistra */}
           <div className="flex max-w-2xl flex-col items-center lg:order-1 lg:items-start">
-            <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-3 py-1 text-xs text-muted-foreground">
-              <Eye className="size-3.5 text-primary" aria-hidden="true" />
-              Chi siamo
-            </p>
-
-            <h1 className="text-display text-balance font-semibold text-foreground">
-              Il benessere visivo, a portata di mano.
+            <h1
+              id="hero-title"
+              className="text-display text-balance font-semibold text-foreground"
+            >
+              Occhi stanchi dopo ore davanti allo schermo?
             </h1>
 
             <p className="mt-5 text-pretty text-lg leading-relaxed text-muted-foreground">
-              {siteConfig.name}{" "}
-              nasce per aiutarti a capire e prendere cura della
-              tua vista nell&apos;era degli schermi. Uniamo contenuti
-              scientificamente corretti e strumenti pratici per ridurre
-              l&apos;affaticamento visivo digitale, con un approccio educativo e
-              preventivo &mdash; mai diagnostico.
+              È l&apos;affaticamento visivo digitale, sempre più comune. Con un
+              breve test scopri quali abitudini pesano di più sui tuoi occhi e
+              ricevi consigli pratici per alleggerirle.
             </p>
 
-            <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+            <ul className="mt-6 flex flex-col gap-3 text-left text-[0.9375rem] leading-relaxed text-muted-foreground">
+              {facts.map(({ icon: Icon, text }) => (
+                <li key={text} className="flex items-start gap-3">
+                  <Icon className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />
+                  {text}
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-8 flex w-full flex-col sm:w-auto">
               <Button asChild size="lg">
-                <Link href={routes.test}>Fai ora il test gratuito</Link>
-              </Button>
-              <Button asChild size="lg" variant="secondary">
-                <Link href="/#come-funziona">Scopri di più</Link>
+                <Link href={routes.test}>Fai il test gratuito</Link>
               </Button>
             </div>
-
-            {/* Indicatori di affidabilità */}
-            <ul className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-muted-foreground lg:justify-start">
-              <li className="inline-flex items-center gap-2">
-                <FlaskConical className="size-4 text-primary" aria-hidden="true" />
-                Basato sulla letteratura su DES/CVS
-              </li>
-              <li className="inline-flex items-center gap-2">
-                <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
-                Nessuna diagnosi, solo prevenzione
-              </li>
-            </ul>
           </div>
         </div>
       </div>

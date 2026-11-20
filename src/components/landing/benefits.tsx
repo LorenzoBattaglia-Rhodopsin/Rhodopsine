@@ -1,12 +1,12 @@
-import { Lightbulb, Sparkles, ShieldCheck, HeartPulse } from "lucide-react";
+import { Lightbulb, Sparkles, HeartPulse } from "lucide-react";
 import { Section } from "@/components/shared/section";
 import { Card, CardContent } from "@/components/ui/card";
 import { IconBadge } from "@/components/shared/icon-badge";
 
 /**
  * SEZIONE "BENEFICI"
- * Card che riassumono il valore offerto: consapevolezza, abitudini migliori,
- * prevenzione, benessere digitale.
+ * Card che riassumono il valore offerto: consapevolezza, abitudini migliori
+ * (che includono la prevenzione), benessere digitale.
  */
 const benefits = [
   {
@@ -17,12 +17,7 @@ const benefits = [
   {
     icon: Sparkles,
     title: "Abitudini visive migliori",
-    body: "Ricevi suggerimenti concreti e sostenibili, da integrare facilmente nella tua routine quotidiana.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Prevenzione",
-    body: "Piccoli accorgimenti, applicati con costanza, aiutano a ridurre il disagio legato all'uso degli schermi.",
+    body: "Suggerimenti concreti e sostenibili: piccoli accorgimenti che, applicati con costanza, aiutano a ridurre il disagio legato agli schermi.",
   },
   {
     icon: HeartPulse,
@@ -35,28 +30,24 @@ export function Benefits() {
   return (
     <Section
       id="benefici"
-      eyebrow="Benefici"
       title="Cosa puoi ottenere"
-      description="Uno strumento semplice per trasformare la consapevolezza in abitudini migliori."
     >
       {/* Elenco vero (ul/li): i benefici sono voci enumerabili e i crawler
           (anche AI) li estraggono meglio da una lista semantica che da una
           griglia di div. role="list" ripristina la semantica dove il reset
           Tailwind rimuove lo stile lista. */}
-      <ul role="list" className="grid gap-6 sm:grid-cols-2">
+      <ul role="list" className="grid gap-6 md:grid-cols-3">
         {benefits.map(({ icon: Icon, title, body }) => (
           <li key={title}>
             <Card tone="tinted" className="h-full">
-              <CardContent className="flex items-start gap-4 p-6">
+              <CardContent className="flex h-full flex-col gap-4 p-6">
                 <IconBadge icon={Icon} />
-                <div>
-                  <h3 className="text-lg font-semibold tracking-tight text-foreground">
-                    {title}
-                  </h3>
-                  <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted-foreground">
-                    {body}
-                  </p>
-                </div>
+                <h3 className="text-lg font-semibold tracking-tight text-foreground">
+                  {title}
+                </h3>
+                <p className="text-[0.9375rem] leading-relaxed text-muted-foreground">
+                  {body}
+                </p>
               </CardContent>
             </Card>
           </li>

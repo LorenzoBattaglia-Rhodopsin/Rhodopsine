@@ -28,9 +28,6 @@ export default function TestPage() {
         */}
         <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-12">
           <div className="mx-auto mb-10 max-w-2xl text-center lg:mx-0 lg:mb-0 lg:text-left lg:sticky lg:top-24">
-            <p className="mb-3 text-eyebrow font-medium uppercase text-primary">
-              Autovalutazione
-            </p>
             <h1 className="text-title text-balance font-semibold text-foreground">
               Quanto affaticano i tuoi occhi gli schermi?
             </h1>

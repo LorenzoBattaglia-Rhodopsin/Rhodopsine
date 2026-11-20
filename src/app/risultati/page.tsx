@@ -60,7 +60,6 @@ export default async function ResultsPage({
     return (
       <Section
         centered
-        eyebrow="Risultati"
         title="Non abbiamo trovato un punteggio da mostrare"
         description="Per vedere il tuo riscontro, completa prima il breve test di autovalutazione."
       >
@@ -83,7 +82,7 @@ export default async function ResultsPage({
   const recommendations = getRecommendations(level, topDomain);
 
   return (
-    <Section eyebrow="Risultati" className="pt-12 sm:pt-16">
+    <Section className="pt-12 sm:pt-16">
       <div className="mx-auto max-w-3xl lg:max-w-none">
         {/*
           Mobile: blocco verticale unico (sintesi → summary → consigli → avvertenza).

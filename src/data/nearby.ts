@@ -114,7 +114,6 @@ export const findPageCopy = {
 
 /** TESTI — Invito nella home. */
 export const findCtaCopy = {
-  eyebrow: "Professionisti",
   title: "Cerchi un ottico o un oculista?",
   description:
     "Trova i professionisti della visione più vicini a te, anche senza fare il test. La tua posizione resta nel tuo browser.",

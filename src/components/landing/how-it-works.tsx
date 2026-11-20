@@ -30,7 +30,6 @@ export function HowItWorks() {
   return (
     <Section
       id="come-funziona"
-      eyebrow="Come funziona"
       title="Tre passi verso occhi più riposati"
     >
       <ol className="grid gap-6 md:grid-cols-3">

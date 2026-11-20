@@ -2,8 +2,9 @@ import { Info } from "lucide-react";
 
 /**
  * SEZIONE DISCLAIMER (landing)
- * Richiamo sintetico e ben visibile: il test è educativo e non diagnostico.
- * Il disclaimer completo, con valore medico-legale, è nel footer.
+ * Richiamo sintetico e ben visibile: il test è educativo e non diagnostico,
+ * e i contenuti si basano sulla letteratura su DES/CVS. È l'unico richiamo
+ * in home: il disclaimer completo, con valore medico-legale, è nel footer.
  */
 export function DisclaimerSection() {
   return (
@@ -24,7 +25,9 @@ export function DisclaimerSection() {
               Test educativo.
             </span>{" "}
             Questo strumento non costituisce una diagnosi medica e non
-            sostituisce la visita di un professionista della visione.
+            sostituisce la visita di un professionista della visione. I
+            contenuti si basano sulla letteratura scientifica sul Digital Eye
+            Strain e sulla Computer Vision Syndrome e hanno scopo informativo.
           </p>
         </div>
       </div>

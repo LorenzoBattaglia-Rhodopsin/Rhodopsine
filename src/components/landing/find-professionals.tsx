@@ -14,7 +14,6 @@ export function FindProfessionals() {
   return (
     <Section
       id="trova-professionisti"
-      eyebrow={findCtaCopy.eyebrow}
       title={findCtaCopy.title}
       description={findCtaCopy.description}
     >

@@ -25,9 +25,6 @@ export default function ArticlesPage() {
       <div className="container">
         {/* Intestazione */}
         <div className="mx-auto mb-10 max-w-2xl text-center sm:mb-14">
-          <p className="mb-3 text-eyebrow font-medium uppercase text-primary">
-            Approfondimenti
-          </p>
           <h1 className="text-title text-balance font-semibold text-foreground">
             Articoli sul benessere visivo
           </h1>

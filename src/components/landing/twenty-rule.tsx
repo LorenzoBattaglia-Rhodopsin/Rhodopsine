@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { routes } from "@/data/site";
 
 /**
- * REGOLA 20-20-20 — Sezione promozionale (Server Component).
+ * REGOLA 20-20-20 (Server Component).
  * Spiega la regola in tre passi e rimanda al timer guidato su /timer
  * (lo strumento vero e proprio vive lì, con stato condiviso via TimerProvider).
+ * CTA secondaria: in home la CTA primaria resta il test.
  */
 const steps = [
   {
@@ -33,7 +34,6 @@ export function TwentyRule() {
   return (
     <Section
       id="regola-20-20-20"
-      eyebrow="Pausa visiva"
       title="La regola del 20-20-20"
       description="Un'abitudine semplice per dare sollievo agli occhi durante le lunghe sessioni davanti allo schermo."
       centered
@@ -54,14 +54,10 @@ export function TwentyRule() {
         ))}
       </ul>
 
-      <div className="mt-10 flex flex-col items-center gap-3 text-center">
-        <Button asChild size="lg">
+      <div className="mt-10 flex justify-center">
+        <Button asChild size="lg" variant="secondary">
           <Link href={routes.timer}>Apri il timer guidato</Link>
         </Button>
-        <p className="max-w-prose text-sm text-muted-foreground">
-          Te lo ricordiamo noi: avvia il timer e continua a lavorare in
-          tranquillità.
-        </p>
       </div>
     </Section>
   );

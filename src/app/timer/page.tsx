@@ -35,9 +35,6 @@ export default function TimerPage() {
       <div className="container">
         {/* Intestazione */}
         <div className="mx-auto mb-10 max-w-2xl text-center">
-          <p className="mb-3 text-eyebrow font-medium uppercase text-primary">
-            Benessere visivo
-          </p>
           <h1 className="text-title text-balance font-semibold text-foreground">
             Timer 20‑20‑20
           </h1>
@@ -54,9 +51,6 @@ export default function TimerPage() {
             con barra di avanzamento lineare e display in Geist Mono. */}
         <div className="mx-auto mt-16 max-w-2xl">
           <div className="mb-6 text-center">
-            <p className="mb-2 text-eyebrow font-medium uppercase text-primary">
-              Modalità focus
-            </p>
             <h2 className="text-heading font-semibold text-foreground">
               La tua sessione in un colpo d&apos;occhio
             </h2>
