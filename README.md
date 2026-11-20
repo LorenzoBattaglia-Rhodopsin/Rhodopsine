@@ -80,6 +80,7 @@ Sono tutte opzionali in sviluppo.
 | `npm run start` | Avvia la build di produzione |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | `tsc --noEmit` |
+| `npm run data:professionisti` | Rigenera l'estratto OSM di ottici e oculisti (`public/data/professionisti-it.json`), da lanciare una volta al mese |
 
 Prima di un deploy conviene lanciare `npm run typecheck && npm run build`.
 

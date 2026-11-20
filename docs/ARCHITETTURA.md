@@ -80,7 +80,7 @@ src/
 │  └─ nearby/                # NearbyProfessionals, ProfessionalList, NearbyMap (on demand)
 ├─ data/                     # Contenuti tipizzati: site, questions, recommendations
 ├─ features/assessment/      # Logica di dominio: scoring, results-content
-├─ features/nearby/          # Ricerca professionisti: geo, Nominatim, Overpass, hook
+├─ features/nearby/          # Ricerca professionisti: geo, Nominatim, estratto statico, hook
 ├─ hooks/                    # use-assessment (hook riutilizzabile)
 ├─ lib/                      # utils (cn), seo (metadata + JSON-LD)
 └─ types/                    # Tipi del dominio (assessment.ts, nearby.ts)
@@ -113,9 +113,13 @@ src/
    (Geolocation API, `enableHighAccuracy: false`) o invia un CAP/città
    (Nominatim, solo al submit, max 1 richiesta/s).
 3. Le coordinate vengono arrotondate a 2 decimali (~1 km) appena ottenute.
-4. Il browser interroga direttamente Overpass API (10 km, 25 km se < 5
-   risultati; backoff su 429/50x), calcola le distanze (Haversine) e mostra
-   lista + mappa. Le tile arrivano da `tile.openstreetmap.org`.
+4. Il browser scarica dal nostro sito `/data/professionisti-it.json`
+   (estratto OSM di tutta Italia, identico per tutti, nessun parametro),
+   filtra in locale entro 10 km (25 km se < 5 risultati) con Haversine e
+   mostra lista + mappa. Le tile arrivano da `tile.openstreetmap.org`.
+   L'estratto si rigenera ogni mese con `npm run data:professionisti`
+   (script `scripts/fetch-professionals.mjs`: riquadri 2°×2°, più istanze
+   Overpass con backoff, scrittura atomica solo se l'estratto è completo).
 5. Lo stato vive solo in memoria React: «Cancella ricerca» lo azzera e smonta
    la mappa. Nessuno storage, cookie, URL o evento analytics.
 6. `Referrer-Policy: strict-origin-when-cross-origin` → i servizi OSM vedono

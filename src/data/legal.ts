@@ -100,12 +100,14 @@ export const privacyPolicy: LegalDocument = {
           "Come funziona. La ricerca avviene interamente nel tuo browser. Se usi la posizione, il browser ti chiede il permesso; le coordinate ottenute vengono subito arrotondate a circa 1 km e da quel momento si usano solo quelle. Se inserisci un CAP o una città, il testo viene inviato al servizio di geocodifica per ricavare le coordinate della località.",
         ),
         p(
+          "Elenco dei professionisti. L'elenco di ottici e oculisti è un estratto dei dati pubblici di OpenStreetMap (© OpenStreetMap contributors, licenza ODbL) che ospitiamo sul nostro sito e aggiorniamo ogni mese. Il browser lo scarica per intero, sempre identico per tutti, senza inviare la tua posizione: il calcolo delle distanze avviene sul tuo dispositivo. Come per ogni file del sito, il download compare nei normali dati di navigazione descritti sopra, ma non contiene né rivela la tua zona di ricerca.",
+        ),
+        p(
           "A chi vanno i dati. Il tuo browser invia questi dati direttamente, senza passare dai nostri server, ai seguenti servizi del progetto OpenStreetMap. Questi servizi ricevono anche il tuo indirizzo IP e i dati tecnici della richiesta, e li trattano come titolari autonomi secondo le proprie policy:",
         ),
         ul(
           "Nominatim, per trovare le coordinate del CAP o della città, gestito dalla OpenStreetMap Foundation (usage policy: https://operations.osmfoundation.org/policies/nominatim/).",
-          "Server delle mappe (tile), per mostrare la mappa, gestiti dalla OpenStreetMap Foundation (usage policy: https://operations.osmfoundation.org/policies/tiles/).",
-          "Overpass API, per cercare le attività nell'area, istanza overpass-api.de gestita da FOSSGIS e.V., Germania (condizioni d'uso e rimando all'informativa: https://fossgis.de/arbeitsgruppen/osm-server/nutzungsbedingungen).",
+          "Server delle mappe (tile), per mostrare la mappa, gestiti dalla OpenStreetMap Foundation (usage policy: https://operations.osmfoundation.org/policies/tiles/). Le immagini della mappa riguardano la zona mostrata, che è centrata sulla posizione arrotondata.",
         ),
         p(
           "L'informativa sulla privacy della OpenStreetMap Foundation è disponibile su https://osmfoundation.org/wiki/Privacy_Policy.",
@@ -277,7 +279,7 @@ export const cookiePolicy: LegalDocument = {
           "Il sito non incorpora video, pulsanti social o altri contenuti esterni che installano cookie. I caratteri tipografici sono ospitati sul sito stesso, senza richieste a servizi esterni. I link verso altri siti (per esempio le fonti scientifiche) portano a pagine con proprie policy.",
         ),
         p(
-          "Mappa della ricerca professionisti. Nella pagina dei risultati la mappa non viene caricata all'apertura, ma solo se avvii tu una ricerca. Le immagini della mappa arrivano dai server di OpenStreetMap e i dati da Nominatim e Overpass API (vedi la privacy policy). Alla data dell'ultimo aggiornamento questi servizi non impostano cookie; in ogni caso le richieste di dati partono dal browser senza cookie né credenziali.",
+          "Mappa della ricerca professionisti. Nella pagina dei risultati la mappa non viene caricata all'apertura, ma solo se avvii tu una ricerca. Le immagini della mappa arrivano dai server di OpenStreetMap e la ricerca per CAP o città usa Nominatim; l'elenco dei professionisti è invece un file ospitato sul nostro sito (vedi la privacy policy). Alla data dell'ultimo aggiornamento questi servizi non impostano cookie; in ogni caso le richieste di dati partono dal browser senza cookie né credenziali.",
         ),
       ],
     },

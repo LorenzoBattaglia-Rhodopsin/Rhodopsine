@@ -24,11 +24,12 @@
   protettive), test di accessibilità e end-to-end del flusso.
 - **OG image dinamica** per pagina (route handler) al posto dell'SVG statico.
 - **Content-Security-Policy.** Quando verrà introdotta, la ricerca
-  professionisti richiede: `connect-src` per `https://nominatim.openstreetmap.org`
-  e `https://overpass-api.de`; `img-src` per `https://tile.openstreetmap.org`.
-- **Overpass di riserva.** L'istanza pubblica `overpass-api.de` è spesso
-  sovraccarica: valutare un'istanza alternativa (aggiornando la privacy policy,
-  perché è un nuovo soggetto terzo) o un estratto OSM statico generato in build.
+  professionisti richiede: `connect-src` per `https://nominatim.openstreetmap.org`;
+  `img-src` per `https://tile.openstreetmap.org`.
+- **Aggiornamento mensile dell'estratto professionisti.** Ogni inizio mese:
+  `npm run data:professionisti`, controllare il riepilogo (totale simile al
+  mese precedente), commit di `public/data/professionisti-it.json`, deploy.
+  Valutare in futuro un job automatico (es. GitHub Action mensile).
 
 ## Fase 2 — Contenuti e SEO (medio termine)
 - **Blog/sezione educativa** (schema `articles` già previsto): articoli su
