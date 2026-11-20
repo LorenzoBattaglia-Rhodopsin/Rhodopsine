@@ -95,7 +95,13 @@ export function parseOverpass(
   return out.sort((a, b) => a.distanceKm - b.distanceKm);
 }
 
-/** Stati transitori dell'istanza pubblica: vale la pena riprovare una volta. */
+/**
+ * Guasti transitori dell'istanza pubblica, per cui vale la pena riprovare:
+ * - stati HTTP 429/502/503/504 ("at capacity");
+ * - errori di rete (connessione chiusa/rifiutata: fetch lancia TypeError);
+ * - risposta 200 con `remark: "runtime error: …"` ed elementi vuoti, che
+ *   altrimenti verrebbe scambiata per "nessun professionista trovato".
+ */
 const RETRYABLE = new Set([429, 502, 503, 504]);
 /** Backoff esponenziale, come chiede il servizio quando è "at capacity". */
 const RETRY_DELAYS_MS = [2000, 4000];
@@ -139,19 +145,34 @@ async function fetchOnce(
   signal?.addEventListener("abort", onAbort);
 
   try {
-    const res = await fetch(OVERPASS_URL, {
-      method: "POST",
-      // Form urlencoded = richiesta "semplice": nessun preflight CORS.
-      body: new URLSearchParams({ data: buildOverpassQuery(center, radiusKm) }),
-      signal: controller.signal,
-      credentials: "omit",
-    });
+    let res: Response;
+    try {
+      res = await fetch(OVERPASS_URL, {
+        method: "POST",
+        // Form urlencoded = richiesta "semplice": nessun preflight CORS.
+        body: new URLSearchParams({ data: buildOverpassQuery(center, radiusKm) }),
+        signal: controller.signal,
+        credentials: "omit",
+      });
+    } catch (err) {
+      // Annullamento (utente o timeout): non si riprova.
+      if (controller.signal.aborted) throw err;
+      // Errore di rete (es. ERR_CONNECTION_CLOSED): transitorio.
+      throw new RetryableError(`Overpass rete: ${String(err)}`);
+    }
     if (!res.ok) {
       const msg = `Overpass ${res.status}`;
       throw RETRYABLE.has(res.status) ? new RetryableError(msg) : new Error(msg);
     }
 
-    const json = (await res.json()) as { elements?: OverpassElement[] };
+    const json = (await res.json()) as {
+      elements?: OverpassElement[];
+      remark?: string;
+    };
+    // Query interrotta lato server: NON è "zero risultati".
+    if (json.remark && /runtime error/i.test(json.remark)) {
+      throw new RetryableError(`Overpass remark: ${json.remark}`);
+    }
     return parseOverpass(json.elements ?? [], center);
   } finally {
     clearTimeout(timer);
