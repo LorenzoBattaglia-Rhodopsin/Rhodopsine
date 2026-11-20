@@ -11,7 +11,8 @@ import { routes, siteConfig } from "@/data/site";
  * - Desktop: marchio + navigazione a sinistra, controllo timer + CTA a destra.
  * - Mobile: marchio + timer + menu hamburger (le voci e la CTA vivono nel
  *   pannello a comparsa, vedi MobileNav).
- * Le voci di navigazione arrivano da `mainNav` (fonte unica in `@/data/site`).
+ * Le voci di navigazione arrivano da `mainNav` (fonte unica in `@/data/site`):
+ * 4 voci di primo livello, con gli strumenti nel menu a tendina "Strumenti".
  */
 export function SiteHeader() {
   return (
@@ -32,7 +33,14 @@ export function SiteHeader() {
             della pagina /timer (stato condiviso via TimerProvider). */}
         <div className="flex items-center gap-2 sm:gap-3">
           <TimerTrigger />
-          <Button asChild size="sm" className="hidden shrink-0 lg:inline-flex">
+          {/* Variante secondaria: la CTA primaria di ogni pagina sta nel
+              contenuto (es. l'hero della home), non nell'header. */}
+          <Button
+            asChild
+            size="sm"
+            variant="secondary"
+            className="hidden shrink-0 lg:inline-flex"
+          >
             <Link href={routes.test}>Inizia il test</Link>
           </Button>
           <MobileNav />

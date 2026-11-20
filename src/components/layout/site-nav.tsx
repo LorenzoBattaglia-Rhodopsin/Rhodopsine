@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { mainNav, routes } from "@/data/site";
+import { isNavGroup, mainNav, routes, type NavGroup } from "@/data/site";
 
 /**
  * Navigazione del sito (desktop + mobile).
@@ -27,10 +27,141 @@ function isNavActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+/** Un gruppo è "attivo" quando lo è una delle sue voci. */
+function isGroupActive(pathname: string, group: NavGroup): boolean {
+  return group.items.some((item) => isNavActive(pathname, item.href));
+}
+
 const navLinkBase =
   "rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
-/** Navigazione orizzontale — visibile da `md` in su. */
+/** Trattino sotto la voce attiva (desktop). */
+function ActiveIndicator() {
+  return (
+    <span
+      aria-hidden="true"
+      className="absolute inset-x-3 bottom-1.5 h-px bg-primary"
+    />
+  );
+}
+
+/**
+ * Menu a tendina desktop (pattern "disclosure" WAI-ARIA, non `role="menu"`:
+ * contiene link di navigazione, che restano raggiungibili con Tab).
+ * - si apre SOLO con click / Invio / Spazio sul bottone (mai all'hover);
+ * - `aria-expanded` + `aria-controls` sul bottone;
+ * - si chiude con Esc (il focus torna al bottone), con click fuori, quando
+ *   il focus esce dal gruppo e al cambio di rotta.
+ */
+function NavDropdown({ group, pathname }: { group: NavGroup; pathname: string }) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLLIElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const panelId = `${useId()}-panel`;
+  const active = isGroupActive(pathname, group);
+
+  // Chiudi quando cambia la rotta (es. dopo aver scelto una voce).
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  // Esc e click fuori, attivi solo a menu aperto.
+  useEffect(() => {
+    if (!open) return;
+
+    function onPointerDown(e: PointerEvent) {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key !== "Escape") return;
+      e.preventDefault();
+      setOpen(false);
+      buttonRef.current?.focus();
+    }
+
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <li
+      ref={rootRef}
+      className="relative"
+      // Chiudi quando il focus esce dal gruppo (Tab oltre l'ultima voce).
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+          setOpen(false);
+        }
+      }}
+    >
+      <button
+        ref={buttonRef}
+        type="button"
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          navLinkBase,
+          "relative inline-flex h-11 items-center gap-1 px-3 text-sm font-medium",
+          active || open
+            ? "text-foreground"
+            : "text-muted-foreground hover:text-foreground",
+        )}
+      >
+        {group.title}
+        <ChevronDown
+          aria-hidden="true"
+          className={cn(
+            "size-4 transition-transform duration-150",
+            open && "rotate-180",
+          )}
+        />
+        {active && <ActiveIndicator />}
+      </button>
+
+      <div
+        id={panelId}
+        hidden={!open}
+        className="absolute left-0 top-full z-50 mt-2 w-80 rounded-lg border border-border bg-card p-2 shadow-xl animate-in fade-in slide-in-from-top-1 duration-150"
+      >
+        <ul className="flex flex-col gap-1">
+          {group.items.map((item) => {
+            const itemActive = isNavActive(pathname, item.href);
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={itemActive ? "page" : undefined}
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    navLinkBase,
+                    "flex min-h-[44px] flex-col justify-center px-3 py-2",
+                    itemActive ? "bg-accent" : "hover:bg-accent",
+                  )}
+                >
+                  <span className="text-sm font-medium text-foreground">
+                    {item.title}
+                  </span>
+                  {item.description && (
+                    <span className="mt-0.5 text-sm leading-snug text-muted-foreground">
+                      {item.description}
+                    </span>
+                  )}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </li>
+  );
+}
+
+/** Navigazione orizzontale — visibile da `lg` in su. */
 export function DesktopNav({ className }: { className?: string }) {
   const pathname = usePathname();
 
@@ -38,6 +169,11 @@ export function DesktopNav({ className }: { className?: string }) {
     <nav aria-label="Navigazione principale" className={className}>
       <ul className="flex items-center gap-1">
         {mainNav.map((item) => {
+          if (isNavGroup(item)) {
+            return (
+              <NavDropdown key={item.title} group={item} pathname={pathname} />
+            );
+          }
           const active = isNavActive(pathname, item.href);
           return (
             <li key={item.href}>
@@ -53,12 +189,7 @@ export function DesktopNav({ className }: { className?: string }) {
                 )}
               >
                 {item.title}
-                {active && (
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-x-3 bottom-1.5 h-px bg-primary"
-                  />
-                )}
+                {active && <ActiveIndicator />}
               </Link>
             </li>
           );
@@ -69,8 +200,86 @@ export function DesktopNav({ className }: { className?: string }) {
 }
 
 /**
- * Menu mobile (hamburger) — visibile sotto `lg` (incluso il tablet, dove le 5
- * voci + timer + CTA non entrerebbero comodamente nell'header).
+ * Sottomenu espandibile del pannello mobile (disclosure con `aria-expanded`).
+ * Parte aperto se la pagina corrente è una delle sue voci, così la posizione
+ * è visibile senza tap aggiuntivi. Righe alte almeno 44px.
+ */
+function MobileNavGroup({
+  group,
+  pathname,
+  onNavigate,
+}: {
+  group: NavGroup;
+  pathname: string;
+  onNavigate: () => void;
+}) {
+  const active = isGroupActive(pathname, group);
+  const [expanded, setExpanded] = useState(active);
+  const listId = `${useId()}-list`;
+
+  return (
+    <div>
+      <button
+        type="button"
+        aria-expanded={expanded}
+        aria-controls={listId}
+        onClick={() => setExpanded((v) => !v)}
+        className={cn(
+          navLinkBase,
+          "flex min-h-[44px] w-full items-center justify-between px-3 text-left text-base font-medium",
+          active
+            ? "text-foreground"
+            : "text-muted-foreground hover:bg-accent hover:text-foreground",
+        )}
+      >
+        {group.title}
+        <ChevronDown
+          aria-hidden="true"
+          className={cn(
+            "size-5 transition-transform duration-150",
+            expanded && "rotate-180",
+          )}
+        />
+      </button>
+
+      <ul
+        id={listId}
+        // Classe `hidden` e non l'attributo: `flex` lo sovrascriverebbe.
+        className={cn(
+          "ml-3 mt-1 flex-col gap-1 border-l border-border pl-3",
+          expanded ? "flex" : "hidden",
+        )}
+      >
+        {group.items.map((item) => {
+          const itemActive = isNavActive(pathname, item.href);
+          return (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                aria-current={itemActive ? "page" : undefined}
+                onClick={onNavigate}
+                className={cn(
+                  navLinkBase,
+                  "flex min-h-[44px] items-center px-3 text-base",
+                  itemActive
+                    ? "bg-accent font-medium text-foreground"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                )}
+              >
+                {item.title}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+/**
+ * Menu mobile (hamburger) — visibile sotto `lg` (incluso il tablet, dove le
+ * voci + timer + CTA non entrerebbero comodamente nell'header). Il gruppo
+ * "Strumenti" è un sottomenu espandibile (MobileNavGroup).
  *
  * Pannello a comparsa sotto l'header, modale (role="dialog" + aria-modal):
  * - apertura/chiusura con `aria-expanded` sul toggle;
@@ -213,6 +422,16 @@ export function MobileNav({ className }: { className?: string }) {
               className="container flex flex-col gap-1 py-4"
             >
               {mainNav.map((item) => {
+                if (isNavGroup(item)) {
+                  return (
+                    <MobileNavGroup
+                      key={item.title}
+                      group={item}
+                      pathname={pathname}
+                      onNavigate={() => setOpen(false)}
+                    />
+                  );
+                }
                 const active = isNavActive(pathname, item.href);
                 return (
                   <Link

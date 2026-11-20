@@ -55,21 +55,58 @@ export const siteConfig = {
  * Voci di navigazione principali — UNICA fonte per header (desktop + mobile) e
  * footer. Aggiungere/spostare una voce qui la propaga ovunque: niente liste di
  * link hard-coded nei componenti.
+ *
+ * Primo livello snello (4 voci): gli strumenti interattivi sono raggruppati
+ * nel menu a tendina "Strumenti". La home è raggiungibile dal logo.
  */
 export type NavItem = {
   title: string;
   href: string;
+  /** Breve descrizione mostrata nel menu a tendina (facoltativa). */
+  description?: string;
 };
 
-export const mainNav: readonly NavItem[] = [
-  { title: "Home", href: "/" },
-  { title: "Test", href: "/test" },
-  { title: "Metodo 20-20-20", href: "/timer" },
-  { title: "Ottici e oculisti", href: "/trova-ottici-oculisti" },
+export type NavGroup = {
+  title: string;
+  items: readonly NavItem[];
+};
+
+export type NavEntry = NavItem | NavGroup;
+
+export function isNavGroup(entry: NavEntry): entry is NavGroup {
+  return "items" in entry;
+}
+
+export const mainNav: readonly NavEntry[] = [
+  {
+    title: "Strumenti",
+    items: [
+      {
+        title: "Test di autovalutazione",
+        href: "/test",
+        description: "Scopri quali abitudini affaticano di più i tuoi occhi.",
+      },
+      {
+        title: "Timer 20-20-20",
+        href: "/timer",
+        description: "Un promemoria per le pause visive mentre lavori.",
+      },
+      {
+        title: "Trova ottici e oculisti",
+        href: "/trova-ottici-oculisti",
+        description: "I professionisti della visione vicino a te.",
+      },
+    ],
+  },
   { title: "Articoli", href: "/articoli" },
   { title: "Fonti", href: "/fonti" },
   { title: "Chi siamo", href: "/#chi-siamo" },
 ] as const;
+
+/** Tutte le voci come link piatti (es. per il footer). */
+export const flatNav: readonly NavItem[] = mainNav.flatMap((entry) =>
+  isNavGroup(entry) ? entry.items : [entry],
+);
 
 /** Rotte applicative riutilizzabili (evita stringhe magiche sparse). */
 export const routes = {

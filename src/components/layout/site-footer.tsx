@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Mail } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
-import { mainNav, siteConfig } from "@/data/site";
+import { flatNav, siteConfig } from "@/data/site";
 import { legalDocuments } from "@/data/legal";
 import {
   contentAuthor,
@@ -76,7 +76,7 @@ export function SiteFooter() {
               Esplora
             </h2>
             <ul className="mt-4 space-y-3 text-sm">
-              {mainNav.map((item) => (
+              {flatNav.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
