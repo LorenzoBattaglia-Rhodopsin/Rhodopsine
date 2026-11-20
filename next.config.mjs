@@ -23,9 +23,12 @@ const nextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          // geolocation=(self): solo il nostro sito (mai iframe di terzi) può
+          // chiedere la posizione, e solo su click esplicito nella ricerca
+          // professionisti di /risultati. La posizione resta nel browser.
           {
             key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
+            value: "camera=(), microphone=(), geolocation=(self)",
           },
         ],
       },
