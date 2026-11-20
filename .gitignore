@@ -30,3 +30,5 @@ yarn-error.log*
 
 # Impostazioni locali degli strumenti
 /.claude/
+/.agents/
+/CLAUDE.md
