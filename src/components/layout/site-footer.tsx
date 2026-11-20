@@ -33,12 +33,6 @@ export function SiteFooter() {
               Educazione al benessere visivo attraverso contenuti affidabili e
               strumenti pratici di autovalutazione.
             </p>
-            {/* Origine del nome (spostata dall'hero per alleggerirne la gerarchia). */}
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              Il nome viene dalla <span className="text-foreground">rodopsina</span>,
-              il pigmento della retina che rende possibile la visione: un piccolo
-              promemoria di quanto sia preziosa.
-            </p>
 
             {/* Trasparenza editoriale: autore + revisione scientifica. */}
             <dl className="mt-6 space-y-4">
