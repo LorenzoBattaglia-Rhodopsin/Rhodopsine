@@ -123,6 +123,9 @@ export const privacyPolicy: LegalDocument = {
           "Chi riceve questi dati. Nominatim e i server delle mappe sono gestiti dalla OpenStreetMap Foundation, con sede nel Regno Unito (Paese che la Commissione europea riconosce come adeguato per la protezione dei dati). Come ogni sito che visiti, ricevono il tuo indirizzo IP e i dati tecnici della richiesta e li trattano come titolari autonomi, non per nostro conto. La loro informativa è su https://osmfoundation.org/wiki/Privacy_Policy.",
         ),
         p(
+          "Indicazioni stradali. Il link «Indicazioni» apre Google Maps in una nuova scheda, con la sola destinazione (la posizione del centro), mai la tua. È un normale collegamento: Google riceve dati solo se lo apri, e da quel momento vale l'informativa di Google (https://policies.google.com/privacy).",
+        ),
+        p(
           "L'elenco dei professionisti. L'elenco proviene dai dati pubblici di OpenStreetMap ed è ospitato sul nostro sito. Il browser lo scarica per intero, uguale per tutti: non rivela la zona che stai cercando. Le schede dei singoli centri sono normali pagine del sito e, come ogni pagina visitata, compaiono nei dati di navigazione.",
         ),
         p(
@@ -279,7 +282,7 @@ export const cookiePolicy: LegalDocument = {
       title: "Contenuti di terze parti",
       blocks: [
         p(
-          "Il sito non incorpora video, pulsanti social o altri contenuti esterni che installano cookie. I caratteri tipografici sono ospitati sul nostro sito. I link verso altri siti (per esempio le fonti scientifiche) portano a pagine con regole proprie.",
+          "Il sito non incorpora video, pulsanti social o altri contenuti esterni che installano cookie. I caratteri tipografici sono ospitati sul nostro sito. I link verso altri siti (per esempio le fonti scientifiche o il link «Indicazioni», che apre Google Maps) portano a pagine con regole proprie.",
         ),
         p(
           "La mappa della ricerca di ottici e oculisti arriva dai server di OpenStreetMap e si carica solo quando avvii una ricerca. Ad oggi questi servizi non impostano cookie. Per i dettagli vedi la privacy policy.",

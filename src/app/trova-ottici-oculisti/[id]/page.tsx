@@ -13,10 +13,10 @@ import {
 } from "lucide-react";
 import { buildMetadata } from "@/lib/seo";
 import { routes } from "@/data/site";
-import { detailCopy, professionalKinds } from "@/data/nearby";
+import { detailCopy, nearbyCopy, professionalKinds } from "@/data/nearby";
 import { getProfessionalDetail } from "@/features/nearby/details";
 import { formatOpeningHours } from "@/features/nearby/opening-hours";
-import { osmDirectionsUrl } from "@/features/nearby/directions";
+import { directionsUrl } from "@/features/nearby/directions";
 import { osmElementUrl } from "@/features/nearby/ids";
 import { Badge } from "@/components/ui/badge";
 import { KIND_ICON } from "@/components/nearby/professional-kinds";
@@ -184,14 +184,14 @@ export default async function ProfessionalDetailPage({ params }: PageProps) {
             <Field icon={Navigation} label={detailCopy.position}>
               <div className="space-y-4">
                 <a
-                  href={osmDirectionsUrl(p.position)}
+                  href={directionsUrl(p.position)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={externalLinkClass}
                 >
-                  Indicazioni
+                  {nearbyCopy.directions}
                   <ExternalLink className="size-3.5" aria-hidden="true" />
-                  <span className="sr-only"> per {name} (si apre in una nuova scheda)</span>
+                  <span className="sr-only">{nearbyCopy.directionsSr(name)}</span>
                 </a>
                 <PlaceMapToggle position={p.position} kind={p.kind} label={name} />
               </div>

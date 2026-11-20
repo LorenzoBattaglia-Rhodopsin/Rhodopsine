@@ -8,7 +8,8 @@ import type { Coordinates, Professional } from "@/types/nearby";
 import { markerIcon } from "@/components/nearby/map-markers";
 import { TILE_ATTRIBUTION, TILE_MAX_ZOOM, TILE_URL } from "@/components/nearby/map-tiles";
 import { formatDistance } from "@/features/nearby/geo";
-import { osmDirectionsUrl } from "@/features/nearby/directions";
+import { directionsUrl } from "@/features/nearby/directions";
+import { professionalHref } from "@/features/nearby/ids";
 import { nearbyCopy, professionalKinds } from "@/data/nearby";
 
 /**
@@ -95,15 +96,27 @@ export default function NearbyMap({ center, professionals }: NearbyMapProps) {
               {p.address && (
                 <p className="mt-1 text-muted-foreground">{p.address}</p>
               )}
-              <a
-                href={osmDirectionsUrl(p.position)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline"
-              >
-                {nearbyCopy.directions}
-                <span className="sr-only"> (si apre in una nuova scheda)</span>
-              </a>
+              <div className="mt-1 flex flex-wrap gap-x-4">
+                {professionalHref(p.id) && (
+                  // <a> normale (come nella lista): tornando indietro il
+                  // browser può ripristinare la ricerca dalla sua cache.
+                  <a
+                    href={professionalHref(p.id) ?? undefined}
+                    className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline"
+                  >
+                    {nearbyCopy.openDetails}
+                  </a>
+                )}
+                <a
+                  href={directionsUrl(p.position)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline"
+                >
+                  {nearbyCopy.directions}
+                  <span className="sr-only">{nearbyCopy.directionsSr(p.name)}</span>
+                </a>
+              </div>
             </Popup>
           </Marker>
         );

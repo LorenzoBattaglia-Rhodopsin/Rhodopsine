@@ -6,11 +6,7 @@ import type { Professional } from "@/types/nearby";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatDistance } from "@/features/nearby/geo";
-import {
-  geoUri,
-  osmDirectionsUrl,
-  supportsGeoUri,
-} from "@/features/nearby/directions";
+import { directionsUrl } from "@/features/nearby/directions";
 import { professionalHref } from "@/features/nearby/ids";
 import { nearbyCopy, professionalKinds } from "@/data/nearby";
 import { legendSwatchClass, markerBaseClass } from "@/components/nearby/marker-style";
@@ -33,9 +29,6 @@ const linkClass =
 
 export function ProfessionalList({ items }: { items: Professional[] }) {
   const [visible, setVisible] = useState(PAGE);
-  // La lista esiste solo dopo un'azione dell'utente (mai in SSR): leggere lo
-  // user agent qui non crea mismatch di idratazione.
-  const showGeo = supportsGeoUri();
   const shown = items.slice(0, visible);
   const remaining = items.length - shown.length;
 
@@ -83,23 +76,15 @@ export function ProfessionalList({ items }: { items: Professional[] }) {
                 )}
                 <div className="mt-1 flex flex-wrap gap-x-5">
                   <a
-                    href={osmDirectionsUrl(p.position)}
+                    href={directionsUrl(p.position)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={linkClass}
                   >
                     {nearbyCopy.directions}
                     <ExternalLink className="size-3.5" aria-hidden="true" />
-                    <span className="sr-only">
-                      {" "}per {p.name} (si apre in una nuova scheda)
-                    </span>
+                    <span className="sr-only">{nearbyCopy.directionsSr(p.name)}</span>
                   </a>
-                  {showGeo && (
-                    <a href={geoUri(p.position, p.name)} className={linkClass}>
-                      {nearbyCopy.openInApp}
-                      <span className="sr-only"> per {p.name}</span>
-                    </a>
-                  )}
                 </div>
               </div>
             </li>

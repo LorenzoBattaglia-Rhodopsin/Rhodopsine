@@ -33,7 +33,10 @@ export const nearbyCopy = {
 
   clear: "Cancella ricerca",
   directions: "Indicazioni",
-  openInApp: "Apri nell'app Mappe",
+  /** Testo per screen reader: il link porta a Google Maps in una nuova scheda. */
+  directionsSr: (name: string) =>
+    ` per ${name} su Google Maps (si apre in una nuova scheda)`,
+  openDetails: "Apri la scheda",
   approxArea: "Area di ricerca (approssimativa)",
   mapLabel: "Mappa dei professionisti trovati",
 
