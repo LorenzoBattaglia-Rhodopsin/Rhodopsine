@@ -10,6 +10,8 @@
 - ✅ Pagina risultati educativa (gauge + consigli personalizzati leggeri).
 - ✅ Disclaimer medico-legale onnipresente (footer + sezioni).
 - ✅ SEO (Metadata, JSON-LD, sitemap, robots, manifest), performance, WCAG 2.2.
+- ✅ Ricerca di ottici e oculisti vicini (OpenStreetMap), tutta nel browser,
+  senza dati al server e senza collegamento con l'esito del test.
 
 ## Fase 1 — Consolidamento (breve termine)
 - **Persistenza locale** della sessione (es. ripresa del test, confronto con
@@ -21,6 +23,12 @@
 - **Test automatici**: unit test su `computeAssessment` (casi limite, domande
   protettive), test di accessibilità e end-to-end del flusso.
 - **OG image dinamica** per pagina (route handler) al posto dell'SVG statico.
+- **Content-Security-Policy.** Quando verrà introdotta, la ricerca
+  professionisti richiede: `connect-src` per `https://nominatim.openstreetmap.org`
+  e `https://overpass-api.de`; `img-src` per `https://tile.openstreetmap.org`.
+- **Overpass di riserva.** L'istanza pubblica `overpass-api.de` è spesso
+  sovraccarica: valutare un'istanza alternativa (aggiornando la privacy policy,
+  perché è un nuovo soggetto terzo) o un estratto OSM statico generato in build.
 
 ## Fase 2 — Contenuti e SEO (medio termine)
 - **Blog/sezione educativa** (schema `articles` già previsto): articoli su

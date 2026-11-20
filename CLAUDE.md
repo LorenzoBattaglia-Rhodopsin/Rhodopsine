@@ -70,18 +70,26 @@ src/
 │  ├─ landing/                # hero, problem, benefits, how-it-works, disclaimer-section
 │  ├─ assessment/             # likert-scale, question-step, assessment-wizard (client)
 │  ├─ results/                # score-gauge (SVG), recommendation-list
+│  ├─ nearby/                 # ricerca professionisti (client): sezione, lista, mappa on demand
 │  └─ legal/                  # legal-page (guscio comune delle pagine legali)
 ├─ data/                      # CONTENUTI tipizzati (modificare qui, non nei componenti)
 │  ├─ site.ts                 # SITE_URL, nome, claim, nav, rotte, keyword SEO
 │  ├─ legal.ts                # testi legali, segnaposto titolare, data ultimo aggiornamento
 │  ├─ questions.ts            # 18 domande + opzioni Likert + etichette domini
-│  └─ recommendations.ts      # consigli pratici + getRecommendations()
+│  ├─ recommendations.ts      # consigli pratici + getRecommendations()
+│  └─ nearby.ts               # testi della ricerca professionisti (informativa, errori, disclaimer)
 ├─ features/assessment/       # LOGICA di dominio (pura, testabile)
 │  ├─ scoring.ts              # SCORE_THRESHOLDS, getResultLevel(), computeAssessment()
 │  └─ results-content.ts      # testo dell'esito per livello + getResultContent()
+├─ features/nearby/           # LOGICA ricerca professionisti (solo browser)
+│  ├─ geo.ts                  # roundCoords (2 decimali), haversineKm, formatDistance
+│  ├─ nominatim.ts            # geocodifica CAP/città (solo al submit, max 1 req/s)
+│  ├─ overpass.ts             # query ottici/oculisti, 10→25 km, backoff su 429/50x
+│  ├─ directions.ts           # link "Indicazioni" con la sola destinazione
+│  └─ use-nearby-search.ts    # hook a stati, solo in memoria
 ├─ hooks/use-assessment.ts    # hook di stato del wizard (riutilizzabile)
 ├─ lib/                       # utils.ts (cn) · seo.ts (buildMetadata + JSON-LD)
-└─ types/assessment.ts        # ⭐ tipi del dominio: fonte di verità condivisa
+└─ types/                     # ⭐ tipi del dominio: assessment.ts, nearby.ts
 ```
 
 **Per modificare i TESTI** (riferimento rapido):
@@ -93,6 +101,7 @@ src/
 | Domande, opzioni, domini | `src/data/questions.ts` |
 | Consigli | `src/data/recommendations.ts` |
 | Esiti per livello | `src/features/assessment/results-content.ts` |
+| Ricerca professionisti (informativa, errori, oculista vs ottico) | `src/data/nearby.ts` |
 | Nome sito, claim, nav, keyword | `src/data/site.ts` |
 | Privacy, cookie, note legali, disclaimer | `src/data/legal.ts` (aggiorna `legalLastUpdated`) |
 | Meta SEO di pagina | il `metadata` in ogni `page.tsx` + default in `src/lib/seo.ts` |
@@ -102,8 +111,8 @@ src/
 ## 5. Convenzioni di codice
 
 - **Server Components di default.** Aggiungi `"use client"` SOLO se serve stato/effetti/
-  interattività. Oggi sono client: `assessment-wizard`, `likert-scale`, e le primitive
-  Radix con hook (`progress`, `radio-group`, `label`).
+  interattività. Oggi sono client: `assessment-wizard`, `likert-scale`, i componenti
+  in `components/nearby/`, e le primitive Radix con hook (`progress`, `radio-group`, `label`).
 - **Separazione dati / logica / presentazione.** I contenuti vivono in `data/`, la logica
   in `features/`, la UI nei componenti. Non incollare contenuti di dominio dentro i componenti.
 - **Tipi condivisi**: importa da `@/types/assessment`. Tieni allineati dati, scoring e UI.
@@ -139,6 +148,14 @@ src/
 7. **Accessibilità (WCAG 2.2) come requisito minimo:** focus sempre visibile,
    target ≥ 44px, `prefers-reduced-motion` e `prefers-contrast` rispettati (in `globals.css`),
    skip-link, landmark, `aria-live` e gestione focus nel wizard. Non regredire su questo.
+8. **Ricerca professionisti: privacy by design.** `<NearbyProfessionals />` si monta
+   **senza props** (non deve mai ricevere punteggio, livello o dominio). Tutto gira nel
+   browser: nessuna API route/server action/log nostro riceve coordinate, CAP o città.
+   Le coordinate si arrotondano a 2 decimali **subito** (`roundCoords`) e quelle esatte
+   non entrano nello stato. Niente storage, cookie, URL o eventi analytics con dati di
+   luogo. Nessuna richiesta a OSM prima di un click; Leaflet resta un chunk on demand
+   (`next/dynamic`, `ssr: false`). `Permissions-Policy` deve restare `geolocation=(self)`.
+   Se cambi servizi esterni (es. un'istanza Overpass di riserva), aggiorna la privacy.
 
 ---
 
@@ -236,6 +253,15 @@ ed escludila da `sitemap.ts` (e valuta `disallow` in `robots.ts`).
   che causava sovrapposizioni di testo. `question-step.tsx` usa un `<div>` + `<h2>`; il
   gruppo è già un `radiogroup` Radix etichettato via `aria-labelledby`.
 - **Sfondo decorativo vs `body`.** Vedi §7: il `body` deve restare trasparente.
+- **Leaflet: CSS e marker.** Il CSS di Leaflet arriva dopo `globals.css` (chunk on demand):
+  gli override di tema usano il prefisso `.nearby-map.leaflet-container` per vincere in
+  specificità. I marker sono `L.divIcon` (niente PNG di default → niente bug delle icone).
+  In react-leaflet `className` va passato come prop, non in `pathOptions` (che passa da
+  `setStyle()` e lo ignora).
+- **Overpass pubblico spesso "at capacity" (502/504).** Già gestito con backoff
+  (2 s, 4 s) e messaggio di attesa dopo 8 s. Nei test e2e usa una risposta registrata.
+- **Test e2e e `role="alert"`.** Anche il route announcer di Next.js ha `role="alert"`:
+  nei selettori escludi `#__next-route-announcer__`.
 - **Vulnerabilità npm audit (postcss dentro Next).** È un avviso build-time a rischio reale
   nullo per questo sito. **Non eseguire `npm audit fix --force`**: proporrebbe un downgrade
   di Next a v9 e romperebbe tutto. Eventualmente aggiorna Next nell'ambito della linea 15.

@@ -38,8 +38,12 @@ introdurre un font brandizzato in futuro.
 - **Server Components di default**: tutte le pagine e la maggior parte dei
   componenti sono RSC (nessun JS inviato al client).
 - **Client Components mirati** (`"use client"`): solo dove serve interattività o
-  stato — il wizard del test, la scala Likert, e le primitive Radix che usano
-  hook (`progress`, `radio-group`, `label`).
+  stato — il wizard del test, la scala Likert, la ricerca professionisti
+  (`components/nearby/`) e le primitive Radix che usano hook (`progress`,
+  `radio-group`, `label`).
+- **Codice caricato su richiesta**: la mappa (Leaflet + react-leaflet + CSS) è
+  importata con `next/dynamic` e `ssr: false` e montata solo a ricerca
+  completata: non pesa sul caricamento di `/risultati` né di `/test`.
 - **`/risultati` è dinamica** (server-rendered on demand) perché legge
   `searchParams`. In **Next.js 15** `params`/`searchParams` sono `Promise`:
   la pagina è `async` e usa `await searchParams`.
@@ -72,12 +76,14 @@ src/
 │  ├─ layout/                # SiteHeader, SiteFooter (con disclaimer)
 │  ├─ landing/               # Hero, Problem, Benefits, HowItWorks, DisclaimerSection
 │  ├─ assessment/            # LikertScale, QuestionStep, AssessmentWizard
-│  └─ results/               # ScoreGauge, RecommendationList
+│  ├─ results/               # ScoreGauge, RecommendationList
+│  └─ nearby/                # NearbyProfessionals, ProfessionalList, NearbyMap (on demand)
 ├─ data/                     # Contenuti tipizzati: site, questions, recommendations
 ├─ features/assessment/      # Logica di dominio: scoring, results-content
+├─ features/nearby/          # Ricerca professionisti: geo, Nominatim, Overpass, hook
 ├─ hooks/                    # use-assessment (hook riutilizzabile)
 ├─ lib/                      # utils (cn), seo (metadata + JSON-LD)
-└─ types/                    # Tipi del dominio (assessment.ts)
+└─ types/                    # Tipi del dominio (assessment.ts, nearby.ts)
 ```
 
 ### Principi di organizzazione
@@ -98,6 +104,22 @@ src/
    browser).
 5. `/risultati` (server) valida i parametri, determina il livello, recupera
    contenuto e consigli, e rende il gauge + i suggerimenti.
+
+### Ricerca professionisti nelle vicinanze (privacy by design)
+
+1. Sotto l'esito, `<NearbyProfessionals />` (client) è montato **senza props**:
+   non conosce punteggio né dominio.
+2. Nessuna richiesta esterna finché l'utente non preme «Usa la mia posizione»
+   (Geolocation API, `enableHighAccuracy: false`) o invia un CAP/città
+   (Nominatim, solo al submit, max 1 richiesta/s).
+3. Le coordinate vengono arrotondate a 2 decimali (~1 km) appena ottenute.
+4. Il browser interroga direttamente Overpass API (10 km, 25 km se < 5
+   risultati; backoff su 429/50x), calcola le distanze (Haversine) e mostra
+   lista + mappa. Le tile arrivano da `tile.openstreetmap.org`.
+5. Lo stato vive solo in memoria React: «Cancella ricerca» lo azzera e smonta
+   la mappa. Nessuno storage, cookie, URL o evento analytics.
+6. `Referrer-Policy: strict-origin-when-cross-origin` → i servizi OSM vedono
+   solo l'origine del sito, mai `/risultati?s=…`.
 
 Vedi [DESIGN-SYSTEM.md](./DESIGN-SYSTEM.md) per la palette e
 [DATABASE.md](./DATABASE.md) per lo schema logico previsto per l'espansione.
