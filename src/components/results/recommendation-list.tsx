@@ -16,7 +16,7 @@ export function RecommendationList({ items }: { items: Recommendation[] }) {
     <ul className="grid gap-4 sm:grid-cols-2">
       {items.map((rec) => (
         <li key={rec.id}>
-          <Card className="h-full">
+          <Card tone="tinted" className="h-full">
             <CardHeader>
               <Badge variant="primary" className="w-fit">
                 {domainLabels[rec.domain]}

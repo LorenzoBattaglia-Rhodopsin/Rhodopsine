@@ -60,11 +60,11 @@ export function Hero() {
             {/* Indicatori di affidabilità */}
             <ul className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-muted-foreground lg:justify-start">
               <li className="inline-flex items-center gap-2">
-                <FlaskConical className="size-4" aria-hidden="true" />
+                <FlaskConical className="size-4 text-primary" aria-hidden="true" />
                 Basato sulla letteratura su DES/CVS
               </li>
               <li className="inline-flex items-center gap-2">
-                <ShieldCheck className="size-4" aria-hidden="true" />
+                <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
                 Nessuna diagnosi, solo prevenzione
               </li>
             </ul>

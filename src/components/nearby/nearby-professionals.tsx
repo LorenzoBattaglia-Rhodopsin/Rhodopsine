@@ -16,6 +16,7 @@ import {
 import type { NearbySearchState, ProfessionalKind } from "@/types/nearby";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { IconBadge } from "@/components/shared/icon-badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -183,11 +184,9 @@ export function NearbyProfessionals() {
           const k = professionalKinds[kind];
           return (
             <li key={kind}>
-              <Card className="h-full">
+              <Card tone="tinted" className="h-full">
                 <CardContent className="flex items-start gap-4 p-6">
-                  <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-muted text-foreground">
-                    <Icon className="size-5" aria-hidden="true" />
-                  </span>
+                  <IconBadge icon={Icon} />
                   <div>
                     <h3 className="text-lg font-semibold tracking-tight text-foreground">
                       {k.title}

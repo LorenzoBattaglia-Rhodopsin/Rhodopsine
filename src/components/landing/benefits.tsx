@@ -1,6 +1,7 @@
 import { Lightbulb, Sparkles, ShieldCheck, HeartPulse } from "lucide-react";
 import { Section } from "@/components/shared/section";
 import { Card, CardContent } from "@/components/ui/card";
+import { IconBadge } from "@/components/shared/icon-badge";
 
 /**
  * SEZIONE "BENEFICI"
@@ -45,11 +46,9 @@ export function Benefits() {
       <ul role="list" className="grid gap-6 sm:grid-cols-2">
         {benefits.map(({ icon: Icon, title, body }) => (
           <li key={title}>
-            <Card className="h-full">
+            <Card tone="tinted" className="h-full">
               <CardContent className="flex items-start gap-4 p-6">
-                <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-muted text-foreground">
-                  <Icon className="size-5" aria-hidden="true" />
-                </span>
+                <IconBadge icon={Icon} />
                 <div>
                   <h3 className="text-lg font-semibold tracking-tight text-foreground">
                     {title}

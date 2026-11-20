@@ -1,25 +1,46 @@
 import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
  * Contenitore "card" con bordo morbido e sfondo leggermente rialzato.
- * Volutamente SENZA stato hover: una card statica che si solleva promette
+ *
+ * Toni:
+ * - `default`: neutro (timer, articoli, superfici funzionali).
+ * - `tinted`: riflesso teal statico nell'angolo + bordo teal tenue. Dà
+ *   colore e identità alle card di contenuto SENZA stato hover.
+ *
+ * Volutamente senza hover: una card statica che reagisce al mouse promette
  * un'azione che non esiste (affordance falsa). Le card cliccabili (es.
  * ArticleCard) aggiungono il proprio hover tramite `group-hover` sul link.
  */
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "rounded-lg border border-border bg-card text-card-foreground",
-      className,
-    )}
-    {...props}
-  />
-));
+const cardVariants = cva(
+  "rounded-lg border bg-card text-card-foreground",
+  {
+    variants: {
+      tone: {
+        default: "border-border",
+        tinted:
+          "border-primary/[0.28] bg-[radial-gradient(130%_100%_at_0%_0%,hsl(var(--primary)/0.16),transparent_60%)]",
+      },
+    },
+    defaultVariants: { tone: "default" },
+  },
+);
+
+export interface CardProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariants> {}
+
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, tone, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(cardVariants({ tone }), className)}
+      {...props}
+    />
+  ),
+);
 Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<

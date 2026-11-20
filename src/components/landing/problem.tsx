@@ -1,6 +1,7 @@
 import { Monitor, Eye, Clock } from "lucide-react";
 import { Section } from "@/components/shared/section";
 import { Card, CardContent } from "@/components/ui/card";
+import { IconBadge } from "@/components/shared/icon-badge";
 
 /**
  * SEZIONE "IL PROBLEMA"
@@ -38,11 +39,9 @@ export function Problem() {
       <ul role="list" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {points.map(({ icon: Icon, title, body }) => (
           <li key={title}>
-            <Card className="h-full">
+            <Card tone="tinted" className="h-full">
               <CardContent className="flex h-full flex-col gap-4 p-6">
-                <span className="inline-flex size-11 items-center justify-center rounded-full bg-muted text-foreground">
-                  <Icon className="size-5" aria-hidden="true" />
-                </span>
+                <IconBadge icon={Icon} />
                 <h3 className="text-lg font-semibold tracking-tight text-foreground">
                   {title}
                 </h3>

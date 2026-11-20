@@ -36,11 +36,11 @@ export function HowItWorks() {
       <ol className="grid gap-6 md:grid-cols-3">
         {steps.map((step) => (
           <li key={step.n} className="relative">
-            <div className="flex h-full flex-col rounded-lg border border-border bg-card p-6">
-              <span className="font-mono text-sm font-medium text-muted-foreground">
+            <div className="flex h-full flex-col rounded-lg border border-primary/[0.28] bg-card bg-[radial-gradient(130%_100%_at_0%_0%,hsl(var(--primary)/0.16),transparent_60%)] p-6">
+              <span className="inline-flex h-8 w-fit items-center rounded-full bg-primary/20 px-3 font-mono text-sm font-medium tabular-nums text-primary ring-1 ring-inset ring-primary/30">
                 {step.n}
               </span>
-              <h3 className="mt-3 text-lg font-semibold tracking-tight text-foreground">
+              <h3 className="mt-4 text-lg font-semibold tracking-tight text-foreground">
                 {step.title}
               </h3>
               <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted-foreground">
