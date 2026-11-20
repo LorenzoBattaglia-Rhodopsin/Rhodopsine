@@ -29,8 +29,6 @@ export const nearbyCopy = {
     locating: "Cerco la tua posizione…",
     geocoding: "Cerco la località…",
     searching: "Cerco i professionisti nelle vicinanze…",
-    /** Dopo qualche secondo di attesa: spiega perché, senza allarmare. */
-    slow: "Il servizio di OpenStreetMap è molto richiesto in questo momento: la ricerca può richiedere fino a un minuto.",
   },
 
   clear: "Cancella ricerca",
@@ -43,6 +41,9 @@ export const nearbyCopy = {
     "Elenco basato sui dati pubblici di OpenStreetMap, potrebbe essere incompleto. Rhodopsine non raccomanda né sponsorizza nessuna delle attività mostrate.",
   approxDistances:
     "Le distanze sono in linea d'aria e approssimate: per proteggere la tua privacy la ricerca usa una posizione arrotondata (circa 1 km).",
+  /** Attribuzione ODbL dell'estratto + data di aggiornamento. */
+  dataCredit: (isoDate: string) =>
+    `Dati © OpenStreetMap contributors (licenza ODbL), aggiornati al ${new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "long", year: "numeric" }).format(new Date(isoDate))}.`,
 } as const;
 
 /** Riepilogo dei risultati (annunciato anche agli screen reader). */
@@ -63,7 +64,7 @@ export const nearbyErrors: Record<NearbyErrorCode, string> = {
   "not-found":
     "Non abbiamo trovato questa località in Italia. Controlla il CAP o prova con il nome della città.",
   network:
-    "Il servizio di OpenStreetMap non risponde in questo momento. Riprova tra qualche istante.",
+    "Non è stato possibile completare la ricerca in questo momento. Controlla la connessione e riprova tra qualche istante.",
 };
 
 /** Le due figure professionali, con la differenza spiegata in modo neutro. */

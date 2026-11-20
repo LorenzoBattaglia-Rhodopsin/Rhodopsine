@@ -13,7 +13,7 @@ import {
   Stethoscope,
   X,
 } from "lucide-react";
-import type { NearbySearchState, ProfessionalKind } from "@/types/nearby";
+import type { ProfessionalKind } from "@/types/nearby";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { IconBadge } from "@/components/shared/icon-badge";
@@ -57,9 +57,6 @@ const KIND_ICON: Record<ProfessionalKind, typeof Glasses> = {
   optician: Glasses,
 };
 
-/** Oltre questa attesa spieghiamo che il servizio è lento (riscontro di stato). */
-const SLOW_AFTER_MS = 8000;
-
 type Filter = "all" | ProfessionalKind;
 type Action = "geo" | "query";
 
@@ -90,16 +87,6 @@ export function NearbyProfessionals() {
     }
   }, [state]);
 
-  // Attesa lunga: si ricorda QUALE ricerca è lenta (nessun setState sincrono
-  // nell'effetto; una nuova ricerca crea un nuovo oggetto stato e azzera).
-  const [slowFor, setSlowFor] = useState<NearbySearchState | null>(null);
-  useEffect(() => {
-    if (state.status !== "searching") return;
-    const t = setTimeout(() => setSlowFor(state), SLOW_AFTER_MS);
-    return () => clearTimeout(t);
-  }, [state]);
-  const isSlow = slowFor === state && state.status === "searching";
-
   const result = state.status === "done" ? state.result : null;
 
   const counts = useMemo(() => {
@@ -122,9 +109,7 @@ export function NearbyProfessionals() {
       : state.status === "geocoding"
         ? nearbyCopy.status.geocoding
         : state.status === "searching"
-          ? isSlow
-            ? nearbyCopy.status.slow
-            : nearbyCopy.status.searching
+          ? nearbyCopy.status.searching
           : "";
 
   function handleLocate() {
@@ -384,6 +369,19 @@ export function NearbyProfessionals() {
           <div className="mt-6 max-w-prose space-y-2 text-xs leading-relaxed text-muted-foreground">
             <p>{nearbyCopy.disclaimer}</p>
             <p>{nearbyCopy.approxDistances}</p>
+            <p>
+              {nearbyCopy.dataCredit(result.dataDate)}{" "}
+              <a
+                href="https://www.openstreetmap.org/copyright"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded underline underline-offset-4 hover:text-foreground"
+              >
+                Licenza e attribuzione
+                <span className="sr-only"> (si apre in una nuova scheda)</span>
+              </a>
+              .
+            </p>
           </div>
         </div>
       )}

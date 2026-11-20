@@ -9,7 +9,7 @@ import type {
 } from "@/types/nearby";
 import { roundCoords } from "@/features/nearby/geo";
 import { geocodeQuery } from "@/features/nearby/nominatim";
-import { searchProfessionals } from "@/features/nearby/overpass";
+import { searchProfessionals } from "@/features/nearby/dataset";
 
 /**
  * HOOK — stato della ricerca professionisti.
@@ -63,14 +63,12 @@ export function useNearbySearch() {
   const runSearch = useCallback(
     async (center: Coordinates, origin: SearchOrigin, signal: AbortSignal) => {
       setState({ status: "searching" });
-      const { radiusKm, professionals } = await searchProfessionals(
-        center,
-        signal,
-      );
+      const { radiusKm, professionals, dataDate } =
+        await searchProfessionals(center);
       if (signal.aborted) return;
       setState({
         status: "done",
-        result: { center, radiusKm, origin, professionals },
+        result: { center, radiusKm, origin, professionals, dataDate },
       });
     },
     [],

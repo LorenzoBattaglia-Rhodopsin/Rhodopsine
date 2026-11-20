@@ -47,6 +47,8 @@ export interface NearbyResult {
   origin: SearchOrigin;
   /** Professionisti ordinati per distanza crescente. */
   professionals: Professional[];
+  /** Data (ISO) dell'estratto OpenStreetMap usato. */
+  dataDate: string;
 }
 
 /** Codici di errore gestiti dall'interfaccia (testi in data/nearby.ts). */
