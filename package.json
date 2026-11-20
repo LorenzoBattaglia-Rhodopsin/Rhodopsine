@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "data:professionisti": "node scripts/fetch-professionals.mjs"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.1",

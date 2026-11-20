@@ -17,6 +17,18 @@ const nextConfig = {
   // Header di sicurezza applicati a tutte le rotte.
   async headers() {
     return [
+      // Estratto OSM dei professionisti: file statico identico per tutti,
+      // aggiornato una volta al mese → cache di 1 giorno (+ 1 settimana
+      // stale-while-revalidate). Non contiene né riceve dati degli utenti.
+      {
+        source: "/data/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
+        ],
+      },
       {
         source: "/:path*",
         headers: [
