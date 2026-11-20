@@ -16,7 +16,7 @@ import { routes, siteConfig } from "@/data/site";
  */
 
 /** Data dell'ultimo aggiornamento dei testi legali (ISO, AAAA-MM-GG). */
-export const legalLastUpdated = "2026-11-19";
+export const legalLastUpdated = "2026-11-20";
 
 /** Dati del titolare del trattamento / gestore del sito. */
 export const legalEntity = {
@@ -92,6 +92,35 @@ export const privacyPolicy: LegalDocument = {
       ],
     },
     {
+      id: "ricerca-professionisti",
+      title: "Ricerca professionisti nelle vicinanze",
+      blocks: [
+        p(
+          "Nella pagina dei risultati puoi cercare, se lo desideri, ottici e oculisti vicini a te. La funzione è facoltativa e si attiva solo quando premi «Usa la mia posizione» oppure invii un CAP o il nome di una città. Prima di allora la pagina non contatta alcun servizio esterno e la mappa non viene caricata.",
+        ),
+        p(
+          "Come funziona. La ricerca avviene interamente nel tuo browser. Se usi la posizione, il browser ti chiede il permesso; le coordinate ottenute vengono subito arrotondate a circa 1 km e da quel momento si usano solo quelle. Se inserisci un CAP o una città, il testo viene inviato al servizio di geocodifica per ricavare le coordinate della località.",
+        ),
+        p(
+          "A chi vanno i dati. Il tuo browser invia questi dati direttamente, senza passare dai nostri server, ai seguenti servizi del progetto OpenStreetMap. Questi servizi ricevono anche il tuo indirizzo IP e i dati tecnici della richiesta, e li trattano come titolari autonomi secondo le proprie policy:",
+        ),
+        ul(
+          "Nominatim, per trovare le coordinate del CAP o della città, gestito dalla OpenStreetMap Foundation (usage policy: https://operations.osmfoundation.org/policies/nominatim/).",
+          "Server delle mappe (tile), per mostrare la mappa, gestiti dalla OpenStreetMap Foundation (usage policy: https://operations.osmfoundation.org/policies/tiles/).",
+          "Overpass API, per cercare le attività nell'area, istanza overpass-api.de gestita da FOSSGIS e.V., Germania (condizioni d'uso e rimando all'informativa: https://fossgis.de/arbeitsgruppen/osm-server/nutzungsbedingungen).",
+        ),
+        p(
+          "L'informativa sulla privacy della OpenStreetMap Foundation è disponibile su https://osmfoundation.org/wiki/Privacy_Policy.",
+        ),
+        p(
+          `Cosa non facciamo. ${siteConfig.name} non riceve, non registra e non conserva la tua posizione, il CAP o la città che inserisci, né i risultati della ricerca. Non li salviamo nel browser (niente cookie, archiviazione locale o parametri nell'indirizzo della pagina), non li inviamo a strumenti di statistica e non li colleghiamo in alcun modo ai risultati del test: la funzione di ricerca non ha accesso al tuo punteggio. Ai servizi esterni il browser comunica soltanto l'indirizzo del sito, non quello della pagina dei risultati. Quando premi «Cancella ricerca» o chiudi la pagina, i dati della ricerca vengono eliminati dalla memoria del browser.`,
+        ),
+        p(
+          "Permesso di geolocalizzazione. Puoi negare il permesso e cercare per CAP o città. Se lo hai concesso, puoi revocarlo in qualsiasi momento dalle impostazioni del browser (di solito nelle impostazioni del sito, alla voce Posizione).",
+        ),
+      ],
+    },
+    {
       id: "finalita",
       title: "Finalità e basi giuridiche",
       blocks: [
@@ -119,6 +148,9 @@ export const privacyPolicy: LegalDocument = {
           "Google LLC / Google Ireland Ltd: servizio di posta elettronica usato per la casella di contatto.",
         ),
         p(
+          "Per la ricerca facoltativa di professionisti nelle vicinanze, il tuo browser contatta direttamente servizi del progetto OpenStreetMap che agiscono come titolari autonomi, non per nostro conto: i dettagli sono nella sezione «Ricerca professionisti nelle vicinanze».",
+        ),
+        p(
           "Alcuni di questi fornitori possono trattare dati negli Stati Uniti. Il trasferimento avviene sulla base delle garanzie previste dagli articoli 45 e 46 del GDPR: la decisione di adeguatezza EU-US Data Privacy Framework, per i fornitori che vi aderiscono, oppure le clausole contrattuali standard approvate dalla Commissione europea.",
         ),
         p("I dati non vengono venduti né ceduti a terzi per finalità proprie."),
@@ -133,6 +165,7 @@ export const privacyPolicy: LegalDocument = {
           "Statistiche: solo in forma aggregata, che non permette di identificarti.",
           "Email: per il tempo necessario a gestire la tua richiesta e comunque non oltre [DURATA_CONSERVAZIONE_EMAIL], salvo obblighi di legge.",
           "Dati del timer nel browser: finché non li cancelli tu, svuotando i dati del sito dal browser.",
+          "Ricerca professionisti: nessuna conservazione da parte nostra. I servizi OpenStreetMap conservano i propri log tecnici secondo le rispettive policy.",
         ),
       ],
     },
@@ -192,6 +225,7 @@ export const cookiePolicy: LegalDocument = {
           "Nessun cookie di profilazione, di marketing o pubblicitario.",
           "Nessun cookie installato dal codice del sito.",
           "Statistiche di visita senza cookie (Cloudflare Web Analytics).",
+          "Mappa della ricerca professionisti caricata solo su tua richiesta, senza cookie.",
           "Possibili cookie tecnici di sicurezza impostati da Cloudflare.",
           "Archiviazione locale del browser solo per il timer 20-20-20.",
         ),
@@ -223,6 +257,9 @@ export const cookiePolicy: LegalDocument = {
         p(
           "Se attivi le notifiche del timer, il browser ti chiede un permesso, che puoi revocare in qualsiasi momento dalle impostazioni del browser.",
         ),
+        p(
+          "La ricerca professionisti nelle vicinanze non salva nulla nel browser: posizione, CAP e risultati restano solo in memoria e spariscono quando cancelli la ricerca o chiudi la pagina.",
+        ),
       ],
     },
     {
@@ -239,7 +276,10 @@ export const cookiePolicy: LegalDocument = {
       title: "Contenuti di terze parti",
       blocks: [
         p(
-          "Il sito non incorpora video, mappe, pulsanti social o altri contenuti esterni che installano cookie. I caratteri tipografici sono ospitati sul sito stesso, senza richieste a servizi esterni. I link verso altri siti (per esempio le fonti scientifiche) portano a pagine con proprie policy.",
+          "Il sito non incorpora video, pulsanti social o altri contenuti esterni che installano cookie. I caratteri tipografici sono ospitati sul sito stesso, senza richieste a servizi esterni. I link verso altri siti (per esempio le fonti scientifiche) portano a pagine con proprie policy.",
+        ),
+        p(
+          "Mappa della ricerca professionisti. Nella pagina dei risultati la mappa non viene caricata all'apertura, ma solo se avvii tu una ricerca. Le immagini della mappa arrivano dai server di OpenStreetMap e i dati da Nominatim e Overpass API (vedi la privacy policy). Alla data dell'ultimo aggiornamento questi servizi non impostano cookie; in ogni caso le richieste di dati partono dal browser senza cookie né credenziali.",
         ),
       ],
     },
