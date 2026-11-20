@@ -108,6 +108,15 @@ export const flatNav: readonly NavItem[] = mainNav.flatMap((entry) =>
   isNavGroup(entry) ? entry.items : [entry],
 );
 
+/**
+ * Id del bottone "Fai il test" dell'hero: l'header lo osserva per non mostrare
+ * la propria CTA finché quella dell'hero è visibile (vedi HeaderCta).
+ * Sta qui, e non nel componente client, perché lo importa anche l'hero
+ * (Server Component): un valore importato da un modulo "use client" arriverebbe
+ * come riferimento client, non come stringa.
+ */
+export const HERO_CTA_ID = "hero-cta";
+
 /** Rotte applicative riutilizzabili (evita stringhe magiche sparse). */
 export const routes = {
   home: "/",

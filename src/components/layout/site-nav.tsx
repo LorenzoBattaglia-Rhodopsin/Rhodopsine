@@ -454,7 +454,7 @@ export function MobileNav({ className }: { className?: string }) {
 
               <Button asChild size="lg" className="mt-3">
                 <Link href={routes.test} onClick={() => setOpen(false)}>
-                  Inizia il test
+                  Fai il test
                 </Link>
               </Button>
             </nav>

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Logo } from "@/components/shared/logo";
-import { Button } from "@/components/ui/button";
 import { TimerTrigger } from "@/components/timer/timer-trigger";
 import { DesktopNav, MobileNav } from "@/components/layout/site-nav";
+import { HeaderCta } from "@/components/layout/header-cta";
 import { routes, siteConfig } from "@/data/site";
 
 /**
@@ -34,15 +34,8 @@ export function SiteHeader() {
         <div className="flex items-center gap-2 sm:gap-3">
           <TimerTrigger />
           {/* Variante secondaria: la CTA primaria di ogni pagina sta nel
-              contenuto (es. l'hero della home), non nell'header. */}
-          <Button
-            asChild
-            size="sm"
-            variant="secondary"
-            className="hidden shrink-0 lg:inline-flex"
-          >
-            <Link href={routes.test}>Inizia il test</Link>
-          </Button>
+              contenuto. In home compare solo dopo la CTA dell'hero. */}
+          <HeaderCta className="hidden lg:inline-flex" />
           <MobileNav />
         </div>
       </div>

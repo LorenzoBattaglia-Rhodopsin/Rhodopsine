@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Monitor, Eye, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EyeIllustration } from "@/components/shared/eye-illustration";
-import { routes } from "@/data/site";
+import { HERO_CTA_ID, routes } from "@/data/site";
 
 /**
  * HERO — Il problema.
@@ -60,7 +60,9 @@ export function Hero() {
 
             <div className="mt-8 flex w-full flex-col sm:w-auto">
               <Button asChild size="lg">
-                <Link href={routes.test}>Fai il test gratuito</Link>
+                <Link id={HERO_CTA_ID} href={routes.test}>
+                  Fai il test gratuito
+                </Link>
               </Button>
             </div>
           </div>

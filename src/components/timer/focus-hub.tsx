@@ -139,7 +139,7 @@ export function FocusHub({ className }: { className?: string }) {
           >
             {display}
           </span>
-          <span className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+          <span className="text-sm text-muted-foreground">
             {unit}
           </span>
         </div>

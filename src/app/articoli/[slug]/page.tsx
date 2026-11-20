@@ -105,7 +105,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <section aria-labelledby="fonti-articolo" className="mt-10">
               <h2
                 id="fonti-articolo"
-                className="text-eyebrow font-medium uppercase text-muted-foreground"
+                className="text-sm font-semibold text-foreground"
               >
                 Fonti
               </h2>

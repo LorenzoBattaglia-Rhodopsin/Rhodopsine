@@ -36,9 +36,8 @@ export function TwentyRule() {
       id="regola-20-20-20"
       title="La regola del 20-20-20"
       description="Un'abitudine semplice per dare sollievo agli occhi durante le lunghe sessioni davanti allo schermo."
-      centered
     >
-      <ul className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-3">
+      <ul className="grid gap-6 sm:grid-cols-3">
         {steps.map(({ icon: Icon, title, text }) => (
           <li key={title}>
             <Card tone="tinted" className="h-full">
@@ -54,7 +53,7 @@ export function TwentyRule() {
         ))}
       </ul>
 
-      <div className="mt-10 flex justify-center">
+      <div className="mt-10">
         <Button asChild size="lg" variant="secondary">
           <Link href={routes.timer}>Apri il timer guidato</Link>
         </Button>

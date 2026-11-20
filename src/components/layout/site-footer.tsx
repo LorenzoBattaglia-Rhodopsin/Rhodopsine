@@ -37,7 +37,7 @@ export function SiteFooter() {
             {/* Trasparenza editoriale: autore + revisione scientifica. */}
             <dl className="mt-6 space-y-4">
               <div>
-                <dt className="text-eyebrow font-medium uppercase text-muted-foreground">
+                <dt className="text-xs text-muted-foreground">
                   A cura di
                 </dt>
                 <dd className="mt-1 text-sm font-medium text-foreground">
@@ -51,7 +51,7 @@ export function SiteFooter() {
                   data/e-e-a-t.ts), come già avviene per `reviewedBy` nel JSON-LD. */}
               {contentReviewer.name && (
                 <div>
-                  <dt className="text-eyebrow font-medium uppercase text-muted-foreground">
+                  <dt className="text-xs text-muted-foreground">
                     Revisione scientifica
                   </dt>
                   <dd className="mt-1 text-sm font-medium text-foreground">
@@ -72,7 +72,7 @@ export function SiteFooter() {
 
           {/* Navigazione */}
           <nav aria-label="Navigazione footer">
-            <h2 className="text-eyebrow font-medium uppercase text-muted-foreground">
+            <h2 className="text-sm font-semibold text-foreground">
               Esplora
             </h2>
             <ul className="mt-4 space-y-3 text-sm">
@@ -91,7 +91,7 @@ export function SiteFooter() {
 
           {/* Contatti diretti dell'organizzazione (canale editoriale). */}
           <div>
-            <h2 className="text-eyebrow font-medium uppercase text-muted-foreground">
+            <h2 className="text-sm font-semibold text-foreground">
               Contatti
             </h2>
             <ul className="mt-4 space-y-3 text-sm">

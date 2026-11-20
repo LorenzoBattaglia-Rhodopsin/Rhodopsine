@@ -2,12 +2,16 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { Section } from "@/components/shared/section";
 import { Button } from "@/components/ui/button";
+import { ProfessionalKinds } from "@/components/nearby/professional-kinds";
 import { routes } from "@/data/site";
-import { findCtaCopy, kindsSummary } from "@/data/nearby";
+import { findCtaCopy } from "@/data/nearby";
 
 /**
  * SEZIONE "TROVA OTTICI E OCULISTI" (landing)
- * Invito sobrio alla pagina di ricerca, accessibile anche senza il test.
+ * Subito dopo "Come funziona": è il secondo strumento del sito, accessibile
+ * anche senza il test. Le due card (oculista vs ottico-optometrista, le stesse
+ * di /risultati) aiutano a scegliere la figura giusta (CLAUDE.md §6.1); la CTA
+ * è primaria perché in questa schermata non ce ne sono altre.
  * Tono informativo: nessuna promozione di strutture (CLAUDE.md §6.2).
  */
 export function FindProfessionals() {
@@ -17,11 +21,9 @@ export function FindProfessionals() {
       title={findCtaCopy.title}
       description={findCtaCopy.description}
     >
-      <p className="max-w-prose text-sm leading-relaxed text-muted-foreground">
-        {kindsSummary}
-      </p>
-      <div className="mt-8">
-        <Button asChild size="lg" variant="secondary">
+      <ProfessionalKinds />
+      <div className="mt-10">
+        <Button asChild size="lg">
           <Link href={routes.professionals}>
             <MapPin aria-hidden="true" />
             {findCtaCopy.cta}
