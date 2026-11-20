@@ -60,9 +60,23 @@ export const privacyPolicy: LegalDocument = {
   path: routes.privacy,
   title: "Privacy policy",
   heading: "Informativa sulla privacy",
-  description: `Come ${siteConfig.name} tratta i dati personali di chi visita il sito: quali dati, per quali finalità, per quanto tempo e quali sono i tuoi diritti (GDPR).`,
-  intro: `Questa informativa spiega quali dati personali vengono trattati quando visiti ${siteConfig.url.replace(/^https?:\/\//, "")}, ai sensi degli articoli 13 e 14 del Regolamento (UE) 2016/679 ("GDPR"). Il sito non richiede registrazione e non ti chiede di inserire dati che ti identificano.`,
+  description: `Come ${siteConfig.name} tratta i dati personali di chi visita il sito: quali dati, perché, per quanto tempo e quali sono i tuoi diritti (GDPR).`,
+  intro: `Questa informativa spiega in parole semplici quali dati personali tratta il sito ${siteConfig.url.replace(/^https?:\/\//, "")} e perché, come previsto dagli articoli 13 e 14 del Regolamento (UE) 2016/679 ("GDPR"). Per usare il sito non devi registrarti e non ti chiediamo dati che ti identificano.`,
   sections: [
+    {
+      id: "in-breve",
+      title: "In breve",
+      blocks: [
+        ul(
+          "Non serve registrarsi: non ti chiediamo nome, email o altri dati per usare il sito.",
+          "Le risposte al test restano nel tuo browser: non le riceviamo e non le salviamo.",
+          "La ricerca di ottici e oculisti è facoltativa. La tua posizione resta nel browser: non la riceviamo e non la salviamo.",
+          "Non usiamo cookie di profilazione o pubblicità e non facciamo marketing.",
+          "Contiamo le visite solo in forma aggregata, senza cookie.",
+          `Per qualsiasi richiesta sui tuoi dati scrivi a ${legalEntity.email}.`,
+        ),
+      ],
+    },
     {
       id: "titolare",
       title: "Titolare del trattamento",
@@ -73,65 +87,64 @@ export const privacyPolicy: LegalDocument = {
       title: "Quali dati trattiamo",
       blocks: [
         p(
-          "Dati di navigazione. Quando visiti il sito, i server dei fornitori che lo distribuiscono e lo proteggono registrano in modo automatico alcuni dati tecnici: indirizzo IP, data e ora della richiesta, indirizzo della pagina richiesta (compresi gli eventuali parametri), tipo di browser e sistema operativo, pagina di provenienza. Servono a far funzionare il sito e a proteggerlo da abusi e attacchi.",
+          "Dati di navigazione. Come per ogni sito, i server che ospitano e proteggono il sito registrano in automatico alcuni dati tecnici: indirizzo IP, data e ora, pagina visitata, tipo di browser e sistema operativo, pagina di provenienza. Servono a far funzionare il sito e a proteggerlo da abusi e attacchi.",
         ),
         p(
-          "Risposte al test di autovalutazione. Le risposte alle singole domande vengono elaborate nel tuo browser e non sono inviate né salvate da noi. Per mostrarti l'esito, il punteggio complessivo (da 0 a 100) e l'area più critica vengono inseriti nell'indirizzo della pagina dei risultati (per esempio /risultati?s=50&d=breaks). Come ogni indirizzo visitato, può quindi comparire nei log tecnici descritti sopra, insieme all'indirizzo IP. Non usiamo questi dati per identificarti, né per profilarti, né per altri scopi.",
+          "Test di autovalutazione. Le risposte vengono elaborate nel tuo browser e non ci vengono inviate. Per mostrarti l'esito, il punteggio complessivo (da 0 a 100) e l'area più critica vengono inseriti nell'indirizzo della pagina dei risultati: per questo possono comparire nei dati di navigazione. Non li usiamo per identificarti, per profilarti o per altri scopi.",
         ),
         p(
-          "Timer 20-20-20. Lo stato e le preferenze del timer vengono salvati solo sul tuo dispositivo (archiviazione locale del browser) e non ci vengono trasmessi. Se attivi le notifiche, il permesso è gestito dal tuo browser.",
+          "Timer 20-20-20. Lo stato e le impostazioni del timer vengono salvati solo sul tuo dispositivo e non ci vengono inviati. Se attivi le notifiche, il permesso lo gestisce il tuo browser.",
         ),
         p(
-          "Statistiche di visita. Usiamo Cloudflare Web Analytics per conoscere in forma aggregata quante visite riceve il sito e quali pagine sono più lette. Secondo quanto dichiarato da Cloudflare, il servizio non usa cookie, non crea profili e non utilizza l'indirizzo IP per tracciare i visitatori.",
+          "Statistiche di visita. Usiamo Cloudflare Web Analytics per sapere, in forma aggregata, quante visite riceve il sito e quali pagine vengono lette. Secondo Cloudflare, il servizio non usa cookie, non crea profili e non usa l'indirizzo IP per seguire i visitatori.",
         ),
         p(
-          "Dati che ci invii volontariamente. Se ci scrivi via email, trattiamo il tuo indirizzo email e il contenuto del messaggio. Ti chiediamo di non inviarci informazioni sulla tua salute: il canale di contatto è editoriale, non clinico.",
+          "Dati che ci invii tu. Se ci scrivi via email, trattiamo il tuo indirizzo email e il contenuto del messaggio. Ti chiediamo di non inviarci informazioni sulla tua salute: la casella è un contatto editoriale, non clinico.",
         ),
       ],
     },
     {
       id: "ricerca-professionisti",
-      title: "Ricerca professionisti nelle vicinanze",
+      title: "Ricerca di ottici e oculisti",
       blocks: [
         p(
-          "Nella pagina dei risultati puoi cercare, se lo desideri, ottici e oculisti vicini a te. La funzione è facoltativa e si attiva solo quando premi «Usa la mia posizione» oppure invii un CAP o il nome di una città. Prima di allora la pagina non contatta alcun servizio esterno e la mappa non viene caricata.",
+          "Nella pagina «Trova ottici e oculisti» e nella pagina dei risultati del test puoi cercare, se vuoi, ottici e oculisti vicini a te. La ricerca è facoltativa e parte solo quando premi «Usa la mia posizione» oppure cerchi una città o un CAP. Prima di allora la pagina non contatta servizi esterni.",
         ),
         p(
-          "Come funziona. La ricerca avviene interamente nel tuo browser. Se usi la posizione, il browser ti chiede il permesso; le coordinate ottenute vengono subito arrotondate a circa 1 km e da quel momento si usano solo quelle. Se inserisci un CAP o una città, il testo viene inviato al servizio di geocodifica per ricavare le coordinate della località.",
+          "La tua posizione. Se usi la posizione, il browser ti chiede il permesso. La posizione viene subito resa approssimativa (circa 1 km) e usata solo nel tuo browser per calcolare le distanze. Non ci viene inviata e non la salviamo.",
         ),
         p(
-          "Elenco dei professionisti. L'elenco di ottici e oculisti è un estratto dei dati pubblici di OpenStreetMap (© OpenStreetMap contributors, licenza ODbL) che ospitiamo sul nostro sito e aggiorniamo ogni mese. Il browser lo scarica per intero, sempre identico per tutti, senza inviare la tua posizione: il calcolo delle distanze avviene sul tuo dispositivo. Come per ogni file del sito, il download compare nei normali dati di navigazione descritti sopra, ma non contiene né rivela la tua zona di ricerca.",
+          "Città o CAP. Se scrivi una città o un CAP, il testo viene inviato al servizio Nominatim di OpenStreetMap, che trova la località sulla mappa.",
         ),
         p(
-          "A chi vanno i dati. Il tuo browser invia questi dati direttamente, senza passare dai nostri server, ai seguenti servizi del progetto OpenStreetMap. Questi servizi ricevono anche il tuo indirizzo IP e i dati tecnici della richiesta, e li trattano come titolari autonomi secondo le proprie policy:",
-        ),
-        ul(
-          "Nominatim, per trovare le coordinate del CAP o della città, gestito dalla OpenStreetMap Foundation (usage policy: https://operations.osmfoundation.org/policies/nominatim/).",
-          "Server delle mappe (tile), per mostrare la mappa, gestiti dalla OpenStreetMap Foundation (usage policy: https://operations.osmfoundation.org/policies/tiles/). Le immagini della mappa riguardano la zona mostrata, che è centrata sulla posizione arrotondata.",
+          "La mappa. Le immagini della mappa arrivano dai server di OpenStreetMap e vengono caricate solo dopo che hai avviato una ricerca.",
         ),
         p(
-          "L'informativa sulla privacy della OpenStreetMap Foundation è disponibile su https://osmfoundation.org/wiki/Privacy_Policy.",
+          "Chi riceve questi dati. Nominatim e i server delle mappe sono gestiti dalla OpenStreetMap Foundation, con sede nel Regno Unito (Paese che la Commissione europea riconosce come adeguato per la protezione dei dati). Come ogni sito che visiti, ricevono il tuo indirizzo IP e i dati tecnici della richiesta e li trattano come titolari autonomi, non per nostro conto. La loro informativa è su https://osmfoundation.org/wiki/Privacy_Policy.",
         ),
         p(
-          `Cosa non facciamo. ${siteConfig.name} non riceve, non registra e non conserva la tua posizione, il CAP o la città che inserisci, né i risultati della ricerca. Non li salviamo nel browser (niente cookie, archiviazione locale o parametri nell'indirizzo della pagina), non li inviamo a strumenti di statistica e non li colleghiamo in alcun modo ai risultati del test: la funzione di ricerca non ha accesso al tuo punteggio. Ai servizi esterni il browser comunica soltanto l'indirizzo del sito, non quello della pagina dei risultati. Quando premi «Cancella ricerca» o chiudi la pagina, i dati della ricerca vengono eliminati dalla memoria del browser.`,
+          "L'elenco dei professionisti. L'elenco proviene dai dati pubblici di OpenStreetMap ed è ospitato sul nostro sito. Il browser lo scarica per intero, uguale per tutti: non rivela la zona che stai cercando. Le schede dei singoli centri sono normali pagine del sito e, come ogni pagina visitata, compaiono nei dati di navigazione.",
         ),
         p(
-          "Permesso di geolocalizzazione. Puoi negare il permesso e cercare per CAP o città. Se lo hai concesso, puoi revocarlo in qualsiasi momento dalle impostazioni del browser (di solito nelle impostazioni del sito, alla voce Posizione).",
+          `Cosa non facciamo. ${siteConfig.name} non riceve e non conserva la tua posizione, la città o il CAP che cerchi, né i risultati della ricerca. Non li salviamo nemmeno nel tuo browser (niente cookie né archiviazione locale) e non li colleghiamo ai risultati del test. Quando cancelli la ricerca o chiudi la pagina, spariscono.`,
+        ),
+        p(
+          "Puoi negare il permesso di posizione e cercare per città o CAP. Se lo hai concesso, puoi revocarlo in qualsiasi momento dalle impostazioni del browser.",
         ),
       ],
     },
     {
       id: "finalita",
-      title: "Finalità e basi giuridiche",
+      title: "Perché trattiamo i dati (finalità e basi giuridiche)",
       blocks: [
         ul(
-          "Erogazione del sito e sicurezza (dati di navigazione): legittimo interesse del titolare a rendere disponibile il sito e a proteggerlo (art. 6, par. 1, lett. f GDPR).",
-          "Statistiche aggregate di visita: legittimo interesse a capire quali contenuti sono utili, con dati aggregati e senza cookie (art. 6, par. 1, lett. f GDPR).",
-          "Risposta alle tue richieste via email: esecuzione di misure adottate su tua richiesta (art. 6, par. 1, lett. b GDPR).",
-          "Adempimento di obblighi di legge, se presenti (art. 6, par. 1, lett. c GDPR).",
+          "Far funzionare il sito e proteggerlo (dati di navigazione): nostro legittimo interesse (art. 6, par. 1, lett. f GDPR).",
+          "Statistiche aggregate di visita, senza cookie: nostro legittimo interesse a capire quali contenuti sono utili (art. 6, par. 1, lett. f GDPR).",
+          "Rispondere alle tue email: misure richieste da te (art. 6, par. 1, lett. b GDPR).",
+          "Rispettare eventuali obblighi di legge (art. 6, par. 1, lett. c GDPR).",
         ),
         p(
-          "Non effettuiamo profilazione, né decisioni basate unicamente su trattamenti automatizzati, né attività di marketing.",
+          "Non facciamo profilazione, né decisioni automatizzate, né marketing.",
         ),
       ],
     },
@@ -140,20 +153,20 @@ export const privacyPolicy: LegalDocument = {
       title: "A chi vengono comunicati i dati",
       blocks: [
         p(
-          "I dati sono trattati da fornitori che agiscono come responsabili del trattamento per conto del titolare:",
+          "Ci affidiamo ad alcuni fornitori, che trattano i dati per nostro conto (responsabili del trattamento):",
         ),
         ul(
-          "Cloudflare, Inc. (Stati Uniti): rete di distribuzione dei contenuti (CDN), protezione da attacchi e statistiche aggregate (Cloudflare Web Analytics).",
-          "Netlify, Inc. (Stati Uniti): hosting del sito.",
-          "Google LLC / Google Ireland Ltd: servizio di posta elettronica usato per la casella di contatto.",
+          "Cloudflare, Inc. (Stati Uniti): rende il sito veloce e lo protegge dagli attacchi; fornisce le statistiche aggregate di visita.",
+          "Netlify, Inc. (Stati Uniti): ospita il sito.",
+          "Google LLC / Google Ireland Ltd: gestisce la casella email di contatto.",
         ),
         p(
-          "Per la ricerca facoltativa di professionisti nelle vicinanze, il tuo browser contatta direttamente servizi del progetto OpenStreetMap che agiscono come titolari autonomi, non per nostro conto: i dettagli sono nella sezione «Ricerca professionisti nelle vicinanze».",
+          "I servizi di OpenStreetMap usati dalla ricerca facoltativa di ottici e oculisti non lavorano per nostro conto: vedi la sezione «Ricerca di ottici e oculisti».",
         ),
         p(
-          "Alcuni di questi fornitori possono trattare dati negli Stati Uniti. Il trasferimento avviene sulla base delle garanzie previste dagli articoli 45 e 46 del GDPR: la decisione di adeguatezza EU-US Data Privacy Framework, per i fornitori che vi aderiscono, oppure le clausole contrattuali standard approvate dalla Commissione europea.",
+          "Alcuni fornitori possono trattare dati negli Stati Uniti. In questi casi il trasferimento è protetto dalle garanzie previste dagli articoli 45 e 46 del GDPR: l'EU-US Data Privacy Framework, per i fornitori che vi aderiscono, oppure le clausole contrattuali standard approvate dalla Commissione europea.",
         ),
-        p("I dati non vengono venduti né ceduti a terzi per finalità proprie."),
+        p("Non vendiamo né cediamo i dati a nessuno."),
       ],
     },
     {
@@ -161,11 +174,11 @@ export const privacyPolicy: LegalDocument = {
       title: "Per quanto tempo conserviamo i dati",
       blocks: [
         ul(
-          "Dati di navigazione: per il periodo previsto dai fornitori di CDN e hosting per finalità tecniche e di sicurezza, secondo le rispettive informative.",
+          "Dati di navigazione: per il tempo previsto dai fornitori di hosting e sicurezza per finalità tecniche, secondo le loro informative.",
           "Statistiche: solo in forma aggregata, che non permette di identificarti.",
-          "Email: per il tempo necessario a gestire la tua richiesta e comunque non oltre 12 mesi dall'ultimo scambio, salvo obblighi di legge.",
-          "Dati del timer nel browser: finché non li cancelli tu, svuotando i dati del sito dal browser.",
-          "Ricerca professionisti: nessuna conservazione da parte nostra. I servizi OpenStreetMap conservano i propri log tecnici secondo le rispettive policy.",
+          "Email: il tempo necessario a rispondere e comunque non oltre 12 mesi dall'ultimo messaggio, salvo obblighi di legge.",
+          "Impostazioni del timer: restano sul tuo dispositivo finché non cancelli i dati del sito dal browser.",
+          "Ricerca di ottici e oculisti: non conserviamo nulla. I servizi di OpenStreetMap conservano i propri dati tecnici secondo le loro regole.",
         ),
       ],
     },
@@ -174,13 +187,13 @@ export const privacyPolicy: LegalDocument = {
       title: "I tuoi diritti",
       blocks: [
         p(
-          "In ogni momento puoi chiedere al titolare l'accesso ai tuoi dati, la rettifica, la cancellazione, la limitazione del trattamento e la portabilità, e puoi opporti ai trattamenti basati sul legittimo interesse (articoli da 15 a 22 GDPR).",
+          "Puoi chiederci in ogni momento di accedere ai tuoi dati, correggerli, cancellarli, limitarne l'uso o riceverli in un formato leggibile (portabilità). Puoi anche opporti ai trattamenti basati sul nostro legittimo interesse (articoli da 15 a 22 GDPR).",
         ),
         p(
-          `Per esercitare i tuoi diritti scrivi a ${legalEntity.email}. Rispondiamo entro un mese dalla richiesta.`,
+          `Per farlo scrivi a ${legalEntity.email}. Ti rispondiamo entro un mese.`,
         ),
         p(
-          "Se ritieni che il trattamento violi il GDPR, puoi proporre reclamo al Garante per la protezione dei dati personali (https://www.garanteprivacy.it) o all'autorità di controllo del Paese in cui risiedi o lavori.",
+          "Se pensi che i tuoi dati siano trattati in modo non corretto, puoi presentare reclamo al Garante per la protezione dei dati personali (https://www.garanteprivacy.it) o all'autorità del Paese in cui vivi o lavori.",
         ),
       ],
     },
@@ -189,7 +202,7 @@ export const privacyPolicy: LegalDocument = {
       title: "Minori",
       blocks: [
         p(
-          "Il sito ha finalità educative e si rivolge a un pubblico generale. Non raccogliamo consapevolmente dati di minori di 14 anni: se sei un genitore e ritieni che tuo figlio ci abbia scritto, contattaci e cancelleremo i dati.",
+          "Il sito è educativo e si rivolge a tutti. Non raccogliamo consapevolmente dati di minori di 14 anni: se sei un genitore e pensi che tuo figlio ci abbia scritto, contattaci e cancelleremo i dati.",
         ),
       ],
     },
@@ -198,7 +211,7 @@ export const privacyPolicy: LegalDocument = {
       title: "Modifiche a questa informativa",
       blocks: [
         p(
-          "Possiamo aggiornare questa informativa, per esempio se cambiano i servizi usati dal sito. La data dell'ultimo aggiornamento è indicata in cima alla pagina.",
+          "Possiamo aggiornare questa informativa, per esempio se cambiano i servizi usati dal sito. La data dell'ultimo aggiornamento è in cima alla pagina.",
         ),
       ],
     },
@@ -215,50 +228,40 @@ export const cookiePolicy: LegalDocument = {
   heading: "Cookie policy",
   description: `${siteConfig.name} non usa cookie di profilazione né di marketing: solo strumenti tecnici necessari al funzionamento e alla sicurezza del sito.`,
   intro:
-    "I cookie sono piccoli file che un sito salva nel browser. Strumenti simili sono l'archiviazione locale del browser (localStorage). Questa pagina spiega quali usa il sito e perché non trovi un banner per il consenso.",
+    "I cookie sono piccoli file che un sito salva nel tuo browser. Qui trovi quali strumenti di questo tipo usa il sito e perché non vedi un banner per il consenso.",
   sections: [
     {
       id: "in-breve",
       title: "In breve",
       blocks: [
         ul(
-          "Nessun cookie di profilazione, di marketing o pubblicitario.",
-          "Nessun cookie installato dal codice del sito.",
-          "Statistiche di visita senza cookie (Cloudflare Web Analytics).",
-          "Mappa della ricerca professionisti caricata solo su tua richiesta, senza cookie.",
-          "Possibili cookie tecnici di sicurezza impostati da Cloudflare.",
-          "Archiviazione locale del browser solo per il timer 20-20-20.",
+          "Il sito non installa cookie propri.",
+          "Nessun cookie di profilazione, pubblicità o marketing.",
+          "Statistiche di visita senza cookie.",
+          "Cloudflare, che protegge il sito, può impostare due cookie tecnici di sicurezza.",
+          "Il timer 20-20-20 salva le tue impostazioni solo sul tuo dispositivo.",
+          "La ricerca di ottici e oculisti non salva nulla nel browser.",
         ),
       ],
     },
     {
-      id: "cookie-tecnici",
-      title: "Cookie tecnici di sicurezza (Cloudflare)",
+      id: "elenco",
+      title: "Cookie e strumenti usati",
       blocks: [
-        p(
-          "Il sito è protetto da Cloudflare. Per distinguere i visitatori reali dal traffico automatizzato, Cloudflare può impostare questi cookie tecnici:",
-        ),
+        p("Questi sono tutti gli strumenti che possono essere salvati nel tuo browser:"),
         ul(
-          "__cf_bm: gestione del traffico automatizzato (bot). Dura circa 30 minuti.",
-          "cf_clearance: ricorda che hai superato una verifica di sicurezza, quando viene mostrata. Dura di norma alcuni minuti o ore, secondo la configurazione.",
+          "__cf_bm (cookie tecnico di Cloudflare): distingue i visitatori reali dal traffico automatico. Dura circa 30 minuti.",
+          "cf_clearance (cookie tecnico di Cloudflare): ricorda che hai superato una verifica di sicurezza, solo se ti è stata mostrata. Dura da pochi minuti ad alcune ore.",
+          "wbe_timer_v1 (archiviazione locale del browser): ricorda lo stato e le impostazioni del timer 20-20-20, solo se lo usi. Resta finché non cancelli i dati del sito dal browser e non ci viene inviato.",
         ),
         p(
-          "Sono strettamente necessari alla sicurezza del sito e non servono a profilarti. Per questo non richiedono il consenso.",
-        ),
-      ],
-    },
-    {
-      id: "archiviazione-locale",
-      title: "Archiviazione locale del browser",
-      blocks: [
-        p(
-          "Il timer 20-20-20 salva il proprio stato e le tue preferenze nell'archiviazione locale del browser, alla voce wbe_timer_v1, così ritrovi il timer come l'avevi lasciato. Il dato resta sul tuo dispositivo, non viene inviato a nessuno e serve solo alla funzione che hai scelto di usare.",
+          "Sono tutti strettamente necessari alla sicurezza del sito o a una funzione che hai scelto di usare, e non servono a profilarti. Per questo non richiedono il tuo consenso.",
         ),
         p(
-          "Se attivi le notifiche del timer, il browser ti chiede un permesso, che puoi revocare in qualsiasi momento dalle impostazioni del browser.",
+          "Se attivi le notifiche del timer, il browser ti chiede un permesso, che puoi revocare in qualsiasi momento dalle sue impostazioni.",
         ),
         p(
-          "La ricerca professionisti nelle vicinanze non salva nulla nel browser: posizione, CAP e risultati restano solo in memoria e spariscono quando cancelli la ricerca o chiudi la pagina.",
+          "La ricerca di ottici e oculisti non salva nulla nel browser: posizione, città e risultati spariscono quando cancelli la ricerca o chiudi la pagina.",
         ),
       ],
     },
@@ -267,7 +270,7 @@ export const cookiePolicy: LegalDocument = {
       title: "Statistiche di visita",
       blocks: [
         p(
-          "Usiamo Cloudflare Web Analytics, che misura le visite in forma aggregata senza installare cookie e senza creare profili. Non usiamo Google Analytics né altri strumenti di tracciamento.",
+          "Usiamo Cloudflare Web Analytics, che conta le visite in forma aggregata senza cookie e senza creare profili. Non usiamo Google Analytics né altri strumenti di tracciamento.",
         ),
       ],
     },
@@ -276,10 +279,10 @@ export const cookiePolicy: LegalDocument = {
       title: "Contenuti di terze parti",
       blocks: [
         p(
-          "Il sito non incorpora video, pulsanti social o altri contenuti esterni che installano cookie. I caratteri tipografici sono ospitati sul sito stesso, senza richieste a servizi esterni. I link verso altri siti (per esempio le fonti scientifiche) portano a pagine con proprie policy.",
+          "Il sito non incorpora video, pulsanti social o altri contenuti esterni che installano cookie. I caratteri tipografici sono ospitati sul nostro sito. I link verso altri siti (per esempio le fonti scientifiche) portano a pagine con regole proprie.",
         ),
         p(
-          "Mappa della ricerca professionisti. Nella pagina dei risultati la mappa non viene caricata all'apertura, ma solo se avvii tu una ricerca. Le immagini della mappa arrivano dai server di OpenStreetMap e la ricerca per CAP o città usa Nominatim; l'elenco dei professionisti è invece un file ospitato sul nostro sito (vedi la privacy policy). Alla data dell'ultimo aggiornamento questi servizi non impostano cookie; in ogni caso le richieste di dati partono dal browser senza cookie né credenziali.",
+          "La mappa della ricerca di ottici e oculisti arriva dai server di OpenStreetMap e si carica solo quando avvii una ricerca. Ad oggi questi servizi non impostano cookie. Per i dettagli vedi la privacy policy.",
         ),
       ],
     },
@@ -288,7 +291,7 @@ export const cookiePolicy: LegalDocument = {
       title: "Perché non c'è il banner dei cookie",
       blocks: [
         p(
-          "Le Linee guida del Garante per la protezione dei dati personali sui cookie e altri strumenti di tracciamento (10 giugno 2021) prevedono che il consenso, e quindi il banner, serva solo per cookie e strumenti non tecnici. Il sito usa esclusivamente strumenti tecnici e statistiche senza cookie, quindi il consenso non è necessario. Questa pagina fornisce comunque l'informativa prevista.",
+          "Secondo le Linee guida del Garante per la protezione dei dati personali sui cookie (10 giugno 2021), il consenso, e quindi il banner, serve solo per cookie e strumenti non tecnici. Il sito usa solo strumenti tecnici e statistiche senza cookie, quindi il consenso non è necessario. Questa pagina ti dà comunque tutte le informazioni previste.",
         ),
       ],
     },
@@ -297,10 +300,10 @@ export const cookiePolicy: LegalDocument = {
       title: "Come gestire cookie e dati del sito",
       blocks: [
         p(
-          "Puoi cancellare o bloccare i cookie e i dati salvati dal sito dalle impostazioni del browser (di solito nella sezione privacy o dati dei siti). Se blocchi i cookie tecnici di Cloudflare, alcune verifiche di sicurezza potrebbero ripetersi.",
+          "Puoi cancellare o bloccare cookie e dati del sito dalle impostazioni del browser (di solito nella sezione privacy). Se blocchi i cookie tecnici di Cloudflare, alcune verifiche di sicurezza potrebbero ripetersi.",
         ),
         p(
-          `Per qualsiasi domanda scrivi a ${legalEntity.email}. Per il trattamento dei dati personali vedi anche la privacy policy.`,
+          `Per qualsiasi domanda scrivi a ${legalEntity.email}. Per i dati personali vedi anche la privacy policy.`,
         ),
       ],
     },
