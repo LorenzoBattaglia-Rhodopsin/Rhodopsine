@@ -22,13 +22,15 @@ export const nearbyCopy = {
   useLocation: "Usa la mia posizione",
   or: "oppure",
   queryLabel: "CAP o città",
-  queryPlaceholder: "Es. 20121 oppure Bologna",
+  queryPlaceholder: "Es. 20121 o Bologna",
   querySubmit: "Cerca",
 
   status: {
     locating: "Cerco la tua posizione…",
     geocoding: "Cerco la località…",
     searching: "Cerco i professionisti nelle vicinanze…",
+    /** Dopo qualche secondo di attesa: spiega perché, senza allarmare. */
+    slow: "Il servizio di OpenStreetMap è molto richiesto in questo momento: la ricerca può richiedere fino a un minuto.",
   },
 
   clear: "Cancella ricerca",

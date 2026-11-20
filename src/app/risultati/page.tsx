@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Section } from "@/components/shared/section";
 import { ScoreGauge } from "@/components/results/score-gauge";
 import { RecommendationList } from "@/components/results/recommendation-list";
+import { NearbyProfessionals } from "@/components/nearby/nearby-professionals";
 import { getResultLevel } from "@/features/assessment/scoring";
 import { getResultContent } from "@/features/assessment/results-content";
 import { getRecommendations } from "@/data/recommendations";
@@ -171,6 +172,11 @@ export default async function ResultsPage({
             </aside>
           </div>
         </div>
+
+        {/* Ricerca professionisti nelle vicinanze. PRIVACY: nessuna prop —
+            il componente non riceve punteggio, livello né dominio, quindi
+            la ricerca non può essere collegata al risultato del test. */}
+        <NearbyProfessionals />
       </div>
     </Section>
   );

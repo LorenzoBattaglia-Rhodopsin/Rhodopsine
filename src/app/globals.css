@@ -200,3 +200,120 @@
 .timer-ring-animated {
   transition: stroke-dashoffset 0.6s cubic-bezier(0.25, 1, 0.5, 1), stroke 0.4s ease;
 }
+
+/* ─── Mappa ricerca professionisti (Leaflet) ───────────────────────────────
+   Prefisso `.nearby-map.leaflet-container`: il CSS di Leaflet arriva DOPO
+   (chunk caricato on demand) e a parità di specificità vincerebbe (es.
+   `.leaflet-touch .leaflet-bar a`, `.leaflet-container a`).
+   Solo token di tema (CLAUDE.md §5). */
+.nearby-map.leaflet-container {
+  background: hsl(var(--muted));
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: hsl(var(--foreground));
+}
+
+/* Le tile OSM sono molto chiare: le attenuiamo per non creare un salto di
+   luminosità brusco sul tema scuro (meno abbagliamento, stesso contenuto). */
+.nearby-map.leaflet-container .leaflet-tile-pane {
+  filter: brightness(0.82) saturate(0.85) contrast(0.95);
+}
+
+/* Area di ricerca approssimativa: cerchio tratteggiato, nessun punto preciso. */
+.nearby-map.leaflet-container path.nearby-area {
+  stroke: hsl(var(--primary));
+  stroke-width: 2;
+  stroke-dasharray: 6 6;
+  fill: hsl(var(--primary));
+  fill-opacity: 0.1;
+}
+
+/* Marker divIcon: niente riquadro bianco di default, focus visibile. */
+.nearby-map.leaflet-container .leaflet-marker-icon.nearby-marker {
+  background: transparent;
+  border: 0;
+  border-radius: 9999px;
+}
+.nearby-map.leaflet-container .leaflet-marker-icon.nearby-marker:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+}
+
+/* Controlli zoom: target 44px, colori di tema. */
+.nearby-map.leaflet-container .leaflet-bar {
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 4px 14px hsl(var(--background) / 0.5);
+}
+.nearby-map.leaflet-container .leaflet-bar a,
+.nearby-map.leaflet-container .leaflet-bar a:hover {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  font-size: 20px;
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  border-bottom-color: hsl(var(--border));
+}
+.nearby-map.leaflet-container .leaflet-bar a:hover {
+  background: hsl(var(--accent));
+}
+.nearby-map.leaflet-container .leaflet-bar a.leaflet-disabled {
+  background: hsl(var(--card));
+  color: hsl(var(--muted-foreground) / 0.5);
+}
+.nearby-map.leaflet-container .leaflet-bar a:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -2px;
+}
+
+/* Attribuzione OSM (obbligatoria): leggibile ma discreta. */
+.nearby-map.leaflet-container .leaflet-control-attribution {
+  background: hsl(var(--background) / 0.85);
+  color: hsl(var(--muted-foreground));
+  font-size: 0.6875rem;
+  padding: 2px 8px;
+  border-top-left-radius: calc(var(--radius) - 4px);
+}
+.nearby-map.leaflet-container .leaflet-control-attribution a {
+  color: hsl(var(--foreground));
+}
+
+/* Popup sul tema scuro. */
+.nearby-map.leaflet-container .leaflet-popup-content-wrapper,
+.nearby-map.leaflet-container .leaflet-popup-tip {
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 12px 32px hsl(var(--background) / 0.6);
+}
+.nearby-map.leaflet-container .leaflet-popup-content-wrapper {
+  border-radius: var(--radius);
+}
+.nearby-map.leaflet-container .leaflet-popup-content {
+  margin: 14px 44px 10px 16px;
+  line-height: 1.45;
+}
+.nearby-map.leaflet-container .leaflet-popup-content p {
+  margin: 0;
+}
+.nearby-map.leaflet-container .leaflet-popup-content a {
+  color: hsl(var(--primary));
+}
+.nearby-map.leaflet-container a.leaflet-popup-close-button {
+  width: 44px;
+  height: 44px;
+  font-size: 20px;
+  line-height: 44px;
+  color: hsl(var(--muted-foreground));
+}
+.nearby-map.leaflet-container a.leaflet-popup-close-button:hover {
+  color: hsl(var(--foreground));
+}
+
+@media (prefers-contrast: more) {
+  .nearby-map.leaflet-container .leaflet-tile-pane {
+    filter: none;
+  }
+}
