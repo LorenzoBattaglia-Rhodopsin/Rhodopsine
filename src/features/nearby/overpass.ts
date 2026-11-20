@@ -95,8 +95,38 @@ export function parseOverpass(
   return out.sort((a, b) => a.distanceKm - b.distanceKm);
 }
 
-/** Esegue una singola query per un raggio dato. Lancia su errore/timeout. */
+/** Stati transitori dell'istanza pubblica: vale la pena riprovare una volta. */
+const RETRYABLE = new Set([429, 502, 503, 504]);
+/** Backoff esponenziale, come chiede il servizio quando è "at capacity". */
+const RETRY_DELAYS_MS = [2000, 4000];
+
+class RetryableError extends Error {}
+
+/**
+ * Esegue una query per un raggio dato. L'istanza pubblica di Overpass
+ * risponde spesso 502/504 sotto carico e chiede di riprovare con backoff
+ * esponenziale: al massimo 2 nuovi tentativi (dopo 2 s e 4 s), poi errore.
+ */
 export async function fetchProfessionals(
+  center: Coordinates,
+  radiusKm: number,
+  signal?: AbortSignal,
+): Promise<Professional[]> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await fetchOnce(center, radiusKm, signal);
+    } catch (err) {
+      const delay = RETRY_DELAYS_MS[attempt];
+      if (!(err instanceof RetryableError) || delay === undefined || signal?.aborted) {
+        throw err;
+      }
+      await new Promise((r) => setTimeout(r, delay));
+      if (signal?.aborted) throw err;
+    }
+  }
+}
+
+async function fetchOnce(
   center: Coordinates,
   radiusKm: number,
   signal?: AbortSignal,
@@ -116,7 +146,10 @@ export async function fetchProfessionals(
       signal: controller.signal,
       credentials: "omit",
     });
-    if (!res.ok) throw new Error(`Overpass ${res.status}`);
+    if (!res.ok) {
+      const msg = `Overpass ${res.status}`;
+      throw RETRYABLE.has(res.status) ? new RetryableError(msg) : new Error(msg);
+    }
 
     const json = (await res.json()) as { elements?: OverpassElement[] };
     return parseOverpass(json.elements ?? [], center);
