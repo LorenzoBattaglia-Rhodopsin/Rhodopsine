@@ -60,6 +60,7 @@ export default async function ResultsPage({
     return (
       <Section
         centered
+        titleAs="h1"
         title="Non abbiamo trovato un punteggio da mostrare"
         description="Per vedere il tuo riscontro, completa prima il breve test di autovalutazione."
       >

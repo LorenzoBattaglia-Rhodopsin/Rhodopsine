@@ -13,6 +13,11 @@ interface SectionProps extends React.HTMLAttributes<HTMLElement> {
   description?: string;
   /** Allinea l'intestazione al centro (default: a sinistra). */
   centered?: boolean;
+  /**
+   * Livello del titolo (default "h2"). Usa "h1" quando la sezione è l'unico
+   * contenuto della pagina, così la pagina ha sempre esattamente un H1.
+   */
+  titleAs?: "h1" | "h2";
 }
 
 export function Section({
@@ -20,6 +25,7 @@ export function Section({
   title,
   description,
   centered = false,
+  titleAs: Title = "h2",
   className,
   children,
   ...props
@@ -42,9 +48,9 @@ export function Section({
             )}
           >
             {title && (
-              <h2 className="text-title text-balance font-semibold text-foreground">
+              <Title className="text-title text-balance font-semibold text-foreground">
                 {title}
-              </h2>
+              </Title>
             )}
             {description && (
               <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
